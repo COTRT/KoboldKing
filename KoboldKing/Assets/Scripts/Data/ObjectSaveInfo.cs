@@ -7,18 +7,18 @@ namespace Assets.Scripts.Data
 {
     public class ObjectSaveInfo
     {
-        public ObjectSaveInfo()
+        internal ObjectSaveInfo()
         {
 
         }
-        public ObjectSaveInfo(object Object, TypeSaveInfo TypeSaveInfo,string FolderName)
+        internal ObjectSaveInfo(object Object, TypeSaveInfo TypeSaveInfo,string FolderName)
         {
             this.Object = Object;
             this.TypeSaveInfo = TypeSaveInfo;
             this.FolderName = FolderName;
         }
         public object Object { get; set; }
-        public virtual TypeSaveInfo TypeSaveInfo { get; set; }
+        internal TypeSaveInfo TypeSaveInfo { get; set; }
         public string FolderName { get; set; }
     }
 }

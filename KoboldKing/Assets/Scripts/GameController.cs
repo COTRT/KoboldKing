@@ -40,21 +40,17 @@ public class GameController : MonoBehaviour {
 	void OnGUI(){
 		if(GUI.Button(new Rect(0,0,75,20),"Load All")){
 			Stopwatch s = Stopwatch.StartNew();
-			LoadAll();
+			DataService.LoadAll();
 			Debug.Log("All Loaded in "+s.ElapsedMilliseconds.ToString());
 			
 		}
 		if(GUI.Button(new Rect(0,30,75,20),"Save All")){
 			Stopwatch s = Stopwatch.StartNew();
-			SaveAll();
+			DataService.SaveAll();
 			Debug.Log("All Saved in "+s.ElapsedMilliseconds.ToString());
 		}
 		if(GUI.Button(new Rect(0,60,75,20),"Scene 2")){
 			SceneManager.LoadScene("Scene2");
 		}
 	}
-
-	#region saving logic
-	
-	#endregion
 }
