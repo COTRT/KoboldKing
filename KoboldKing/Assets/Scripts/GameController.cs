@@ -1,10 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.IO;
-using System.Reflection;
-using System.Linq;
+﻿using UnityEngine;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
@@ -12,29 +6,27 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
 
 	public static GameController controller;
-    ///<summary>
-	/// Field Name v. destination path
-	///</summary>
-	private static Dictionary<string,string> SaveFieldMappings;
-	///<summary>
-	///	destination path v. Field Name
-	///</summary>
-	private static Dictionary<string,string> ReversedSaveFieldMappings;
 
 	[SaveTo("inventory.dat")]
 	public Inventory inventory;
 
 	void Awake(){
-		if(controller == null){
-			DontDestroyOnLoad(gameObject);
-			controller = this;
-		}
-		else if(controller != this){
-			Destroy(gameObject);
-		}
+        if (controller == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            controller = this;
+        }
+        else if (controller != this)
+        {
+            Destroy(gameObject);
+        }
+        //Give DataService the path it needs (since it isn't a monobehavoir, it doesn't have access to this stuff.)
+        DataService.SaveDataPath = Application.persistentDataPath;
+        //Sign up for log messages
+        DataService.OnLogMessage += Debug.Log;
 	}
 	void Start(){
-	    
+        DataService.Register(this, "GameController");
 	}
 
 	void OnGUI(){

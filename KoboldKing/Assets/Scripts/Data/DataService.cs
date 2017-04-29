@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -9,25 +10,25 @@ public static class DataService
 {
     private static Dictionary<string, ObjectSaveInfo> RegisteredObjects = new Dictionary<string, ObjectSaveInfo>();
     private static Dictionary<Type, TypeSaveInfo> TypeSaveInfos = new Dictionary<Type, TypeSaveInfo>();
-    private static Dictionary<string, PathSaveInfo> PathSaveInfos = new Dictionary<string, PathSaveInfo>();
     private static Dictionary<PathSaveInfo, string> ReversedPathSaveInfos = new Dictionary<PathSaveInfo, string>(new FieldAndObjectPathSaveInfoComparer());
 
-    private static string _applicationPersistentDataPath;
-    public static string ApplicationPersistentDataPath
+    private static string _saveDataPath;
+    public static string SaveDataPath
     {
         private get
         {
-            if(_applicationPersistentDataPath == null)
+            if(_saveDataPath == null)
             {
-                throw new NullReferenceException("ApplicationPesistentDataPath is null.  It must be set to the Application Persistent Data Path before Saving operations can occur");
+                throw new NullReferenceException("ApplicationPesistentDataPath is null.  It must be set to the Application Persistent Data Path before Saving, Registering, or Loading operations can occur");
             }
-            return _applicationPersistentDataPath;
+            return _saveDataPath;
         }
         set
         {
-            _applicationPersistentDataPath = value;
+            _saveDataPath = value;
         }
     }
+    public static event LogFunc OnLogMessage;
     
     public static bool ObjectNameIsRegistered(string objectName)
     {
@@ -49,6 +50,11 @@ public static class DataService
                 return attempt;
             }
         }
+    }
+    private static void Log(object message)
+    {
+        if (OnLogMessage != null)
+            OnLogMessage.Invoke(message);
     }
 
     /// <summary>
@@ -74,36 +80,41 @@ public static class DataService
                 throw new ArgumentException("Folder with name: " + FolderName + " already exists.  Please select a different folder name");
             }
         }
+        Log("Registering Object with identification name:  " + IdentificationName+"...");
         Type oType = ObjectToRegister.GetType();
         //We don't load all Type Infos off the bat; instead, we load the infos as soon an object of a certain type is registered, and then we add it to a dictionary so the TypeSaveInfo object only has to be created once.
         if (!TypeSaveInfos.ContainsKey(oType))
         {
             TypeSaveInfos.Add(oType, new TypeSaveInfo(oType));
         }
+        Directory.CreateDirectory(Path.Combine(SaveDataPath, FolderName));
         ObjectSaveInfo osi = new ObjectSaveInfo(ObjectToRegister, TypeSaveInfos[oType], FolderName);
         RegisteredObjects.Add(FolderName, osi);
         FindPaths(osi);
+        Log("Successfully Registered Object with identification name:  " + IdentificationName + "!");
         return FolderName;
     }
 
     private static void FindPaths(ObjectSaveInfo osi)
     {
-        string basePath = Path.Combine(ApplicationPersistentDataPath, osi.FolderName);
+        string basePath = Path.Combine(SaveDataPath, osi.FolderName);
         foreach(var FieldPathGroup in osi.TypeSaveInfo.SavedFields)
         {
-            string filepath = Path.Combine(basePath, FieldPathGroup.Value.filename);
+            string filepath = Path.GetFullPath(Path.Combine(basePath, FieldPathGroup.Value.filename));
             PathSaveInfo pathSaveInfo = new PathSaveInfo(osi, FieldPathGroup.Key, filepath);
-            PathSaveInfos.Add(filepath, pathSaveInfo);
             ReversedPathSaveInfos.Add(pathSaveInfo, filepath);
         }
     }
 
     public static void SaveAll()
     {
+        Log("**Beginning SaveAll Operation (saving to " + SaveDataPath + ")**");
+        Stopwatch s = Stopwatch.StartNew();
         foreach (var RegisteredObject in RegisteredObjects.Values)
         {
             Save(RegisteredObject);
         }
+        Log("**SaveAll Operation Completed in "+s.ElapsedMilliseconds.ToString()+"ms!");
     }
 
     public static void Save(string FolderName, bool throwIfObjectNotRegistered = true)
@@ -120,9 +131,9 @@ public static class DataService
 
     public static void Save(ObjectSaveInfo RegisteredObject)
     {
-        foreach(string FieldName in RegisteredObject.TypeSaveInfo.SavedFields.Keys)
+        foreach (var field in RegisteredObject.TypeSaveInfo.SavedFields.Values)
         {
-            Save(RegisteredObject, RegisteredObject.TypeSaveInfo.SavedFields[FieldName]);
+            Save(RegisteredObject, field);
         }
     }
 
@@ -153,6 +164,17 @@ public static class DataService
 
     private static void Save(ObjectSaveInfo RegisteredObject, FieldSaveInfo fieldSaveInfo)
     {
+        Log("Saving Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + RegisteredObject.FolderName + "\"...");
+        string filePath = GetPath(RegisteredObject, fieldSaveInfo);
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream saveFile = File.Open(filePath, FileMode.OpenOrCreate);
+        saveFile.SetLength(0);
+        bf.Serialize(saveFile, fieldSaveInfo.field.GetValue(RegisteredObject.Object));
+        saveFile.Close();
+    }
+
+    private static string GetPath(ObjectSaveInfo RegisteredObject, FieldSaveInfo fieldSaveInfo)
+    {
         PathSaveInfo psi = new PathSaveInfo(RegisteredObject, fieldSaveInfo.field.Name);
         if (!ReversedPathSaveInfos.ContainsKey(psi))
         {
@@ -163,16 +185,15 @@ public static class DataService
         {
             psi.Filepath = ReversedPathSaveInfos[psi];
         }
-        BinaryFormatter bf = new BinaryFormatter();
-        FileStream saveFile = File.Open(psi.Filepath, FileMode.OpenOrCreate);
-        saveFile.SetLength(0);
-        bf.Serialize(saveFile, fieldSaveInfo.field.GetValue(RegisteredObject.Object));
-        saveFile.Close();
+
+        return psi.Filepath;
     }
 
     public static void LoadAll()
     {
-        foreach (var loadDir in Directory.GetDirectories(ApplicationPersistentDataPath))
+        Log("**Beginning LoadAll Operation (saving from " + SaveDataPath + ")**");
+        Stopwatch s = Stopwatch.StartNew();
+        foreach (var loadDir in Directory.GetDirectories(SaveDataPath))
         {
             string foldername = Path.GetFileName(loadDir);
             if (RegisteredObjects.ContainsKey(foldername))
@@ -180,6 +201,7 @@ public static class DataService
                 Load(RegisteredObjects[foldername],false);
             }
         }
+        Log("**LoadAll Operation Completed in " + s.ElapsedMilliseconds.ToString() + "ms!");
     }
 
     public static void Load(string objectName,bool throwIfNotRegistered =true,bool throwIfNotExists = true)
@@ -219,7 +241,8 @@ public static class DataService
     }
     private static void Load(ObjectSaveInfo RegisteredObject,FieldSaveInfo fieldSaveInfo,bool throwIfNotExists)
     {
-        string filePath = Path.Combine(ApplicationPersistentDataPath, fieldSaveInfo.filename);
+        Log("Loading Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + RegisteredObject.FolderName + "\"...");
+        string filePath = GetPath(RegisteredObject, fieldSaveInfo);
         if (File.Exists(filePath))
         {
             BinaryFormatter bf = new BinaryFormatter();
@@ -229,15 +252,26 @@ public static class DataService
         }
         else
         {
-            throw new FileNotFoundException("Could not load file " + filePath + " into Field " + fieldSaveInfo.field.Name + " because the desired file was not found");
+            string errorString = "Could not load file " + filePath + " into Field " + fieldSaveInfo.field.Name + " because the desired file was not found";
+            if (throwIfNotExists)
+            {
+                throw new FileNotFoundException(errorString);
+            }
+            else
+            {
+                Log(errorString);
+            }
         }
     }
 
     private static void ThrowNotRegisteredException(string objectName,string unregisteredItemTypeName,bool throwIfNotRegistered)
     {
+        string errorString = "ERROR:  "+ unregisteredItemTypeName + ":  " + objectName + " cannot be loaded, because it has no relevant Registered " + unregisteredItemTypeName + ".  (In other words, you need to register the " + unregisteredItemTypeName + " you're trying to load/save before saying, 'LOAD IT!!' [Or 'SAVE IT!!'])";
         if (throwIfNotRegistered)
-            throw new KeyNotFoundException(unregisteredItemTypeName+":  " + objectName + " cannot be loaded, because it has no relevant Registered "+unregisteredItemTypeName +".  (In other words, you need to register the "+unregisteredItemTypeName+" you're trying to load/save before saying, 'LOAD IT!!' [Or 'SAVE IT!!'])");
+            throw new KeyNotFoundException(errorString);
         else
-            return;//Insert whatever log logic we come up with here
+            Log(errorString);
     }
 }
+
+public delegate void LogFunc(object message);

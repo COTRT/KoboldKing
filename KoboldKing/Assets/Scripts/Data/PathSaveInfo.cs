@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Assets.Scripts.Data
 {
@@ -31,7 +28,8 @@ namespace Assets.Scripts.Data
 
         public int GetHashCode(PathSaveInfo obj)
         {
-            return obj.GetHashCode();
+            //Sounds a little cheaty, doesn't it...
+            return obj.FieldName.GetHashCode() + obj.ObjectSaveInfo.FolderName.GetHashCode();
         }
     }
 }
