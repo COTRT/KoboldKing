@@ -6,14 +6,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Assets.Scripts.Data
 {
-    public static class DataService
+    public class DataService
     {
-        private static Dictionary<string, ObjectSaveInfo> RegisteredObjects = new Dictionary<string, ObjectSaveInfo>();
-        private static Dictionary<Type, TypeSaveInfo> TypeSaveInfos = new Dictionary<Type, TypeSaveInfo>();
-        private static Dictionary<PathSaveInfo, string> ReversedPathSaveInfos = new Dictionary<PathSaveInfo, string>(new FieldAndObjectPathSaveInfoComparer());
+        private Dictionary<string, ObjectSaveInfo> RegisteredObjects = new Dictionary<string, ObjectSaveInfo>();
+        private Dictionary<Type, TypeSaveInfo> TypeSaveInfos = new Dictionary<Type, TypeSaveInfo>();
+        private Dictionary<PathSaveInfo, string> ReversedPathSaveInfos = new Dictionary<PathSaveInfo, string>(new FieldAndObjectPathSaveInfoComparer());
 
-        private static string _saveDataPath;
-        public static string SaveDataPath
+        private string _saveDataPath;
+        public string SaveDataPath
         {
             private get
             {
@@ -28,24 +28,24 @@ namespace Assets.Scripts.Data
                 _saveDataPath = value;
             }
         }
-        public static event LogFunc OnLogMessage;
+        public event LogFunc OnLogMessage;
 
         /// <summary>
         /// This function can be used from user code to create custom Identification/Folder names for objects without a) duplicates, or b) using the "AutomaticNoDuplicateSuffixes" option (under <see cref="Register(object, string, bool)"/>) to automatically add suffixes.
         /// </summary>
-        /// <param name="objectName">An Identification Name.</param>
+        /// <param name="identificationName">An Identification Name.</param>
         /// <returns>True if the objectName has already been taken by a registered object, and false if not</returns>
-        public static bool ObjectNameIsRegistered(string objectName)
+        public bool ObjectNameIsRegistered(string identificationName)
         {
-            return RegisteredObjects.ContainsKey(objectName);
+            return RegisteredObjects.ContainsKey(identificationName);
         }
 
-        private static string GetNonDuplicate(string folderName)
+        private string GetNonDuplicate(string identificationName)
         {
             int currentSuffix = 0;
             while (true)
             {
-                string attempt = folderName + "_" + currentSuffix.ToString();
+                string attempt = identificationName + "_" + currentSuffix.ToString();
                 if (RegisteredObjects.ContainsKey(attempt))
                 {
                     currentSuffix++;
@@ -56,7 +56,7 @@ namespace Assets.Scripts.Data
                 }
             }
         }
-        private static void Log(object message)
+        private void Log(object message)
         {
             if (OnLogMessage != null)
                 OnLogMessage.Invoke(message);
@@ -65,18 +65,18 @@ namespace Assets.Scripts.Data
         /// <summary>
         /// Register the specified object for saving.  All objects MUST be saved before any of thier data can be saved.
         /// </summary>
-        /// <param name="ObjectToRegister">The object to be registered for saving.</param>
-        /// <param name="IdentificationName">The NAME this object should be stored and referenced as.  To save data, each object (with SaveTo fields in it to save) MUST be registered with a unique identification name.  To check if a name is already registered, use the ObjectNameIsRegistered function.</param>
-        /// <param name="AutomaticNoDuplicateSuffixes">With this parameter set to true, DataService will automatically add unique suffixes (for example, "IdName" becomes "IdName_0", "IdName_1","IdName_2", etc.) if the supplied IdentificationName already exists.  If this is false, Duplicate Identification Names will throw an ArgumentException</param>
+        /// <param name="objectToRegister">The object to be registered for saving.</param>
+        /// <param name="identificationName">The NAME this object should be stored and referenced as.  To save data, each object (with SaveTo fields in it to save) MUST be registered with a unique identification name.  To check if a name is already registered, use the ObjectNameIsRegistered function.</param>
+        /// <param name="automaticNoDuplicateSuffixes">With this parameter set to true, DataService will automatically add unique suffixes (for example, "IdName" becomes "IdName_0", "IdName_1","IdName_2", etc.) if the supplied IdentificationName already exists.  If this is false, Duplicate Identification Names will throw an ArgumentException</param>
         /// <exception cref="ArgumentException">Throws if a duplicate IdentificationName is supplied, and AutomaticNoDuplicateSuffixes is false. Use ObjectNameIsRegistered to ensure IdentificationNames aren't duplicates.</exception>
         /// <returns>The Identitification Name of the new object (If AutomaticNoDuplicateSuffixes is false, this will always be equal to the supplied IdentificationName)</returns>
         /// <seealso cref="ObjectNameIsRegistered(string)"/>
-        public static string Register(object ObjectToRegister, string IdentificationName, bool AutomaticNoDuplicateSuffixes = false)
+        public string Register(object objectToRegister, string identificationName, bool automaticNoDuplicateSuffixes = false)
         {
-            string FolderName = IdentificationName;
+            string FolderName = identificationName;
             if (RegisteredObjects.ContainsKey(FolderName))
             {
-                if (AutomaticNoDuplicateSuffixes)
+                if (automaticNoDuplicateSuffixes)
                 {
                     FolderName = GetNonDuplicate(FolderName);
                 }
@@ -85,22 +85,22 @@ namespace Assets.Scripts.Data
                     throw new ArgumentException("Folder with name: " + FolderName + " already exists.  Please select a different folder name");
                 }
             }
-            Log("Registering Object with identification name:  " + IdentificationName + "...");
-            Type oType = ObjectToRegister.GetType();
+            Log("Registering Object with identification name:  " + identificationName + "...");
+            Type oType = objectToRegister.GetType();
             //We don't load all Type Infos off the bat; instead, we load the infos as soon an object of a certain type is registered, and then we add it to a dictionary so the TypeSaveInfo object only has to be created once.
             if (!TypeSaveInfos.ContainsKey(oType))
             {
                 TypeSaveInfos.Add(oType, new TypeSaveInfo(oType));
             }
             Directory.CreateDirectory(Path.Combine(SaveDataPath, FolderName));
-            ObjectSaveInfo osi = new ObjectSaveInfo(ObjectToRegister, TypeSaveInfos[oType], FolderName);
+            ObjectSaveInfo osi = new ObjectSaveInfo(objectToRegister, TypeSaveInfos[oType], FolderName);
             RegisteredObjects.Add(FolderName, osi);
             FindPaths(osi);
-            Log("Successfully Registered Object with identification name:  " + IdentificationName + "!");
+            Log("Successfully Registered Object with identification name:  " + identificationName + "!");
             return FolderName;
         }
 
-        private static void FindPaths(ObjectSaveInfo osi)
+        private void FindPaths(ObjectSaveInfo osi)
         {
             string basePath = Path.Combine(SaveDataPath, osi.FolderName);
             foreach (var FieldPathGroup in osi.TypeSaveInfo.SavedFields)
@@ -110,13 +110,13 @@ namespace Assets.Scripts.Data
                 ReversedPathSaveInfos.Add(pathSaveInfo, filepath);
             }
         }
-        private static string GetPath(ObjectSaveInfo RegisteredObject, FieldSaveInfo fieldSaveInfo)
+        private string GetPath(ObjectSaveInfo registeredObject, FieldSaveInfo fieldSaveInfo)
         {
-            PathSaveInfo psi = new PathSaveInfo(RegisteredObject, fieldSaveInfo.field.Name);
+            PathSaveInfo psi = new PathSaveInfo(registeredObject, fieldSaveInfo.field.Name);
             if (!ReversedPathSaveInfos.ContainsKey(psi))
             {
                 //If this happens, it's time to complain to the Tech Lead.
-                throw new KeyNotFoundException("Internal Path Logic Error.  No Path Could be found (to SAVE to) for Registered Object:  " + RegisteredObject.FolderName + " Field:  " + fieldSaveInfo.field.Name + ", most likely because of an internal path handling error.");
+                throw new KeyNotFoundException("Internal Path Logic Error.  No Path Could be found (to SAVE to) for Registered Object:  " + registeredObject.FolderName + " Field:  " + fieldSaveInfo.field.Name + ", most likely because of an internal path handling error.");
             }
             else
             {
@@ -129,7 +129,7 @@ namespace Assets.Scripts.Data
         /// <summary>
         /// Save every registered object.  
         /// </summary>
-        public static void SaveAll()
+        public void SaveAll()
         {
             Log("**Beginning SaveAll Operation (saving to " + SaveDataPath + ")**");
             Stopwatch s = Stopwatch.StartNew();
@@ -143,68 +143,68 @@ namespace Assets.Scripts.Data
         /// <summary>
         /// Find the Registered Object with the supplied Identification Name and Save it.  If the Identification/Folder name supplied is not registered, the program will either throw an error or log one, dependant on the throwIfObjectNotRegistered parameter"/>
         /// </summary>
-        /// <param name="FolderName">The Identification/Folder name of the object to save</param>
+        /// <param name="folderName">The Identification/Folder name of the object to save</param>
         /// <param name="throwIfObjectNotRegistered">Whether to throw an error or log one, if the Identificaiton/Folder name supplied is not registered</param>
-        public static void Save(string FolderName, bool throwIfObjectNotRegistered = true)
+        public void Save(string identificationName, bool throwIfObjectNotRegistered = true)
         {
-            if (!RegisteredObjects.ContainsKey(FolderName))
+            if (!RegisteredObjects.ContainsKey(identificationName))
             {
-                ThrowNotRegisteredException(FolderName, "Object", throwIfObjectNotRegistered);
+                ThrowNotRegisteredException(identificationName, "Object", throwIfObjectNotRegistered);
             }
             else
             {
-                Save(RegisteredObjects[FolderName]);
+                Save(RegisteredObjects[identificationName]);
             }
         }
 
-        private static void Save(ObjectSaveInfo RegisteredObject)
+        private void Save(ObjectSaveInfo registeredObject)
         {
-            foreach (var field in RegisteredObject.TypeSaveInfo.SavedFields.Values)
+            foreach (var field in registeredObject.TypeSaveInfo.SavedFields.Values)
             {
-                Save(RegisteredObject, field);
+                Save(registeredObject, field);
             }
         }
 
         /// <summary>
         /// Save the specified object (specified by FodlerName) and underlying Field (specified by FieldName).  If either are not registered (or do not exist) the program will either throw an error or log on, dependant on the throwifObjectNotRegistered and throwIfFieldNotRegistered fields.
         /// </summary>
-        /// <param name="FolderName">The Identification/Folder name of the object to save from.</param>
-        /// <param name="FieldName">The name of the field (within the specified object) to save.</param>
+        /// <param name="identificatioName">The Identification/Folder name of the object to save from.</param>
+        /// <param name="fieldName">The name of the field (within the specified object) to save.</param>
         /// <param name="throwIfObjectNotRegistered">Whether to throw or log an error if the Object specified is not registered.</param>
         /// <param name="throwIfFieldNotRegistered">hether to throw or log an error if the Field specified is not registered.</param>
-        public static void Save(string FolderName, string FieldName, bool throwIfObjectNotRegistered = true, bool throwIfFieldNotRegistered = true)
+        public void Save(string identificatioName, string fieldName, bool throwIfObjectNotRegistered = true, bool throwIfFieldNotRegistered = true)
         {
-            if (!RegisteredObjects.ContainsKey(FolderName))
+            if (!RegisteredObjects.ContainsKey(identificatioName))
             {
-                ThrowNotRegisteredException(FolderName, "Object", throwIfObjectNotRegistered);
+                ThrowNotRegisteredException(identificatioName, "Object", throwIfObjectNotRegistered);
             }
             else
             {
-                Save(RegisteredObjects[FolderName], FieldName, throwIfFieldNotRegistered);
+                Save(RegisteredObjects[identificatioName], fieldName, throwIfFieldNotRegistered);
             }
         }
 
-        private static void Save(ObjectSaveInfo RegisteredObject, string FieldName, bool throwIfFieldNotRegistered = true)
+        private void Save(ObjectSaveInfo registeredObject, string fieldName, bool throwIfFieldNotRegistered = true)
         {
-            if (RegisteredObject.TypeSaveInfo.SavedFields.ContainsKey(FieldName))
+            if (registeredObject.TypeSaveInfo.SavedFields.ContainsKey(fieldName))
             {
-                FieldSaveInfo fieldSaveInfo = RegisteredObject.TypeSaveInfo.SavedFields[FieldName];
-                Save(RegisteredObject, fieldSaveInfo);
+                FieldSaveInfo fieldSaveInfo = registeredObject.TypeSaveInfo.SavedFields[fieldName];
+                Save(registeredObject, fieldSaveInfo);
             }
             else
             {
-                ThrowNotRegisteredException(FieldName, "Field", throwIfFieldNotRegistered);
+                ThrowNotRegisteredException(fieldName, "Field", throwIfFieldNotRegistered);
             }
         }
 
-        private static void Save(ObjectSaveInfo RegisteredObject, FieldSaveInfo fieldSaveInfo)
+        private void Save(ObjectSaveInfo registeredObject, FieldSaveInfo fieldSaveInfo)
         {
-            Log("Saving Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + RegisteredObject.FolderName + "\"...");
-            string filePath = GetPath(RegisteredObject, fieldSaveInfo);
+            Log("Saving Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + registeredObject.FolderName + "\"...");
+            string filePath = GetPath(registeredObject, fieldSaveInfo);
             BinaryFormatter bf = new BinaryFormatter();
             FileStream saveFile = File.Open(filePath, FileMode.OpenOrCreate);
             saveFile.SetLength(0);
-            bf.Serialize(saveFile, fieldSaveInfo.field.GetValue(RegisteredObject.Object));
+            bf.Serialize(saveFile, fieldSaveInfo.field.GetValue(registeredObject.Object));
             saveFile.Close();
         }
 
@@ -212,7 +212,7 @@ namespace Assets.Scripts.Data
         /// <summary>
         /// Load every Registered Object.  If a registered object's save files don't exist (because it has never been saved) it will be skipped.
         /// </summary>
-        public static void LoadAll()
+        public void LoadAll()
         {
             Log("**Beginning LoadAll Operation (saving from " + SaveDataPath + ")**");
             Stopwatch s = Stopwatch.StartNew();
@@ -230,70 +230,71 @@ namespace Assets.Scripts.Data
         /// <summary>
         /// Load every field in the specified object.  If the object isn't registered or has not been saved before, the throwIfNotRegistered and throwIfNotExists parameters (respectively) define wether to throw or log an error
         /// </summary>
-        /// <param name="objectName">The Identification/Folder name of the object to load</param>
+        /// <param name="identificationName">The Identification/Folder name of the object to load</param>
         /// <param name="throwIfNotRegistered">Whether to throw or log an error if the specified objectName isn't registered</param>
         /// <param name="throwIfNotExists">Whether to throw or log an error if the specified object hasn't been saved before.</param>
-        public static void Load(string objectName, bool throwIfNotRegistered = true, bool throwIfNotExists = true)
+        public void Load(string identificationName, bool throwIfNotRegistered = true, bool throwIfNotExists = true)
         {
-            if (RegisteredObjects.ContainsKey(objectName))
+            if (RegisteredObjects.ContainsKey(identificationName))
             {
-                Load(RegisteredObjects[objectName], throwIfNotExists);
+                Load(RegisteredObjects[identificationName], throwIfNotExists);
             }
             else
             {
-                ThrowNotRegisteredException(objectName, "Object", throwIfNotRegistered);
+                ThrowNotRegisteredException(identificationName, "Object", throwIfNotRegistered);
             }
         }
 
-        private static void Load(ObjectSaveInfo RegisteredObject, bool throwIfNotExists = true)
+        private void Load(ObjectSaveInfo registeredObject, bool throwIfNotExists = true)
         {
-            foreach (var field in RegisteredObject.TypeSaveInfo.SavedFields)
+            foreach (var field in registeredObject.TypeSaveInfo.SavedFields)
             {
-                Load(RegisteredObject, field.Value, throwIfNotExists);
+                Load(registeredObject, field.Value, throwIfNotExists);
             }
         }
 
         /// <summary>
         /// Load the specified object (specified by FodlerName) and underlying Field (specified by FieldName).  If either are not registered (or do not exist) the program will either throw an error or log on, dependant on the throwifObjectNotRegistered and throwIfFieldNotRegistered fields.
         /// </summary>
-        /// <param name="FolderName">The Identification/Folder name of the object to save from.</param>
-        /// <param name="FieldName">The name of the field (within the specified object) to save.</param>
+        /// <param name="identificationName">The Identification/Folder name of the object to save from.</param>
+        /// <param name="fieldName">The name of the field (within the specified object) to save.</param>
         /// <param name="throwIfObjectNotRegistered">Whether to throw or log an error if the Object specified is not registered.</param>
         /// <param name="throwIfFieldNotRegistered">Whether to throw or log an error if the Field specified is not registered under.</param>
-        public static void Load(string objectName, string FieldName,bool throwIfObjectNotRegistered = true, bool throwIfFieldNotRegistered = true, bool throwIfNotExists = true)
+        /// <param name="throwIfNotExists">Whether to throw or log an error if there is no saved data for the specified object and field.</param>
+        public void Load(string identificationName, string fieldName,bool throwIfObjectNotRegistered = true, bool throwIfFieldNotRegistered = true, bool throwIfNotExists = true)
         {
-            if (RegisteredObjects.ContainsKey(objectName))
+            if (RegisteredObjects.ContainsKey(identificationName))
             {
-                Load(RegisteredObjects[objectName], FieldName, throwIfFieldNotRegistered, throwIfNotExists);
+                Load(RegisteredObjects[identificationName], fieldName, throwIfFieldNotRegistered, throwIfNotExists);
             }
             else
             {
-                ThrowNotRegisteredException(objectName, "Object", throwIfObjectNotRegistered);
+                ThrowNotRegisteredException(identificationName, "Object", throwIfObjectNotRegistered);
             }
         }
 
-        private static void Load(ObjectSaveInfo RegisteredObject, string FieldName, bool throwIfFieldNotRegistered, bool throwIfNotExists = true)
+        private void Load(ObjectSaveInfo registeredObject, string fieldName, bool throwIfFieldNotRegistered, bool throwIfNotExists = true)
         {
-            if (RegisteredObject.TypeSaveInfo.SavedFields.ContainsKey(FieldName))
+            if (registeredObject.TypeSaveInfo.SavedFields.ContainsKey(fieldName))
             {
-                FieldSaveInfo fieldSaveInfo = RegisteredObject.TypeSaveInfo.SavedFields[FieldName];
-                Load(RegisteredObject, fieldSaveInfo, throwIfNotExists);
+                FieldSaveInfo fieldSaveInfo = registeredObject.TypeSaveInfo.SavedFields[fieldName];
+                Load(registeredObject, fieldSaveInfo, throwIfNotExists);
             }
             else
             {
-                ThrowNotRegisteredException(FieldName, "Field", throwIfFieldNotRegistered);
+                ThrowNotRegisteredException(fieldName, "Field", throwIfFieldNotRegistered);
             }
         }
 
-        private static void Load(ObjectSaveInfo RegisteredObject, FieldSaveInfo fieldSaveInfo, bool throwIfNotExists)
+        private void Load(ObjectSaveInfo registeredObject, FieldSaveInfo fieldSaveInfo, bool throwIfNotExists)
         {
             Log("Loading Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + RegisteredObject.FolderName + "\"...");
-            string filePath = GetPath(RegisteredObject, fieldSaveInfo);
+            string filePath = GetPath(registeredObject, fieldSaveInfo);
             if (File.Exists(filePath))
             {
                 BinaryFormatter bf = new BinaryFormatter();
                 FileStream loadFile = File.Open(filePath, FileMode.Open);
-                fieldSaveInfo.field.SetValue(RegisteredObject.Object, bf.Deserialize(loadFile));
+                fieldSaveInfo.field.SetValue(registeredObject.Object, bf.Deserialize(loadFile));
                 loadFile.Close();
             }
             else
@@ -310,9 +311,9 @@ namespace Assets.Scripts.Data
             }
         }
 
-        private static void ThrowNotRegisteredException(string objectName, string unregisteredItemTypeName, bool throwIfNotRegistered)
+        private void ThrowNotRegisteredException(string identificationName, string unregisteredItemTypeName, bool throwIfNotRegistered)
         {
-            string errorString = "ERROR:  " + unregisteredItemTypeName + ":  " + objectName + " cannot be loaded, because it has no relevant Registered " + unregisteredItemTypeName + ".  (In other words, you need to register the " + unregisteredItemTypeName + " you're trying to load/save before saying, 'LOAD IT!!' [Or 'SAVE IT!!'])";
+            string errorString = "ERROR:  " + unregisteredItemTypeName + ":  " + identificationName + " cannot be loaded, because it has no relevant Registered " + unregisteredItemTypeName + ".  (In other words, you need to register the " + unregisteredItemTypeName + " you're trying to load/save before saying, 'LOAD IT!!' [Or 'SAVE IT!!'])";
             if (throwIfNotRegistered)
                 throw new KeyNotFoundException(errorString);
             else
