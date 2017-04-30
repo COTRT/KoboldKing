@@ -29,6 +29,11 @@ namespace Assets.Scripts.Data
             }
         }
         public event LogFunc OnLogMessage;
+        public DataService(string SaveDataPath)
+        {
+            this.SaveDataPath = SaveDataPath;
+        }
+        
 
         /// <summary>
         /// This function can be used from user code to create custom Identification/Folder names for objects without a) duplicates, or b) using the "AutomaticNoDuplicateSuffixes" option (under <see cref="Register(object, string, bool)"/>) to automatically add suffixes.
@@ -288,7 +293,7 @@ namespace Assets.Scripts.Data
 
         private void Load(ObjectSaveInfo registeredObject, FieldSaveInfo fieldSaveInfo, bool throwIfNotExists)
         {
-            Log("Loading Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + RegisteredObject.FolderName + "\"...");
+            Log("Loading Field with Name:  \"" + fieldSaveInfo.field.Name + "\" in Object with IdentificationName:  \"" + registeredObject.FolderName + "\"...");
             string filePath = GetPath(registeredObject, fieldSaveInfo);
             if (File.Exists(filePath))
             {

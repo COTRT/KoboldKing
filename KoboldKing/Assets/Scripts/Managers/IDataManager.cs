@@ -1,7 +1,8 @@
-﻿using Assets.Scripts.Managers;
+﻿using Assets.Scripts.Data;
+using Assets.Scripts.Managers;
 
 public interface IGameManager
 {
-    ManagerStatus status { get; }
-    void Startup();
+    ManagerStatus Status { get; }
+    void Startup(DataService dataService);
 }
