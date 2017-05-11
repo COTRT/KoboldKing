@@ -2,6 +2,7 @@
 using Assets.Scripts.Data;
 using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Events;
 
 namespace Assets.Scripts.Managers
 {
@@ -11,35 +12,14 @@ namespace Assets.Scripts.Managers
         public bool hothStarted = false;
         public override void Startup(DataService dataService)
         {
+            dataService.Register(this, "Magic");
             hothStarted = true;
-            StartCoroutine(LongRunner());
+            Startup_Complete();
         }
-
-        // Use this for initialization
-        void Start()
+        [On(StartupEvent.MANAGERS_STARTED)]
+        public void OnAllStarted()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            
-        }
-        IEnumerator LongRunner()
-        {
-            Debug.Log(Fibonacci(40));
-            yield return null;
-            this.Status = ManagerStatus.STARTED;
-            yield return null;
-        }
-        long Fibonacci(int x)
-        {
-            if(x == 0 ||x == 1)
-            {
-                return 1;
-            }
-            return Fibonacci(x - 1) + Fibonacci(x - 2);
+            Debug.Log("MagicManager has recieved a StartupEvent.MANAGERS_STARTED event!");
         }
     }
 }

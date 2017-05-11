@@ -5,6 +5,7 @@ using System.Text;
 using Assets.Scripts.Data;
 using Assets.Scripts.Events;
 using UnityEngine;
+using System.Reflection;
 
 namespace Assets.Scripts.Managers
 {
@@ -13,6 +14,26 @@ namespace Assets.Scripts.Managers
         private ManagerStatus _status;
         private ManagerStatus oldStatus;
         public event UnhandledExceptionEventHandler OnException;
+
+        public ManagerBase()
+        {
+            //Get all methods that implement OnAttribute, then turn that into a grouping mapping event names to methods
+            //StackOverflow: http://stackoverflow.com/questions/43860262/mapping-a-single-method-to-multiple-strings-dictionary-to-a-single-string-to-mul
+            var methods = this.GetType().GetMethods()
+                 .Where(m => Attribute.IsDefined(m, typeof(OnAttribute))&&m.GetParameters().Count()==0&&m.ReturnType==typeof(void)) //Filter to methods with OnAttributes.  Also, ban parameters and return types. (yes, know that Messenger supports return types, but they can be of any type under the sun, so if you really want to sign up for one, just sign up yourself)
+                 .SelectMany(m => m.GetCustomAttributes(typeof(OnAttribute), true)
+                         .Select(a => new KeyValuePair<string,MethodInfo>(((OnAttribute)a).EventName,m)))
+                 .GroupBy(g => g.Key, g => g.Value);
+
+            foreach (var eventname in methods)
+            {
+                foreach (var method in eventname)
+                {
+                    Messenger.AddListener(eventname.Key, (Action)Delegate.CreateDelegate(typeof(Action), this, method));
+                }
+            }
+            Status = ManagerStatus.STARTING;
+        }
 
         public ManagerStatus Status
         {
@@ -56,8 +77,33 @@ namespace Assets.Scripts.Managers
         }
 
         public abstract void Startup(DataService dataService);
-        
+
+        protected void Startup_Complete()
+        {
+            this.Status = ManagerStatus.STARTED;
+        }
+
+
+        [System.AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+        protected sealed class OnAttribute : Attribute
+        {
+            // See the attribute guidelines at 
+            //  http://go.microsoft.com/fwlink/?LinkId=85236
+            readonly string _eventName;
+
+            // This is a positional argument
+            public OnAttribute(string EventName)
+            {
+                this._eventName = EventName;
+            }
+
+            public string EventName
+            {
+                get { return _eventName; }
+            }
+        }
 
         
     }
+
 }
