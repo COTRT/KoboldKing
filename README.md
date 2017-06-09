@@ -1,10 +1,10 @@
 # KoboldKing
 The Game:  Rise of the Kobold King.  Tremble before its majesty.
 
-For the humble outsider looking in:  This is the product of a bunch of nerds in a nerd class (known as the Coders of the Round Table) producing fairly unskilled but awesome code.
-
-# ** PLEASE, PLEASE, _PLEASE_ ** Clone this code into:
+## ** PLEASE, PLEASE, _PLEASE_ ** Clone this code into:
 C:\CodersOfTheRoundTable\RiseOfTheKoboldKing
+
+For the humble outsider looking in:  This is the product of a bunch of nerds in a nerd class (known as the Coders of the Round Table) producing fairly unskilled but awesome code.
 
 For the Insider looking in:  _GET BACK TO WORK_  
 
