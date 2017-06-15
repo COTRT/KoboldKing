@@ -1,5 +1,5 @@
 ﻿var quit=false;
-
+var load=false;
 function OnMouseEnter()
 {
 	
@@ -20,6 +20,9 @@ function OnMouseUp()
 	if (quit == true)
 	{
 		Application.Quit();					    //If you click on quit aplication quits.
+	}
+	else if (load == true){
+	    Application.LoadLevel(2);
 	}
 	else
 	{
