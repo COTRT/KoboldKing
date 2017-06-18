@@ -8,11 +8,12 @@ using System;
 
 public class Damageable : MonoBehaviour
 {
-    public float Health;
+    public float currentHealth;
     public DamageableType damageableType;
     public Dictionary<DamageType, float> DamageTypeMultipliers;
-    public DamageableBrokenAction brokenAction;
-
+    public DamageableDeadAction deathAction;
+    public RectTransform healthBar;
+    public bool useHealthBar;
 
 
     //This DamageTypeMultiplierListItem monkey business is here to let you edit the above dicitonary in the Unity Inspector.
@@ -34,7 +35,7 @@ public class Damageable : MonoBehaviour
     private void OnValidate()
     {
         BuildDamageMultipliers();
-        if (Health <= 0)
+        if (currentHealth <= 0)
         {
             OnBroken_internal(new DamageableDamagedEventArgs() { });
             
@@ -46,6 +47,20 @@ public class Damageable : MonoBehaviour
     public event DamageableDamaged OnDamaged;
     public event DamageableDamaged OnBroken;
 
+    //Lazy load DamageTypes.  For Efficiency.  Because why not.
+    private DamageType[] _damageType;
+    private DamageType[] DamageTypes
+    {
+        get
+        {
+            return _damageType ?? (_damageType = (DamageType[])Enum.GetValues(typeof(DamageType)));
+        }
+        set
+        {
+            _damageType = value;
+        }
+    }
+
 
     // Use this for initialization
     void Start()
@@ -56,7 +71,8 @@ public class Damageable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //TESTING CODE!! REMOVE THIS!!!!
+        DealDamage(DamageType.Hot, 1);
     }
 
     /// <summary>
@@ -69,9 +85,39 @@ public class Damageable : MonoBehaviour
     /// <returns>How much damage was actually dealt to the Damageable</returns>
     float DealDamage(DamageType damageType, float amount)
     {
-        float OldHealth = Health;
-        float actualAmount = amount * (DamageTypeMultipliers.ContainsKey(damageType) ? DamageTypeMultipliers[damageType] : 1);
-        Health -= actualAmount;
+        float OldHealth = currentHealth;
+        //The supplied damageType might be DamageType.Enemy,
+        //but the DamageTypeMultiplier dictionary might only define DamageType.EnemyOrBoss
+        //In case that happens, this code will find out the best DamageTypeMultiplier dictionary entry to use
+        DamageType damageTypeToUse;
+        if (DamageTypeMultipliers.ContainsKey(damageType))
+        {
+            damageTypeToUse = damageType;
+        }
+        else
+        {
+            //Get all damage Types the multiplier dictionary defines that flag this damageType
+            // (e.g. All, Moveable, EnemyOrBoss, and Enemy for DamageType.Enemy)
+            var flaggedTypes = DamageTypeMultipliers.Keys.Where(dt => (dt & damageType) != 0);
+            int count = flaggedTypes.Count();
+            if (count == 1)
+            {
+                damageTypeToUse = flaggedTypes.Single();
+            }
+            else if (count > 1)
+            {
+                //If there are more than one flagged types available, use the most specific (aka. smallest)
+                damageTypeToUse = flaggedTypes.Min();
+            }
+            else
+            {
+                //Default to Direct
+                damageTypeToUse = DamageType.Direct;
+            }
+        }
+
+        float actualAmount = amount * DamageTypeMultipliers[damageTypeToUse];
+        currentHealth -= actualAmount;
         var eArgs = new DamageableDamagedEventArgs()
         {
             DamageableType = this.damageableType,
@@ -79,11 +125,11 @@ public class Damageable : MonoBehaviour
             Amount = amount,
             ActualAmount = actualAmount,
             OldHealth = OldHealth,
-            NewHealth = Health,
+            NewHealth = currentHealth,
             DamagedDamageable = this
         };
         OnDamageDealt_internal(eArgs);
-        if (Health <= 0)
+        if (currentHealth <= 0)
         {
             OnBroken_internal(eArgs);
         }
@@ -101,14 +147,14 @@ public class Damageable : MonoBehaviour
             OnBroken.Invoke(eArgs);
         }
         DispatchDamageEvent(eArgs, DamageEvent.BROKEN);
-        switch (brokenAction)
+        switch (deathAction)
         {
-            case DamageableBrokenAction.None:
+            case DamageableDeadAction.None:
                 break;
-            case DamageableBrokenAction.Destroy:
+            case DamageableDeadAction.Destroy:
                 Destroy(this.gameObject);
                 break;
-            case DamageableBrokenAction.Custom:
+            case DamageableDeadAction.Custom:
                 throw new NotImplementedException("Custom Damageable Broken Actions are not supported.  yet.");
             default:
                 Debug.LogWarning("This Damageable was broken, but the DamageableBrokenAction was set to an invalid value.");
@@ -129,6 +175,8 @@ public class Damageable : MonoBehaviour
         {
             OnDamageDealt.Invoke(eArgs);
         }
+        if(useHealthBar)
+            healthBar.sizeDelta = new Vector2(eArgs.NewHealth, healthBar.sizeDelta.y);
         DispatchDamageEvent(eArgs, DamageEvent.DAMAGE_DEALT);
     }
     private void DispatchDamageEvent(DamageableDamagedEventArgs a, string eventType)
@@ -191,6 +239,7 @@ public enum DamageType
 [Flags]
 public enum DamageableType
 {
+    Default = 0,
     Player = 1,
     /// <summary>
     /// An entity CREATED BY or otherwise WORKING FOR the player, but not the player itself
@@ -215,11 +264,11 @@ public enum DamageableType
     /// Any DamageableType that never, ever moves
     /// </summary>
     Unmoveable = Obstacle | Structure,
-    All = Player | PlayerEntity | Enemy | Boss | Obstacle | Structure | Object,
+    All = Default | Player | PlayerEntity | Enemy | Boss | Obstacle | Structure | Object,
 
 }
 
-public enum DamageableBrokenAction
+public enum DamageableDeadAction
 {
     None,Destroy,Custom
 }
