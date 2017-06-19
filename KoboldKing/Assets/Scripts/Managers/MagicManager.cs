@@ -1,15 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using Assets.Scripts.Data;
+using UnityEngine;
+using System.Collections;
+using Assets.Scripts.Events;
 
-[Manager]
-public class MagicManager : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+namespace Assets.Scripts.Managers
+{
+    [Manager(Priority = 0)]
+    public class MagicManager : ManagerBase
+    {
+        public bool hothStarted = false;
+        public override void Startup(DataService dataService)
+        {
+            dataService.Register(this, "Magic");
+            hothStarted = true;
+            Startup_Complete();
+        }
+        [On(StartupEvent.MANAGERS_STARTED)]
+        public void OnAllStarted()
+        {
+            Debug.Log("MagicManager has recieved a StartupEvent.MANAGERS_STARTED event!");
+        }
+    }
 }
