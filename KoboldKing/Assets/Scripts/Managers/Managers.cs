@@ -12,10 +12,19 @@ namespace Assets.Scripts.Managers
 {
     public class Managers : MonoBehaviour
     {
-        public Dictionary<string, IGameManager> AllManagers;
+        public Dictionary<Type, IGameManager> AllManagers;
+
+        public IGameManager this[Type type]
+        {
+            get
+            {
+                return AllManagers[type];
+            }
+        }
+
         private void Awake()
         {
-            AllManagers = new Dictionary<string, IGameManager>();
+            AllManagers = new Dictionary<Type, IGameManager>();
             //AWESOME!!!!!!!!  This is, like, the best part of C# I've across to date
             //This is also kinda complicated (I copied it out of a codebase made by some $125-an-hour mega-programmers) so I'll walk you through it:
             var prioritizedGroups = from a in AppDomain.CurrentDomain.GetAssemblies() //Get Every Assembly (like System.Linq and KoboldKing) in the current Application Domain
@@ -54,9 +63,15 @@ namespace Assets.Scripts.Managers
             foreach (var pGroup in prioritizedTypes)
             {
                 //We add the extra .ToList() to prevent a funky issue:
-                //When you just leave it as ".Select(...)",  The expression tree you specify gets executed each time you use/iterate over the IEnumerable.
-                //That means that, in the following code, we'd get two IGameManager's added per Type, but only one would be Started Up.
-                var startingManagers = pGroup.Select(mType => (IGameManager)gameObject.AddComponent(mType)).ToList();
+                //  When you just leave it as ".Select(...)",  The expression tree you specify gets executed each time you use/iterate over the IEnumerable.
+                //  That means that, in the following code, we'd get two IGameManager's added per Type, but only one would be Started Up.
+                //Also of Note in these lines of code:  We add the manager instance to AllManagers here, at the same time as getting starting instances, 
+                //  because this is the only point in this program where both the starting type and the starting instance are available.
+                var startingManagers = pGroup.Select(mType => {
+                        var m = (IGameManager)gameObject.AddComponent(mType);
+                        AllManagers.Add(mType, m);
+                        return m;
+                    }).ToList();
                 currentTotalManagers = startingManagers.Count();
                 currentCompletedManagers = 0;
                 //Start dem up!

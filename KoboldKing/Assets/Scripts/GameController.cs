@@ -3,11 +3,22 @@ using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using UnityEngine.SceneManagement;
 using Assets.Scripts.Data;
+using Assets.Scripts.Managers;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
 	public static GameController controller;
     public DataService dataService;
+    //Make Managers easily available
+    public Managers _managers;
+    public static Managers Managers
+    {
+        get
+        {
+            return controller._managers ?? (controller._managers = controller.GetComponent<Managers>());
+        }
+    }
 
 	[SaveTo("inventory.dat")]
 	public Inventory inventory;
@@ -47,4 +58,19 @@ public class GameController : MonoBehaviour {
 			SceneManager.LoadScene("Scene2");
 		}
 	}
+}
+
+public static class MonoBehaviorExtensions
+{
+    public static T GetManager<T>(this MonoBehaviour o)
+    {
+        try
+        {
+            return (T)GameController.Managers[typeof(T)];
+        }
+        catch (KeyNotFoundException)
+        {
+            return default(T);
+        }
+    }
 }
