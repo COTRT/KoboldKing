@@ -2,5 +2,8 @@
 {
     public enum ManagerStatus
     {
+        STARTING,
+        STARTED,
+        FAULTED
     }
 }

@@ -20,14 +20,13 @@ GameObject:
   m_Component:
   - 4: {fileID: 4613781028437114}
   - 114: {fileID: 114051927409980168}
-  - 114: {fileID: 114000011616075650}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4613781028437114
 Transform:
   m_ObjectHideFlags: 1
@@ -41,17 +40,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &114000011616075650
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1650438609151548}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8cc65c0479a0584894bb4e6952ffd43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &114051927409980168
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -64,4 +52,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory:
-    items: 101
+    items: 100
