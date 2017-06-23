@@ -6,14 +6,15 @@ using System;
 
 public class Damageable : MonoBehaviour
 {
+    public float maxHealth;
     public float currentHealth;
     public DamageableType damageableType;
-    public Dictionary<DamageType, float> DamageTypeMultipliers;
     public DamageableDeadAction deathAction;
-    public RectTransform healthBar;
+    public RectTransform healthBarForeground;
+    public RectTransform healthBarBackground;
     public bool useHealthBar;
 
-
+    public Dictionary<DamageType, float> DamageTypeMultipliers;
     //This DamageTypeMultiplierListItem monkey business is here to let you edit the above dicitonary in the Unity Inspector.
     public List<DamageTypeMultiplierListItem> DamageTypeMultiplierList;
     [System.Serializable]
@@ -29,6 +30,7 @@ public class Damageable : MonoBehaviour
         DamageTypeMultipliers[DamageType.Direct] = 1;
         //Ditto for None, except... none
         DamageTypeMultipliers[DamageType.None] = 0;
+        DamageTypeMultipliers[DamageType.Default] = 1;
     }
     private void OnValidate()
     {
@@ -48,14 +50,13 @@ public class Damageable : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        SetHealthBar(currentHealth);
     }
 
     // Update is called once per frame
     void Update()
     {
-        //TESTING CODE!! REMOVE THIS!!!!
-        DealDamage(DamageType.Hot, 1);
+
     }
 
     /// <summary>
@@ -79,24 +80,8 @@ public class Damageable : MonoBehaviour
         }
         else
         {
-            //Get all damage Types the multiplier dictionary defines that flag this damageType
-            // (e.g. All, Moveable, EnemyOrBoss, and Enemy for DamageType.Enemy)
-            var flaggedTypes = DamageTypeMultipliers.Keys.Where(dt => (dt & damageType) != 0);
-            int count = flaggedTypes.Count();
-            if (count == 1)
-            {
-                damageTypeToUse = flaggedTypes.Single();
-            }
-            else if (count > 1)
-            {
-                //If there are more than one flagged types available, use the most specific (aka. smallest)
-                damageTypeToUse = flaggedTypes.Min();
-            }
-            else
-            {
-                //Default to Direct
-                damageTypeToUse = DamageType.Direct;
-            }
+            //Default to... Default
+            damageTypeToUse = DamageType.Default;
         }
 
         float actualAmount = amount * DamageTypeMultipliers[damageTypeToUse];
@@ -158,10 +143,16 @@ public class Damageable : MonoBehaviour
         {
             OnDamageDealt.Invoke(eArgs);
         }
-        if(useHealthBar)
-            healthBar.sizeDelta = new Vector2(eArgs.NewHealth, healthBar.sizeDelta.y);
+        if (useHealthBar)
+            SetHealthBar(eArgs.NewHealth);
         DispatchDamageEvent(eArgs, DamageEvent.DAMAGE_DEALT);
     }
+
+    private void SetHealthBar(float NewHealth)
+    {
+        healthBarForeground.sizeDelta = new Vector2((healthBarBackground.sizeDelta.x / maxHealth) * NewHealth, healthBarForeground.sizeDelta.y);
+    }
+
     private void DispatchDamageEvent(DamageableDamagedEventArgs a, string eventType)
     {
         //Brodcast to two listers: 1) everyone looking for the eventtype (no matter the DamageableType) and 2) only folks filtering to a particular type of DamageableType.
@@ -172,6 +163,7 @@ public class Damageable : MonoBehaviour
 
 public enum DamageType
 {
+    Default = 0,
     /// <summary>
     /// Dealing with a piercing projectile or sword 
     /// </summary>
