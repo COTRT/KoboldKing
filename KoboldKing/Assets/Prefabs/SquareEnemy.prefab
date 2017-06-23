@@ -56,8 +56,8 @@ GameObject:
   - component: {fileID: 33341495246855162}
   - component: {fileID: 65601765663894112}
   - component: {fileID: 23309340497952548}
-  - component: {fileID: 114177133001023766}
   - component: {fileID: 114511642370121700}
+  - component: {fileID: 114786705720669536}
   m_Layer: 0
   m_Name: SquareEnemy
   m_TagString: Untagged
@@ -213,20 +213,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114177133001023766
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1767937784140028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d99c49babc52644f816b33c3436e0b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  destroyOnDeath: 1
-  currentHealth: 20
-  healthBar: {fileID: 224686822099853454}
 --- !u!114 &114410192297751944
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -276,6 +262,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb65ad0499a5cd142acfcb7571f35b09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114786705720669536
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1767937784140028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef162747f10f4104c8dabd9a6f410e4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 0
+  healthBackgroundWidth: 100
+  currentHealth: 20
+  damageableType: 4
+  deathAction: 1
+  healthBarForeground: {fileID: 0}
+  healthBarBackground: {fileID: 0}
+  useHealthBar: 1
+  DamageTypeMultiplierList: []
 --- !u!222 &222229962257570120
 CanvasRenderer:
   m_ObjectHideFlags: 1

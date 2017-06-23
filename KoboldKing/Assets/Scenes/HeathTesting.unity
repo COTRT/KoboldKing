@@ -262,9 +262,8 @@ GameObject:
   - component: {fileID: 74683369}
   - component: {fileID: 74683368}
   - component: {fileID: 74683367}
-  - component: {fileID: 74683371}
   - component: {fileID: 74683372}
-  - component: {fileID: 74683373}
+  - component: {fileID: 74683371}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -346,12 +345,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 74683366}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d99c49babc52644f816b33c3436e0b2, type: 3}
+  m_Script: {fileID: 11500000, guid: ef162747f10f4104c8dabd9a6f410e4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyOnDeath: 1
-  currentHealth: 20
-  healthBar: {fileID: 3170571}
+  maxHealth: 0
+  healthBackgroundWidth: 100
+  currentHealth: 30
+  damageableType: 4
+  deathAction: 1
+  healthBarForeground: {fileID: 0}
+  healthBarBackground: {fileID: 0}
+  useHealthBar: 1
+  DamageTypeMultiplierList: []
 --- !u!114 &74683372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,20 +368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad0e210a71d07b4409450e7405562c31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &74683373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 74683366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1eacc96574233f545b230de86cf02253, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1000013210574472, guid: 2b206e8a70e7e614aa6e69a39f277700,
-    type: 2}
-  bulletSpawn: {fileID: 1159220313}
 --- !u!1 &150535278
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,36 +439,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 150535278}
   m_Mesh: {fileID: 4300060, guid: cb9055afc7cbb8540afdd1e1527d3bb5, type: 3}
---- !u!1 &170996297
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1000010288206696, guid: 0eacbb73de915d344b88d8af0f0fd661,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 170996298}
-  m_Layer: 0
-  m_Name: Bullet Spawn (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &170996298
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4000012002447518, guid: 0eacbb73de915d344b88d8af0f0fd661,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 170996297}
-  m_LocalRotation: {x: -0, y: -0.72041273, z: -0, w: 0.6935457}
-  m_LocalPosition: {x: -2.28, y: 0.247, z: -0.12}
-  m_LocalScale: {x: 0.6153747, y: 0.59770966, z: 0.31135485}
-  m_Children: []
-  m_Father: {fileID: 2097365245}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &179407689
 GameObject:
   m_ObjectHideFlags: 0
@@ -2543,7 +2504,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 868711896}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb65ad0499a5cd142acfcb7571f35b09, type: 3}
+  m_Script: {fileID: 11500000, guid: a260c7697241d8c49a80a6796309f6c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &868711899
@@ -4390,7 +4351,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1514479297}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb65ad0499a5cd142acfcb7571f35b09, type: 3}
+  m_Script: {fileID: 11500000, guid: a260c7697241d8c49a80a6796309f6c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1514479300
@@ -6193,9 +6154,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2097365245}
   - component: {fileID: 2097365244}
-  - component: {fileID: 2097365247}
   - component: {fileID: 2097365246}
-  - component: {fileID: 2097365248}
+  - component: {fileID: 2097365247}
   m_Layer: 0
   m_Name: Kobold body PRO
   m_TagString: Player
@@ -6233,7 +6193,6 @@ Transform:
   m_Children:
   - {fileID: 1514479298}
   - {fileID: 228143667}
-  - {fileID: 170996298}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: -71.302, z: 0}
@@ -6257,23 +6216,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2097365243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d99c49babc52644f816b33c3436e0b2, type: 3}
+  m_Script: {fileID: 11500000, guid: ef162747f10f4104c8dabd9a6f410e4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  destroyOnDeath: 1
-  currentHealth: 10
-  healthBar: {fileID: 1038742830}
---- !u!114 &2097365248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2097365243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d1128b471678214d9856babf5d87ac6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 1000013210574472, guid: 2b206e8a70e7e614aa6e69a39f277700,
-    type: 2}
-  bulletSpawn: {fileID: 170996298}
+  maxHealth: 45
+  healthBackgroundWidth: 200
+  currentHealth: 40
+  damageableType: 1
+  deathAction: 1
+  healthBarForeground: {fileID: 1038742830}
+  healthBarBackground: {fileID: 1063038860}
+  useHealthBar: 1
+  DamageTypeMultiplierList: []
