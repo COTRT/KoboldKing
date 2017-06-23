@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Assets.Scripts;
 using Assets.Scripts.Events;
 using System;
 
@@ -38,7 +36,6 @@ public class Damageable : MonoBehaviour
         if (currentHealth <= 0)
         {
             OnBroken_internal(new DamageableDamagedEventArgs() { });
-            
         }
     }
     //End Monkey Business
@@ -46,20 +43,6 @@ public class Damageable : MonoBehaviour
     public event DamageableDamaged OnDamageDealt;
     public event DamageableDamaged OnDamaged;
     public event DamageableDamaged OnBroken;
-
-    //Lazy load DamageTypes.  For Efficiency.  Because why not.
-    private DamageType[] _damageType;
-    private DamageType[] DamageTypes
-    {
-        get
-        {
-            return _damageType ?? (_damageType = (DamageType[])Enum.GetValues(typeof(DamageType)));
-        }
-        set
-        {
-            _damageType = value;
-        }
-    }
 
 
     // Use this for initialization
