@@ -188,7 +188,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400072, guid: 0ad39f489ba3d5846b35aef52e34726a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 40.944798
+      value: 40.97
       objectReference: {fileID: 0}
     - target: {fileID: 400072, guid: 0ad39f489ba3d5846b35aef52e34726a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1957,6 +1957,7 @@ GameObject:
   - component: {fileID: 592574559}
   - component: {fileID: 592574558}
   - component: {fileID: 592574561}
+  - component: {fileID: 592574562}
   m_Layer: 0
   m_Name: PlayerKobold
   m_TagString: Player
@@ -2032,6 +2033,19 @@ MonoBehaviour:
   healthBarBackground: {fileID: 0}
   useHealthBar: 0
   DamageTypeMultiplierList: []
+--- !u!136 &592574562
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 592574557}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.479126
+  m_Height: 5
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &599502859
 GameObject:
   m_ObjectHideFlags: 0
@@ -3759,6 +3773,29 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1384854606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1384854601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f302fc876f065aa4690ffb6ab91e926f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &1384854607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1384854601}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.2317657, y: 4.093138, z: 3.143341}
+  m_Center: {x: -1.6158829, y: 2.04762, z: -0.03541565}
 --- !u!1 &1431105498
 GameObject:
   m_ObjectHideFlags: 0
