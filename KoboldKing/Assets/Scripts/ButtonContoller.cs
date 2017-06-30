@@ -8,6 +8,9 @@ public class ButtonContoller : MonoBehaviour {
     {
         Application.LoadLevel(0);
     }
-
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 
 }
