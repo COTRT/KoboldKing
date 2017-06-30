@@ -8,8 +8,27 @@ public class PlayerMovement : MonoBehaviour {
     public float jumpSpeed = 8.0F;
     public float gravity = 20.0F;
     private Vector3 moveDirection = Vector3.zero;
+    private GameObject player;
+    private GameObject DeathScreen;
     void Update()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        DeathScreen = GameObject.FindGameObjectWithTag("DeathScreen");
+        if (player = null)
+        {
+            if (DeathScreen.gameObject.activeInHierarchy == false)
+
+            {
+                DeathScreen.gameObject.SetActive(true);
+                Time.timeScale = 0;
+            }
+
+            else
+            {
+                DeathScreen.gameObject.SetActive(false);
+                Time.timeScale = 1;
+            }
+        }
         CharacterController controller = GetComponent<CharacterController>();
         if (controller.isGrounded)
         {
