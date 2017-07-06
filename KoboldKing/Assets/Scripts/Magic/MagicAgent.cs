@@ -8,13 +8,14 @@ public class MagicAgent : MonoBehaviour
     public string spellName;
     public HashSet<string> AvailableSpells;
 
-    private MagicManager magicManager;
+    private SpellManager magicManager;
     // Use this for initialization
     void Start()
     {
         AvailableSpells = new HashSet<string>();
-        magicManager = this.GetManager<MagicManager>();
-        foreach (var spell in magicManager.Spells.Keys)
+        magicManager = this.GetManager<SpellManager>();
+        //No AddRange() :-(
+        foreach (var spell in magicManager.Prefabs.Keys)
         {
             AvailableSpells.Add(spell);
         }
@@ -25,7 +26,11 @@ public class MagicAgent : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            TryCast(spellName);
+            if (TryCast(spellName)){
+                Debug.Log("Casted spell:  " + spellName);
+            } else {
+                Debug.Log("Could not cast Spell:  " + spellName);
+            }
         }
     }
 
@@ -37,7 +42,7 @@ public class MagicAgent : MonoBehaviour
         bool canCast = AvailableSpells.Contains(spell) && magicManager.Exists(spell);
         if (canCast)
         {
-            magicManager[spell].Cast(gameObject);
+            magicManager.Create(spell).Cast(gameObject);
         }
         return canCast;
     }
