@@ -6,11 +6,13 @@ using UnityEngine.Networking;
 using Assets.Scripts;
 
 public class EnemyKillPlayer : MonoBehaviour {
+    public Transform GameOverScreen;
 
     void OnTriggerEnter(Collider other)
     {
         if (gameObject.tag == "Enemy") {
             Destroy(other.gameObject);
+            GameOverScreen.gameObject.SetActive(true);
         }
     }
 
