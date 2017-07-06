@@ -1175,6 +1175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1100b35595f241940948dd97e44b5edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 451654003}
 --- !u!4 &210020306
 Transform:
   m_ObjectHideFlags: 0
@@ -1201,6 +1202,11 @@ Prefab:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114170429660963438, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
@@ -1362,6 +1368,31 @@ Prefab:
       value: ExitGame
       objectReference: {fileID: 0}
     - target: {fileID: 114170429660963438, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 210020305}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 114125554097245234, guid: a87069f71d2dff545ba29113aa076117,
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
@@ -1938,6 +1969,11 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 430206453}
   m_Mesh: {fileID: 4300116, guid: 73674af951e0d9742a5e6e17ef8089bd, type: 3}
+--- !u!224 &451654003 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 224439980120626386, guid: a87069f71d2dff545ba29113aa076117,
+    type: 2}
+  m_PrefabInternal: {fileID: 255374757}
 --- !u!1 &536677833
 GameObject:
   m_ObjectHideFlags: 0
@@ -3748,34 +3784,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1150423742}
   m_Mesh: {fileID: 4300072, guid: 73674af951e0d9742a5e6e17ef8089bd, type: 3}
---- !u!1 &1180016346 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1427936528811112, guid: a87069f71d2dff545ba29113aa076117,
-    type: 2}
-  m_PrefabInternal: {fileID: 255374757}
---- !u!114 &1180016351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1180016346}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 713bfba8671d2a1429bd6129308be1ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!65 &1180016352
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1180016346}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 109.81, y: 26.8, z: 0.8456459}
-  m_Center: {x: 14.231827, y: 0, z: -0.07717705}
 --- !u!1 &1192904528
 GameObject:
   m_ObjectHideFlags: 0
@@ -4468,7 +4476,7 @@ Transform:
   m_PrefabParentObject: {fileID: 400078, guid: 73674af951e0d9742a5e6e17ef8089bd, type: 3}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1484258023}
-  m_LocalRotation: {x: -0.2988363, y: 0.64085644, z: 0.64085644, w: -0.29883626}
+  m_LocalRotation: {x: -0.29883626, y: 0.6408564, z: 0.6408564, w: -0.29883623}
   m_LocalPosition: {x: 0.7396965, y: -0.35804558, z: -0.9719238}
   m_LocalScale: {x: 0.16312833, y: 0.1631283, z: 0.16312833}
   m_Children: []
