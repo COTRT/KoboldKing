@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114906149627188132}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Canvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,9 +107,11 @@ GameObject:
   - component: {fileID: 222308235946776470}
   - component: {fileID: 114604970484664306}
   - component: {fileID: 114125554097245234}
+  - component: {fileID: 65376054985645954}
+  - component: {fileID: 114506904975294384}
   m_Layer: 5
   m_Name: Resume
-  m_TagString: Untagged
+  m_TagString: resume
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -215,6 +217,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65376054985645954
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1427936528811112}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 109.81, y: 26.8, z: 0.8456459}
+  m_Center: {x: 14.231827, y: 0, z: -0.07717705}
 --- !u!114 &114125554097245234
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -456,6 +470,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Pause
+--- !u!114 &114506904975294384
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1427936528811112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 713bfba8671d2a1429bd6129308be1ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114560870135993258
 MonoBehaviour:
   m_ObjectHideFlags: 1
