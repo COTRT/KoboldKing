@@ -5,23 +5,27 @@ using UnityEngine;
 public class PauseGame : MonoBehaviour {
 
     public Transform canvas;
+    public bool present = false;
 	
 	// Update is called once per frame
 	void Update () {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (canvas.gameObject.activeInHierarchy == false)
-
+            if (present == false)
             {
-                canvas.gameObject.SetActive(true);
+                Instantiate(canvas);
+                present = true;
                 Time.timeScale = 0;
             }
-
             else
             {
-                canvas.gameObject.SetActive(false);
+                DestroyObject(GameObject.FindGameObjectWithTag("PauseMenu"));
+                present = false;
                 Time.timeScale = 1;
             }
+          
+
+
         }
-	}
+    }
 }

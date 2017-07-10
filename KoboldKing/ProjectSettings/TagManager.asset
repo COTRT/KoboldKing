@@ -8,6 +8,7 @@ TagManager:
   - resume
   - Enemy
   - DeathScreen
+  - PauseMenu
   layers:
   - Default
   - TransparentFX

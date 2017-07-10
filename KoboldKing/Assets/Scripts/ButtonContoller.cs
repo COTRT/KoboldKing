@@ -8,6 +8,7 @@ public class ButtonContoller : MonoBehaviour {
 
    public void MainMenu()
     {
+        Time.timeScale = 1;
         Application.LoadLevel(0);
 
     }
@@ -23,8 +24,7 @@ public class ButtonContoller : MonoBehaviour {
     }
     public void Resume()
     {
-        Canvas = GameObject.FindGameObjectWithTag("Canvas");
-        Canvas.gameObject.SetActive(false);
+        DestroyObject(GameObject.FindGameObjectWithTag("PauseMenu"));
         Time.timeScale = 1;
     }
 
