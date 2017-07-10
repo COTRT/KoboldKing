@@ -14,11 +14,11 @@ public class NavMeshFollow : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
         if (player != null)
         {
             //agent.GetComponent<NavMeshFollow>().destination = target.transform.position;
-            agent.SetDestination(target.position);
+            agent.SetDestination(player.transform.position);
         }
     }
 }

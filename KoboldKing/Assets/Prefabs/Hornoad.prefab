@@ -71,9 +71,9 @@ GameObject:
   - component: {fileID: 4494103840290356}
   - component: {fileID: 95932124376434278}
   - component: {fileID: 65536506193481954}
-  - component: {fileID: 114177481126828104}
   - component: {fileID: 195015223109048562}
   - component: {fileID: 114723249309864800}
+  - component: {fileID: 114058257058043586}
   m_Layer: 0
   m_Name: Hornoad
   m_TagString: Enemy
@@ -3895,7 +3895,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114177481126828104
+--- !u!114 &114058257058043586
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -3906,7 +3906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5a8d0a3196c214182e99344072977b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
+  target: {fileID: 4338638306121082, guid: ea4fd95cebb2bde4381d514fba0ca7c6, type: 2}
 --- !u!114 &114723249309864800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3918,7 +3918,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f302fc876f065aa4690ffb6ab91e926f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameOverScreen: {fileID: 0}
+  GameOverScreen: {fileID: 224527518817690336, guid: 263d53c5b55083b4d8c5fa5aede8141b,
+    type: 2}
 --- !u!137 &137108651610936170
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1
