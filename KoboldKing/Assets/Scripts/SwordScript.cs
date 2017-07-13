@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class SwordScript : MonoBehaviour
 {
@@ -8,60 +10,96 @@ public class SwordScript : MonoBehaviour
     public Vector3 swordSwipePosDelta;
     public Vector3 swordSwipeRotDelta;
     public Vector3 swordSwipeScaleDelta;
-    
-    public bool swiping;
+    public float Damage;
+
+
+    private bool swiping = false;
+
+    public bool Swiping
+    {
+        get
+        {
+            return swiping;
+        }
+
+        private set
+        {
+            swiping = value;
+        }
+    }
+
 
     // Use this for initialization
     void Start()
     {
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!swiping&&Input.GetButton("Fire1"))
+        //if (!Swiping && Input.GetButton("Fire1"))
+        if(!Swiping&&Input.GetButton("Fire1"))
         {
-            Debug.Log("Starting Sword Swipe");
-            
-            StartCoroutine(SwordSwipe());
-            swiping = true; //since the coroutine kinda runs seperately from everything else, there's a chance that swiping will still be false despite the coroutine having been started (they call it a "race condition").  We set swiping to true here as well to avoid that.
+            StartCoroutine(SwordSwipe(true));
+        };
+    }
+
+    IEnumerator DelayedRaycastDamage(float amount, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out hit, 10.0f))
+        {
+            var damageable = hit.transform.GetComponent<Damageable>();
+            if (damageable != null)
+            {
+                damageable.DealDamage(DamageType.Sharp, Damage);
+            }
         }
     }
 
-    IEnumerator SwordSwipe()
+    IEnumerator SwordSwipe(bool damage)
     {
-        Debug.Log("Swiping Sword");
-        
         Vector3 startingSwipePos = transform.localPosition;
         Vector3 startingSwipeRot = transform.localRotation.eulerAngles;
         Vector3 startingSwipeScale = transform.localScale;
         Vector3 swipeDestPos = startingSwipePos + swordSwipePosDelta;
         Vector3 swipeDestRot = startingSwipeRot + swordSwipeRotDelta;
         Vector3 swipeDestScale = startingSwipeScale + swordSwipeScaleDelta;
-        if (swiping)
+        if (Swiping)
         {
             yield break; //If we're already swiping, abort!
         }
-        swiping = true;
-        float swipePos = 0;
-        float perSec = 180.0f / durationSeconds;
-        while (swiping)
+        else
         {
-            swipePos += Time.deltaTime * perSec;
-            if(swipePos >= 180)
-            {
-                //if swipePos would be greater than 180 (complete), set swipe Pos to 180 (complete)
-                swipePos = 180;
-                swiping = false;
-            }
-            Debug.Log(swipePos);
-            //Yes I DID just learn what the heck a Sine Wave is, thank you
-            float sin = Mathf.Sin(swipePos*Mathf.Deg2Rad);
-            transform.localPosition = Vector3.Lerp(startingSwipePos, swipeDestPos, sin);
-            transform.localRotation = Quaternion.Euler(Vector3.Lerp(startingSwipeRot, swipeDestRot, sin));
-            transform.localScale = Vector3.Lerp(startingSwipeScale, swipeDestScale, sin);
+            Swiping = true;
             yield return new WaitForEndOfFrame();
+            if (damage)
+            {
+                StartCoroutine(DelayedRaycastDamage(Damage, durationSeconds / 2));
+            }
+            float swipePos = 0.0f;
+            float perSec = 180.0f / durationSeconds;
+            while (Swiping)
+            {
+                swipePos += Time.deltaTime * perSec;
+                if (swipePos >= 180)
+                {
+                    //if swipePos would be greater than 180 (complete), set swipe Pos to 180 (complete)
+                    swipePos = 180;
+                    Swiping = false;
+                }
+                //Yes I DID just learn what the heck a Sine Wave is, thank you
+                float sin = Mathf.Sin(swipePos * Mathf.Deg2Rad);
+                transform.localPosition = Vector3.Lerp(startingSwipePos, swipeDestPos, sin);
+                transform.localRotation = Quaternion.Euler(Vector3.Lerp(startingSwipeRot, swipeDestRot, sin));
+                transform.localScale = Vector3.Lerp(startingSwipeScale, swipeDestScale, sin);
+                if(!Swiping)
+                    yield break;
+                else
+                    yield return new WaitForEndOfFrame();
+            }
         }
     }
 }

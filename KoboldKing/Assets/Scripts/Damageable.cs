@@ -84,7 +84,7 @@ public class Damageable : MonoBehaviour
     /// <param name="damageType">The Type of damage being applied</param>
     /// <param name="amount">The amount of damage to apply.  The actual amount of damage applied might vary due to the strengths and weaknesses of the Damageable</param>
     /// <returns>How much damage was actually dealt to the Damageable</returns>
-    float DealDamage(DamageType damageType, float amount)
+    public float DealDamage(DamageType damageType, float amount)
     {
         float OldHealth = currentHealth;
         //The supplied damageType might be DamageType.Enemy,
@@ -160,14 +160,14 @@ public class Damageable : MonoBehaviour
         {
             OnDamageDealt.Invoke(eArgs);
         }
-        if (useHealthBar)
-            SetHealthBar(eArgs.NewHealth);
+        SetHealthBar(eArgs.NewHealth);
         DispatchDamageEvent(eArgs, DamageEvent.DAMAGE_DEALT);
     }
 
     private void SetHealthBar(float NewHealth)
     {
-        healthBarForeground.sizeDelta = new Vector2((healthBarBackground.sizeDelta.x / maxHealth) * NewHealth, healthBarForeground.sizeDelta.y);
+        if(useHealthBar)
+            healthBarForeground.sizeDelta = new Vector2((healthBarBackground.sizeDelta.x / maxHealth) * NewHealth, healthBarForeground.sizeDelta.y);
     }
 
     private void DispatchDamageEvent(DamageableDamagedEventArgs a, string eventType)
