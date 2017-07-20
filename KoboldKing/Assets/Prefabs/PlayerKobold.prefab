@@ -1507,7 +1507,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1965401552588940}
-  m_LocalRotation: {x: -0.29883626, y: 0.6408564, z: 0.6408564, w: -0.29883623}
+  m_LocalRotation: {x: -0.2988363, y: 0.64085644, z: 0.64085644, w: -0.29883626}
   m_LocalPosition: {x: 0.7396965, y: -0.35804558, z: -0.9719238}
   m_LocalScale: {x: 0.16312833, y: 0.1631283, z: 0.16312833}
   m_Children: []
@@ -5219,10 +5219,10 @@ MonoBehaviour:
   maxHealth: 20
   currentHealth: 20
   damageableType: 0
-  deathAction: 0
+  deathAction: 1
   healthBarForeground: {fileID: 224557022406158532}
   healthBarBackground: {fileID: 224077559190769446}
-  useHealthBar: 0
+  useHealthBar: 1
   DamageTypeMultiplierList: []
 --- !u!114 &114240550330153018
 MonoBehaviour:
