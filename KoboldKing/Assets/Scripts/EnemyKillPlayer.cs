@@ -11,8 +11,12 @@ public class EnemyKillPlayer : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {
         if (gameObject.tag == "Enemy") {
-            Destroy(other.gameObject);
-            GameOverScreen.gameObject.SetActive(true);
+
+            if (other.tag == "Player")
+            {
+                Destroy(other.gameObject);
+                GameOverScreen.gameObject.SetActive(true);
+            }
         }
     }
 

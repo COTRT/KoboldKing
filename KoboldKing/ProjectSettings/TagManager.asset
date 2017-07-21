@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - DeathScreen
   - PauseMenu
+  - Pick Up
   layers:
   - Default
   - TransparentFX

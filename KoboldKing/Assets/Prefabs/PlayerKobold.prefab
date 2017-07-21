@@ -1299,6 +1299,7 @@ GameObject:
   - component: {fileID: 114240550330153018}
   - component: {fileID: 114172958983945712}
   - component: {fileID: 136969187068736946}
+  - component: {fileID: 114552168375439448}
   m_Layer: 0
   m_Name: PlayerKobold
   m_TagString: Player
@@ -2294,7 +2295,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1989836322756496}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 29.96, y: 2.83, z: 288.34}
+  m_LocalPosition: {x: 26, y: 2.83, z: 288.34}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224732100830665966}
@@ -5238,6 +5239,17 @@ MonoBehaviour:
   speed: 6
   jumpSpeed: 8
   gravity: 20
+--- !u!114 &114552168375439448
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1989836322756496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a95caf85989bf9945b440be90cde8ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114599593179061664
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5256,7 +5268,7 @@ CapsuleCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1989836322756496}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 1.479126
   m_Height: 5
