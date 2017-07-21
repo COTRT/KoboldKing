@@ -11,6 +11,7 @@ public class EnemyKillPlayer : MonoBehaviour
     private GameObject myDamageable;
 
     
+
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
