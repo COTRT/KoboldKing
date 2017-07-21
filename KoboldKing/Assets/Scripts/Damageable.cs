@@ -184,7 +184,7 @@ public class Damageable : MonoBehaviour
 
 public enum DamageType
 {
-    Default = 1,
+    Default = 0,
     /// <summary>
     /// Dealing with a piercing projectile or sword 
     /// </summary>
