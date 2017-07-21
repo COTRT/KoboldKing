@@ -34,6 +34,10 @@ public class Damageable : MonoBehaviour
         DamageTypeMultipliers[DamageType.None] = 0;
         DamageTypeMultipliers[DamageType.Default] = 1;
     }
+    private void Awake()
+    {
+        BuildDamageMultipliers();
+    }
     private void OnValidate()
     {
         BuildDamageMultipliers();
@@ -73,7 +77,7 @@ public class Damageable : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        SetHealthBar(currentHealth);
     }
 
     /// <summary>
