@@ -15,6 +15,7 @@ public class NavMeshFollow : MonoBehaviour {
 	
 	// Update is called once per frame
 	void LateUpdate () {
+
         if (player != null)
         {
             //agent.GetComponent<NavMeshFollow>().destination = target.transform.position;

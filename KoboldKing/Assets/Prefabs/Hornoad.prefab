@@ -489,7 +489,7 @@ GameObject:
   - component: {fileID: 114758595194306448}
   - component: {fileID: 114412742341818056}
   m_Layer: 0
-  m_Name: Hornoad(Clone)
+  m_Name: Hornoad
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -855,7 +855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1810726058292684
 GameObject:
   m_ObjectHideFlags: 1
@@ -1166,7 +1166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1979649966270024
 GameObject:
   m_ObjectHideFlags: 1
