@@ -7,6 +7,7 @@ public class SpawnerL : MonoBehaviour {
 
     public GameObject Enemy;
     public Transform transformLocation;
+    public GameObject Spawns;
 
 
     //this is just for testing porposes will be deleted when we are ready to call this function elsewhere.
@@ -17,7 +18,8 @@ public class SpawnerL : MonoBehaviour {
 
     void SpawnEnemy()
     {
-        Instantiate(Enemy);
+       Spawns = Instantiate(Enemy, transformLocation.position, Quaternion.Euler(0,0,0)) as GameObject;
+
     }
 }
 
