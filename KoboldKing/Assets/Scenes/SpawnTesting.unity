@@ -201,7 +201,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 207180060}
-  - component: {fileID: 207180061}
   m_Layer: 0
   m_Name: Location
   m_TagString: Enemy
@@ -223,24 +222,6 @@ Transform:
   m_Father: {fileID: 818392707}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &207180061
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 95905732937612800, guid: 39c84143da9b4b941a6d125b865ddd40,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 207180059}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0ad39f489ba3d5846b35aef52e34726a, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &818392705
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +259,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 818392705}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.4227834, y: 0.9687946, z: -0.34957385}
+  m_LocalPosition: {x: 2.13, y: 0.9687946, z: -0.34957385}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 207180060}
