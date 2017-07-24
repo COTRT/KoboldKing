@@ -75,7 +75,7 @@ GameObject:
   - component: {fileID: 114723249309864800}
   - component: {fileID: 114058257058043586}
   m_Layer: 0
-  m_Name: Hornoad
+  m_Name: Hornoad (old)
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
