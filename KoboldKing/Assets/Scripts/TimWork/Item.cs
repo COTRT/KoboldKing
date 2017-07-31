@@ -37,7 +37,7 @@ namespace Assets.Scripts.Item
             set { _description = value; }
         }
 
-        public ICon Thumbnail
+        public Icon Thumbnail
         {
             get { return _icon; }
             set { _icon = value; }

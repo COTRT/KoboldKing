@@ -5,10 +5,12 @@ using System.Text;
 
 namespace Assets.Scripts.Item
 {
-    [System.Serializable]
-    public class Armor : Item
+    public enum MobRanks
     {
-        // enum for armor slot
-        // set the itemtype to be armor
+        Minion,
+        Common,
+        Boss,
+        EliteBoss,
+        Legendary
     }
 }

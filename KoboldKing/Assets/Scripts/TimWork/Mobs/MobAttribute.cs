@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+// do my players inherit from mobs or do we need a base class.
+
 namespace Assets.Scripts.Item
 {
     public class MobAttribute

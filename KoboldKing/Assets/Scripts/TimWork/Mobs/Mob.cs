@@ -14,9 +14,14 @@ namespace Assets.Scripts.Item
         [SerializeField] private int _maxHealth;
         [SerializeField] private int _level;
 
+        [SerializeField] private GameObject _prefab;
+
         [SerializeField] private Icon _icon;
         [SerializeField] private List<Buff> _buffs;
-
+        [SerializeField] private MobTypes _mobType;
+        [SerializeField] private MobRanks _mobRank;
+        
+        // add loot tables
 
         public string Name
         {
@@ -46,34 +51,13 @@ namespace Assets.Scripts.Item
         public int MaxHealth
         {
             get { return _maxHealth;}
-            set
-            {
-                if (value < 1)
-                {
-                    _maxHealth = 1;
-                }
-                else
-                {
-                    _maxHealth = value;
-                }
-            }
+            set { _maxHealth = value < 1 ? 1 : value; }
         }
 
         public int Level
         {
             get { return _level; }
-            set
-            {
-                if (value < 0)
-                {
-                    _level = 0;
-                }
-                else
-                {
-                    _level = value;
-                }
-
-            }
+            set { _level = value < 0 ? 0 : value; }
         }
 
         public void LevelUp()
@@ -85,6 +69,18 @@ namespace Assets.Scripts.Item
         {
             get { return _icon; }
             set { _icon = value; }
+        }
+
+        public MobTypes MobType
+        {
+            get { return _mobType; }
+            set { _mobType = value; }
+        }
+
+        public MobRanks MobRank
+        {
+            get { return _mobRank; }
+            set { _mobRank = value; }
         }
 
         public List<Buff> Buffs

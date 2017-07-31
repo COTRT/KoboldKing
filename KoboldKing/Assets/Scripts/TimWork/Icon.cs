@@ -7,10 +7,12 @@ namespace Assets.Scripts.Item
     {
         [SerializeField] private Sprite _image;
         [SerializeField] private string _toolTip;
+        [SerializeField] private string _description;
 
-        public Sprite Image()
+        public Sprite Image
         {
-            return null;
+            get { return _image;}
+            set { _image = value; }
         }
 
         public string ToolTip
@@ -19,6 +21,11 @@ namespace Assets.Scripts.Item
             set { _toolTip = value; }
         }
 
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
 
     }
 }
