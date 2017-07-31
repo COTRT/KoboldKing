@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Assets.Scripts.Item;
 using UnityEngine;
 
 // do my players inherit from mobs or do we need a base class.
 
-namespace Assets.Scripts.Item
+namespace Assets.Scripts.TimWork.Mobs
 {
     public class MobAttribute
     {
