@@ -4,8 +4,9 @@
     {
         // kobolds, rats, etc...
         Goblin,
-        Group2,
-        Group3,
-        Group4
+        ToBeDetermined_1,
+        ToBeDetermined_2,
+        ToBeDetermined_3,
+        ToBeDetermined_4,
     }
 }

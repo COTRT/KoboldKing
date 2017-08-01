@@ -37,10 +37,6 @@ namespace Assets.Scripts.Item
             gameObject.tag = _mobTag;
         }
 
-
-
-
-
         public string Name
         {
             get { return _mobName; }
@@ -112,13 +108,41 @@ namespace Assets.Scripts.Item
             _buffs.Add(buff);
         }
 
-        //TODO:
-        //_attackRating;
-        //_defenseRating;
-        //_luckRating;
-        //_meleeDamageBonus;
-        //_rangedDamageBonus;
-        //_magicDamageBonus;
+        public int AttackRating
+        {
+            get { return _attackRating; }
+            set { _attackRating = value; }
+        }
+
+        public int DefenseRating
+        {
+            get { return _defenseRating; }
+            set { _defenseRating = value; }
+        }
+
+        public int LuckRating
+        {
+            get { return _luckRating; }
+            set { _luckRating = value; }
+        }
+
+        public int MeleeDamageBonus
+        {
+            get { return _meleeDamageBonus; }
+            set { _meleeDamageBonus = value; }
+        }
+
+        public int RangedDamageBonus
+        {
+            get { return _rangedDamageBonus; }
+            set { _rangedDamageBonus = value; }
+        }
+        
+        public int MagicDamageBonus
+        {
+            get { return _magicDamageBonus; }
+            set { _magicDamageBonus = value; }
+        }
 
         public int ExpValue
         {

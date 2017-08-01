@@ -10,7 +10,7 @@ namespace Assets.Scripts
     // messge to screen hit/miss damage?  what was the results of the round of battle??
     public class CombatManager
     {
-        private static Random s_Random = new Random();
+        private static readonly Random Random = new Random();
         public CombatResult CalcCombat(CombatInput input)
         {
             var hit = calcHit(input);
@@ -35,7 +35,7 @@ namespace Assets.Scripts
 
         private int calcDamage(CombatInput input)
         {
-            var rollDamage = s_Random.Next(input.MinDamage, input.MaxDamage);
+            var rollDamage = Random.Next(input.MinDamage, input.MaxDamage);
 
             return rollDamage;
         }
@@ -49,7 +49,7 @@ namespace Assets.Scripts
 
             var hitChance = toHit - defense;
 
-            var rollDice = s_Random.Next(1, 100);
+            var rollDice = Random.Next(1, 100);
 
             bool hit;
             if (rollDice <= hitChance)
