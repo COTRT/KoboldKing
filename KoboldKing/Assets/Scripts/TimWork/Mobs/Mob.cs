@@ -13,15 +13,33 @@ namespace Assets.Scripts.Item
         [SerializeField] private int _currentHealth;
         [SerializeField] private int _maxHealth;
         [SerializeField] private int _level;
+        [SerializeField] private int _attackRating;
+        [SerializeField] private int _defenseRating;
+        [SerializeField] private int _luckRating;
+        [SerializeField] private int _meleeDamageBonus;
+        [SerializeField] private int _rangedDamageBonus;
+        [SerializeField] private int _magicDamageBonus;
+        [SerializeField] private int _expValue;
+
+        [SerializeField] private string _mobTag = "Enemy";
 
         [SerializeField] private GameObject _prefab;
-
+        
         [SerializeField] private Icon _icon;
         [SerializeField] private List<Buff> _buffs;
         [SerializeField] private MobTypes _mobType;
         [SerializeField] private MobRanks _mobRank;
         
         // add loot tables
+
+        private void Awake()
+        {
+            gameObject.tag = _mobTag;
+        }
+
+
+
+
 
         public string Name
         {
@@ -93,5 +111,21 @@ namespace Assets.Scripts.Item
         {
             _buffs.Add(buff);
         }
+
+        //TODO:
+        //_attackRating;
+        //_defenseRating;
+        //_luckRating;
+        //_meleeDamageBonus;
+        //_rangedDamageBonus;
+        //_magicDamageBonus;
+
+        public int ExpValue
+        {
+            get { return _expValue; }
+            set { _expValue = value; }
+        }
+
+
     }
 }

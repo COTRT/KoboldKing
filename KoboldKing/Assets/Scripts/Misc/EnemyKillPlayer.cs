@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Assets.Scripts;
+using Assets.Scripts.Misc;
 
 public class EnemyKillPlayer : MonoBehaviour
 {

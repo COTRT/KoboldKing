@@ -3,7 +3,7 @@
     public enum MobTypes
     {
         // kobolds, rats, etc...
-        Group1,
+        Goblin,
         Group2,
         Group3,
         Group4
