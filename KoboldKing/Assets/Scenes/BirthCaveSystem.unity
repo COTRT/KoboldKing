@@ -189,7 +189,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &51092822
 Rigidbody:
@@ -206,56 +206,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!1 &61456963
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 61456965}
-  - component: {fileID: 61456964}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &61456964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 61456963}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7746b48c56bf71e4f86d698a8399be55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mobName: 
-  _currentHealth: 0
-  _maxHealth: 0
-  _level: 0
-  _mobTag: Enemy
-  _prefab: {fileID: 0}
-  _icon: {fileID: 0}
-  _buffs: []
-  _mobType: 0
-  _mobRank: 0
---- !u!4 &61456965
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 61456963}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.35412, y: 2.04762, z: 288.3246}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 8
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &205534881
 GameObject:
   m_ObjectHideFlags: 0
@@ -331,7 +281,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &289724036
 MonoBehaviour:
@@ -360,74 +310,6 @@ MonoBehaviour:
   GameOverScreen: {fileID: 224527518817690336, guid: 263d53c5b55083b4d8c5fa5aede8141b,
     type: 2}
   done: 0
---- !u!1001 &529756802
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 37.73386
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0.00000023841858
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 287.64713
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0.9808549
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 0.19474001
-      objectReference: {fileID: 0}
-    - target: {fileID: 4145199997590290, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
-  m_IsPrefabParent: 0
---- !u!1 &529756803 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1300394432474194, guid: a43fe8f383e9dbb42a60d8e24eb99136,
-    type: 2}
-  m_PrefabInternal: {fileID: 529756802}
---- !u!114 &529756804
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 529756803}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7746b48c56bf71e4f86d698a8399be55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _mobName: Goblin Ranger
-  _currentHealth: 5
-  _maxHealth: 5
-  _level: 1
-  _mobTag: Enemy
-  _prefab: {fileID: 0}
-  _icon: {fileID: 0}
-  _buffs: []
-  _mobType: 0
-  _mobRank: 1
 --- !u!1 &653056493
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,7 +337,7 @@ Transform:
   m_Children:
   - {fileID: 1094117118}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &658798623
 GameObject:
@@ -517,7 +399,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1014799610
 Prefab:
@@ -812,7 +694,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1865642646
 GameObject:
@@ -854,7 +736,7 @@ Transform:
   - {fileID: 1565753603}
   - {fileID: 205534882}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1001 &2065428748
 Prefab:

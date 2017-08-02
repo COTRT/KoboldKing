@@ -4,6 +4,7 @@
     {
         // kobolds, rats, etc...
         Goblin,
+        Kobold,
         ToBeDetermined_1,
         ToBeDetermined_2,
         ToBeDetermined_3,

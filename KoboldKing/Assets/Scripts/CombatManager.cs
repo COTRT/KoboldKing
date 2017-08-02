@@ -61,3 +61,45 @@ namespace Assets.Scripts
         }
     }
 }
+
+
+//private static System.Random s_Random = new System.Random();
+//public Transform GameOverScreen;
+//private GameObject myDamageable;
+//private GameObject PlayerCombat;
+//int randomPercent = s_Random.Next(0, 100);
+//public int AttackerChance;
+//int BaseHitChance = 50;
+//int perCent;
+
+
+
+//void OnTriggerEnter(Collider other)
+//{
+//    perCent = s_Random.Next(0, 100);
+//    if (other.tag == "Player")
+//    {
+//        var DefenseChance = other.GetComponent<PlayerCombat>();
+//        int AttackChance = BaseHitChance + AttackerChance - DefenseChance.DefenseChance;
+//        if(perCent >= 95)
+//        {
+//            var component = other.GetComponent<Damageable>();
+//            if (component != null)
+//                component.DealDamage(DamageType.Default, 50);
+//        }
+//        else if (perCent <= AttackChance)
+//        {
+//            var component = other.GetComponent<Damageable>();
+//            if (component != null)
+//                component.DealDamage(DamageType.Default, 50);
+//        }
+//    }
+//}
+
+    //Start Combat Script.
+
+    //1. attach to bg.
+    //2. on triggr enter call combat manager.  Send to combat manager the following:
+    //    A). Who am I.
+    //    B). Who am I attacking.
+
