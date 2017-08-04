@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1453622161414360}
+  m_IsPrefabParent: 1
+--- !u!1 &1453622161414360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4518980711874816}
+  - component: {fileID: 65483607786557256}
+  - component: {fileID: 114596599766607588}
+  - component: {fileID: 114014189590387840}
+  m_Layer: 0
+  m_Name: Encounter 5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4518980711874816
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453622161414360}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 102.67, y: 0, z: 324.11}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65483607786557256
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453622161414360}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 4.724698, z: 8.370422}
+  m_Center: {x: 0, y: 1.862349, z: -0.42163086}
+--- !u!114 &114014189590387840
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453622161414360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe01b50c9a571df4998811fcff9a779f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _encounterNumber: 5
+  _name: The bad attack of the Goblin
+  _description: Bad attack of 4 goblins.
+  _mobCount: 4
+  _mobTypes: 2
+  _mobRanks: 0
+  _prefab: {fileID: 1767937784140028, guid: 7a3fa881ac86acd4f9c55482a25f8f25, type: 2}
+  _xPos:
+  - 100.7699
+  - 100.8478
+  _yPos:
+  - 0
+  - 0
+  _zPos:
+  - 323.01
+  - 325.0255
+  _xRotation:
+  - 0
+  - 0
+  _yRotation:
+  - 0
+  - 0
+  _zRotation:
+  - 0
+  - 0
+--- !u!114 &114596599766607588
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1453622161414360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe01b50c9a571df4998811fcff9a779f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _encounterNumber: 5
+  _name: The bad attack of the Goblin
+  _description: Bad attack of 4 goblins.
+  _mobCount: 4
+  _mobTypes: 0
+  _mobRanks: 0
+  _prefab: {fileID: 1300394432474194, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
+  _xPos:
+  - 110.98
+  - 111.17
+  _yPos:
+  - 0
+  - 0
+  _zPos:
+  - 326.34
+  - 321.56
+  _xRotation:
+  - 0
+  - 0
+  _yRotation:
+  - 0
+  - 0
+  _zRotation:
+  - 0
+  - 0

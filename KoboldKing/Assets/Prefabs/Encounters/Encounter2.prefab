@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1437371151527042}
+  m_IsPrefabParent: 1
+--- !u!1 &1437371151527042
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4895829483844462}
+  - component: {fileID: 65077833978569730}
+  - component: {fileID: 114751785242188604}
+  m_Layer: 0
+  m_Name: Encounter2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4895829483844462
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437371151527042}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 39.7, y: 1.61, z: 257.55}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &65077833978569730
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437371151527042}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 7.821744, z: 19.527725}
+  m_Center: {x: 0, y: -0.44481516, z: -1.646553}
+--- !u!114 &114751785242188604
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1437371151527042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe01b50c9a571df4998811fcff9a779f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _encounterNumber: 2
+  _name: Two Ranger Goblin Ambush
+  _description: Two goblins come around the corner
+  _mobCount: 2
+  _mobTypes: 0
+  _mobRanks: 0
+  _prefab: {fileID: 1300394432474194, guid: a43fe8f383e9dbb42a60d8e24eb99136, type: 2}
+  _xPos:
+  - 48.86
+  - 50.22
+  _yPos:
+  - 0
+  - 0.5
+  _zPos:
+  - 257
+  - 258.83
+  _xRotation:
+  - 0
+  - 0
+  _yRotation:
+  - 273
+  - 273
+  _zRotation:
+  - 0
+  - 0

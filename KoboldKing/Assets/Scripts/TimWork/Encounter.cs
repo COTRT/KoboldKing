@@ -13,14 +13,14 @@ namespace Assets.Scripts.TimWork
         [SerializeField] private MobTypes _mobTypes;
         [SerializeField] private MobRanks _mobRanks;
         [SerializeField] private GameObject _prefab;
-        [SerializeField] private List<int> _xPos;
-        [SerializeField] private List<int> _yPos;
-        [SerializeField] private List<int> _zPos;
-        [SerializeField] private List<int> _xRotation;
-        [SerializeField] private List<int> _yRotation;
-        [SerializeField] private List<int> _zRotation;
+        [SerializeField] private List<float> _xPos;
+        [SerializeField] private List<float> _yPos;
+        [SerializeField] private List<float> _zPos;
+        [SerializeField] private List<float> _xRotation;
+        [SerializeField] private List<float> _yRotation;
+        [SerializeField] private List<float> _zRotation;
 
-        [SerializeField] GameObject gameObject;
+        //[SerializeField] GameObject gameObject;
 
         void OnTriggerEnter(Collider other)
         {
