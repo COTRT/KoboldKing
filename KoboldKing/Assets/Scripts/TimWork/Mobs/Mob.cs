@@ -6,12 +6,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.Item
 {
+    [RequireComponent(typeof(Damageable))]
     [System.Serializable]
     public class Mob : MonoBehaviour
     {
         [SerializeField] private string _mobName;
-        [SerializeField] private int _currentHealth;
-        [SerializeField] private int _maxHealth;
         [SerializeField] private int _level;
         [SerializeField] private int _attackRating;
         [SerializeField] private int _defenseRating;
@@ -41,31 +40,6 @@ namespace Assets.Scripts.Item
         {
             get { return _mobName; }
             set { _mobName = value; }
-        }
-
-        public int CurrentHealth
-        {
-            get { return _currentHealth ; }
-            set {
-                    if (value < 0)
-                    {
-                        _currentHealth = 0;
-                    }
-                    else if (_currentHealth > _maxHealth)
-                    {
-                        _currentHealth = _maxHealth;
-                    }
-                    else
-                    {
-                        _currentHealth = value;
-                    }
-                }
-        }
-
-        public int MaxHealth
-        {
-            get { return _maxHealth;}
-            set { _maxHealth = value < 1 ? 1 : value; }
         }
 
         public int Level

@@ -10,25 +10,14 @@ public class PlayerMovement : MonoBehaviour {
     private Vector3 moveDirection = Vector3.zero;
     private GameObject player;
     private GameObject DeathScreen;
-    void Update()
+    private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
         DeathScreen = GameObject.FindGameObjectWithTag("DeathScreen");
-        if (player = null)
-        {
-            if (DeathScreen.gameObject.activeInHierarchy == false)
+    }
+    void Update()
+    {
 
-            {
-                DeathScreen.gameObject.SetActive(true);
-                Time.timeScale = 0;
-            }
-
-            else
-            {
-                DeathScreen.gameObject.SetActive(false);
-                Time.timeScale = 1;
-            }
-        }
         CharacterController controller = GetComponent<CharacterController>();
         if (controller.isGrounded)
         {
