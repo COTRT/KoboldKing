@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.Runtime.InteropServices.ComTypes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -32,7 +33,7 @@ namespace Assets.Scripts
 
             return combatResult;
         }
-
+        
         private int calcDamage(CombatInput input)
         {
             var rollDamage = Random.Next(input.MinDamage, input.MaxDamage);
@@ -56,9 +57,11 @@ namespace Assets.Scripts
             {
                 return true;
             }
-
-            return false;
-        }
+            else
+            {
+                return false;
+            }
+         }
     }
 }
 

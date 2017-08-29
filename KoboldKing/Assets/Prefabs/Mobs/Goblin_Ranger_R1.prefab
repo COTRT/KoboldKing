@@ -775,7 +775,7 @@ BoxCollider:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1300394432474194}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 0.9657153, y: 1.5773706, z: 1}
@@ -810,10 +810,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mobName: Goblin Ranger
   _level: 1
-  _attackRating: 1
+  _attackRating: 50050
+  _minDamage: 10
+  _maxDamage: 20
   _defenseRating: 0
   _luckRating: 0
-  _meleeDamageBonus: 1
+  _meleeDamageBonus: 10
   _rangedDamageBonus: 1
   _magicDamageBonus: 0
   _expValue: 90
