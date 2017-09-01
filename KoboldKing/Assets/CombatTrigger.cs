@@ -31,9 +31,9 @@ public class CombatTrigger : MonoBehaviour {
             combatInput.MaxDamage = MaxDamage;
             combatInput.AttackRating = AttackRating;
             combatInput.DefenseRating = DefenseRating;
-            var combatManager =  GetComponent<CombatManager>();
-            combatManager.CalcCombat(combatInput);
-            var combatResult = GetComponent<CombatResult>();
+            var combatResult = new CombatResult();
+            var combatManager =  new CombatManager();
+            combatResult = combatManager.CalcCombat(combatInput);
             if (combatResult.Hit)
             {
                 var damageable = other.GetComponent<Damageable>();

@@ -5293,10 +5293,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _mobName: Player
-  _currentHealth: 100
-  _maxHealth: 100
   _level: 1
   _attackRating: 2
+  _minDamage: 1
+  _maxDamage: 2
   _defenseRating: 2
   _luckRating: 2
   _meleeDamageBonus: 2
