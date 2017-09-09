@@ -5297,7 +5297,7 @@ MonoBehaviour:
   _attackRating: 2
   _minDamage: 1
   _maxDamage: 2
-  _defenseRating: 2
+  _defenseRating: 10
   _luckRating: 2
   _meleeDamageBonus: 2
   _rangedDamageBonus: 2

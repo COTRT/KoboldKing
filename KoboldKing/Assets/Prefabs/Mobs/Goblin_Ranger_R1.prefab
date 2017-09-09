@@ -810,12 +810,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mobName: Goblin Ranger
   _level: 1
-  _attackRating: 50050
-  _minDamage: 10
-  _maxDamage: 20
+  _attackRating: 15
+  _minDamage: 1
+  _maxDamage: 4
   _defenseRating: 0
   _luckRating: 0
-  _meleeDamageBonus: 10
+  _meleeDamageBonus: 1
   _rangedDamageBonus: 1
   _magicDamageBonus: 0
   _expValue: 90
