@@ -1,35 +1,25 @@
-﻿using UnityEditor;
-using Assets.Scripts;
-using Assets.Scripts.Models;
-using Assets.Scripts.Item;
-using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.Scripts;
 using UnityEngine;
 
 public class CombatTrigger : MonoBehaviour {
 
-    public float attackTimer;
-    public float coolDown;
+    public float attackTimer = 0;
+    public float coolDown = 2.0f;
     public bool attackAgain = false;
-    GameObject Player;	void Start () {
-	// Use this for initialization
-	void Start () {
-        attackTimer = 0;
-        coolDown = 2.0f;
-	}
-    private void OnTriggerEnter(Collider other)
+    GameObject Target;	
+
+    private void Attack()
     {
-        CombatCalculator.Attack(gameObject, other.gameObject);
-        attackTimer = coolDown;
-        attackAgain = true;
+        CombatCalculator.Attack(gameObject, Target.gameObject);
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if(other.name != Target.name)
         {
-            Player = other.gameObject;
-            attackAgain = true;
+            Target = other.gameObject;
         }
+        attackTimer = coolDown;
+        attackAgain = true;
     }
     private void OnTriggerExit(Collider other)
     {
