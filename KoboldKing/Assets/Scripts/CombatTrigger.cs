@@ -12,36 +12,9 @@ public class CombatTrigger : MonoBehaviour {
 	void Start () {
 		
 	}
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
-        {
-            var DefenderStats = other.GetComponent<Mob>();
-            var Defender = DefenderStats.Name;
-            var DefenseRating = DefenderStats.DefenseRating;
-            var enemyStats = GetComponent<Mob>();
-            var Attacker = enemyStats.Name;
-            var AttackRating = enemyStats.AttackRating;
-            var MinDamage = enemyStats.MinDamage;
-            var MaxDamage = enemyStats.MaxDamage;
-            var combatInput = new CombatInput();
-            combatInput.Attacker = Attacker;
-            combatInput.Defender = Defender;
-            combatInput.MinDamage = MinDamage;
-            combatInput.MaxDamage = MaxDamage;
-            combatInput.AttackRating = AttackRating;
-            combatInput.DefenseRating = DefenseRating;
-            var combatResult = new CombatResult();
-            var combatManager =  new CombatManager();
-            combatResult = combatManager.CalcCombat(combatInput);
-            if (combatResult.Hit)
-            {
-                var damageable = other.GetComponent<Damageable>();
-                damageable.DealDamage(DamageType.Default, combatResult.Damage + enemyStats.MeleeDamageBonus);
-            }
-            
-            
-        }
+        CombatCalculator.Attack(gameObject, other.gameObject);
     }
 
     // Update is called once per frame
