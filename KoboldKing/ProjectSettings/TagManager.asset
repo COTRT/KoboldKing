@@ -10,7 +10,7 @@ TagManager:
   - DeathScreen
   - PauseMenu
   - Pick Up
-  - Event Manger
+  - Event Manager
   layers:
   - Default
   - TransparentFX

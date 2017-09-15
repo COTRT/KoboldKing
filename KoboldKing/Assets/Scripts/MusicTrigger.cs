@@ -4,15 +4,18 @@ using UnityEngine;
 
 public class MusicTrigger : MonoBehaviour {
     GameObject EventManager;
-    AudioClip Music;
-    private void OnTriggerEnter(Collider other)
+    [SerializeField]
+  public AudioClip Music;
+    public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
             EventManager = GameObject.FindGameObjectWithTag("Event Manager");
             AudioSource audioSource = EventManager.GetComponent<AudioSource>();
-            AudioClip audioClip = audioSource.audio;
-            audioClip = Music;
+           // AudioClip audioClip = audioSource.GetComponent<AudioClip>();
+            //audioClip = Music;
+            audioSource.clip = Music;
+            audioSource.Play();
         }
     }
     // Use this for initialization
