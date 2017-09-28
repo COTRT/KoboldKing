@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class StartUp : MonoBehaviour {
     public GameObject Player;
-    public GameObject Enemy;
 
     // Use this for initialization
     void Start () {
         Instantiate(Player);
-        Instantiate(Enemy);
 
 
 

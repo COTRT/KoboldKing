@@ -1,24 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.Models;
+﻿using Assets.Scripts.Models;
+using UnityEngine;
+using Assets.Scripts.Item;
+using Random = System.Random;
 
 namespace Assets.Scripts
 {
     //8. Assign Damage
-    // messge to screen hit/miss damage?  what was the results of the round of battle??
-    public class CombatManager
+    // message to screen hit/miss damage?  what was the results of the round of battle??
+    public static class CombatCalculator
     {
-        private static readonly Random Random = new Random();
-        public CombatResult CalcCombat(CombatInput input)
+        private static readonly Random Rand = new Random();
+        public static CombatResult CalcCombat(CombatInput input)
         {
-            var hit = calcHit(input);
+            var hit = CalcHit(input);
+            
+            
 
             var damage = 0;
             if (hit)
             {
-                damage = calcDamage(input);
+                damage = CalcDamage(input);
             }
 
             var combatResult = new CombatResult()
@@ -32,15 +33,15 @@ namespace Assets.Scripts
 
             return combatResult;
         }
-
-        private int calcDamage(CombatInput input)
+        
+        private static int CalcDamage(CombatInput input)
         {
-            var rollDamage = Random.Next(input.MinDamage, input.MaxDamage);
+            var rollDamage = Rand.Next(input.MinDamage, input.MaxDamage);
 
             return rollDamage;
         }
 
-        private bool calcHit(CombatInput input)
+        private static bool CalcHit(CombatInput input)
         {
             var baseHitChance = 50;
 
@@ -49,16 +50,73 @@ namespace Assets.Scripts
 
             var hitChance = toHit - defense;
 
-            var rollDice = Random.Next(1, 100);
+            var rollDice = Rand.Next(1, 100);
 
-            bool hit;
-            if (rollDice <= hitChance)
+            return rollDice <= hitChance;
+         }
+
+
+        public static CombatAttackResult Attack(GameObject Attacker, GameObject Defender)
+        {
+            if (Defender.tag == Attacker.name)
             {
-                return true;
-            }
+                var AttackerStats = Attacker.GetComponent<Mob>();
+                if(AttackerStats == null)
+                {
+                    return new CombatAttackResult(CombatAttackError.AttackerNotMob);
+                }
 
-            return false;
+                var OtherStats = Defender.GetComponent<Mob>();
+                if (OtherStats == null)
+                {
+                    return new CombatAttackResult(CombatAttackError.DefenderNotMob);
+                }
+
+                var combatInput = new CombatInput(AttackerStats, OtherStats);
+                var combatResult = CalcCombat(combatInput);
+                if (combatResult.Hit)
+                {
+                    var damageable = Defender.GetComponent<Damageable>();
+                    if(damageable == null)
+                    {
+                        return new CombatAttackResult(CombatAttackError.DefenderNotDamageable);
+                    }
+                    damageable.DealDamage(DamageType.Default, combatResult.Damage + OtherStats.MeleeDamageBonus);
+                }
+                return new CombatAttackResult(CombatAttackError.None, combatResult);
+            }
+            else
+            {
+                return new CombatAttackResult(CombatAttackError.DefenderIsAttacker);
+            }
         }
+    }
+    public class CombatAttackResult : CombatResult
+    {
+        public CombatAttackResult()
+        {
+
+        }
+        public CombatAttackResult(CombatAttackError error, CombatResult combatResult = null)
+        {
+            this.CombatAttackError = error;
+            if(combatResult != null)
+            {
+                this.Defender = combatResult.Defender;
+                this.Attacker = combatResult.Attacker;
+                this.Damage = combatResult.Damage;
+                this.Hit = combatResult.Hit;
+            }
+        }
+        public CombatAttackError CombatAttackError { get; set; }
+    }
+    public enum CombatAttackError
+    {
+        AttackerNotMob,
+        DefenderNotMob,
+        DefenderNotDamageable,
+        DefenderIsAttacker,
+        None
     }
 }
 
