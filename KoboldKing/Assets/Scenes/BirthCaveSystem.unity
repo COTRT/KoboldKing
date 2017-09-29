@@ -270,6 +270,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 1989836322756496, guid: e62feee6d529f4148bd1f6360bbc02d3, type: 2}
   Enemy: {fileID: 1097951993584694, guid: 3cbcba1cdd9d07d4296705b78bdfc88a, type: 2}
+  MusicTrigger: {fileID: 114734182821451048, guid: 27d098ceb7fab8c4fb3db4024dd1c215,
+    type: 2}
 --- !u!4 &289724035
 Transform:
   m_ObjectHideFlags: 0
@@ -862,6 +864,12 @@ Prefab:
       propertyPath: m_TagString
       value: Event Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 114555243779356874, guid: f6c8d930cdf383a488108882efb42a17,
+        type: 2}
+      propertyPath: MusicTrigger
+      value: 
+      objectReference: {fileID: 114734182821451048, guid: 27d098ceb7fab8c4fb3db4024dd1c215,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: f6c8d930cdf383a488108882efb42a17, type: 2}
   m_IsPrefabParent: 0
