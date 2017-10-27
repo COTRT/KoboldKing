@@ -5,20 +5,19 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private GameObject player;
+    private GameObject _player;
+    private Vector3 offset;
 
     // Use this for initialization
-    void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player");
-    }
+
 
     // Update is called once per frame after update
     void LateUpdate()
     {
-        if (player != null)
+        _player = GameObject.FindGameObjectWithTag("Player");
+        if (_player != null)
         {
-            transform.position = player.transform.position;
+            transform.position = _player.transform.position + offset;
         }
     }
 }

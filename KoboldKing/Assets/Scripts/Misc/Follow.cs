@@ -15,7 +15,7 @@ public class Follow : MonoBehaviour {
         if (tr_Player != null) { 
             //This is to look at the player object, and the second one is to go to the player object.
             transform.rotation = Quaternion.Slerp (transform.rotation , Quaternion.LookRotation (tr_Player.position - transform.position) , f_RotSpeed * Time.deltaTime);
-			transform.position += transform.forward * f_MoveSpeed * Time.deltaTime;
+			transform.position += transform.forward * f_MoveSpeed * Time.deltaTime; 
             }
 		}
 	}
