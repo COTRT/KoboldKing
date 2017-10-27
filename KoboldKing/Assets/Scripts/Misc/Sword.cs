@@ -52,7 +52,7 @@ public class Sword : MonoBehaviour
         yield return new WaitForSeconds(delay);
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit)&& Vector3.Distance(hit.transform.position, player.transform.position) > Range)
+        if (Physics.Raycast(ray, out hit)&& Vector3.Distance(hit.transform.position, player.transform.position) < Range)
         {
             var damageable = hit.transform.GetComponent<Damageable>();
             if (damageable != null)
