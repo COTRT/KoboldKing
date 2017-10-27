@@ -6,7 +6,7 @@ public class CombatTrigger : MonoBehaviour {
     public float attackTimer = 0;
     public float coolDown = 2.0f;
     public bool attackAgain = false;
-    GameObject Target;	
+    private GameObject Target;
 
     private void Attack()
     {
@@ -14,10 +14,18 @@ public class CombatTrigger : MonoBehaviour {
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name != Target.name)
+
+        Debug.Log(other);
+        if(!other.CompareTag("Player"))
         {
-            Target = other.gameObject;
+            return;
         }
+        Target = other.gameObject;
+        if (attackTimer <= 0)
+        {
+            Attack();
+        }
+
         attackTimer = coolDown;
         attackAgain = true;
     }
@@ -36,9 +44,14 @@ public class CombatTrigger : MonoBehaviour {
         {
             attackTimer = 0;
         }
+        if(Target == null)
+        {
+            attackAgain = false;
+        }
         if (attackTimer == 0 && attackAgain)
         {
             Attack();
+            attackTimer = coolDown;
         }
     }
 }

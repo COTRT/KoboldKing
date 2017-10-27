@@ -58,7 +58,7 @@ namespace Assets.Scripts
 
         public static CombatAttackResult Attack(GameObject Attacker, GameObject Defender)
         {
-            if (Defender.tag == Attacker.name)
+            if (Defender.name != Attacker.name)
             {
                 var AttackerStats = Attacker.GetComponent<Mob>();
                 if(AttackerStats == null)

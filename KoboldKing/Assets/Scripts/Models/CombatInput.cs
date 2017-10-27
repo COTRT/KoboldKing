@@ -15,7 +15,7 @@ namespace Assets.Scripts.Models
             this.Defender = Defender.Name;
             DefenseRating = Defender.DefenseRating;
             MinDamage = Attacker.MinDamage;
-            MinDamage = Attacker.MaxDamage;
+            MaxDamage = Attacker.MaxDamage;
         }
         public string Attacker { get; set;}
         public string Defender { get; set; }
