@@ -6,8 +6,9 @@ public class GameOver : MonoBehaviour {
     public Transform GameOverScreen;
     private GameObject player;
     public bool done = false;
-	// Use this for initialization
-	void Start () {
+    GameObject EventManager;
+    // Use this for initialization
+    void Start () {
 
     }
 	
@@ -22,6 +23,11 @@ public class GameOver : MonoBehaviour {
 
                 Instantiate(GameOverScreen);
                 done = true;
+
+                EventManager = GameObject.FindGameObjectWithTag("Event Manager");
+                AudioSource audioSource = EventManager.GetComponent<AudioSource>();
+                audioSource.enabled = false;
+
                 //if (GameOverScreen.gameObject.activeInHierarchy == false)
                 //{
                 //    GameOverScreen.gameObject.SetActive(true);
