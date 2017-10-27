@@ -13,6 +13,8 @@ namespace Assets.Scripts.Item
         [SerializeField] private string _mobName;
         [SerializeField] private int _level;
         [SerializeField] private int _attackRating;
+        [SerializeField] private int _minDamage;
+        [SerializeField] private int _maxDamage;
         [SerializeField] private int _defenseRating;
         [SerializeField] private int _luckRating;
         [SerializeField] private int _meleeDamageBonus;
@@ -86,6 +88,16 @@ namespace Assets.Scripts.Item
         {
             get { return _attackRating; }
             set { _attackRating = value; }
+        }
+        public int MinDamage
+        {
+            get { return _minDamage; }
+            set { _minDamage = value; }
+        }
+        public int MaxDamage
+        {
+            get { return _maxDamage; }
+            set { _maxDamage = value; }
         }
 
         public int DefenseRating

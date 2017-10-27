@@ -11,9 +11,11 @@ public class Sword : MonoBehaviour
     public Vector3 swordSwipeRotDelta;
     public Vector3 swordSwipeScaleDelta;
     public float Damage;
+    public float Range = 10.0f;
 
 
     private bool swiping = false;
+    private GameObject player;
 
     public bool Swiping
     {
@@ -32,6 +34,7 @@ public class Sword : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
     }
 
     // Update is called once per frame
@@ -49,12 +52,12 @@ public class Sword : MonoBehaviour
         yield return new WaitForSeconds(delay);
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit, 10.0f))
+        if (Physics.Raycast(ray, out hit)&& Vector3.Distance(hit.transform.position, player.transform.position) < Range)
         {
             var damageable = hit.transform.GetComponent<Damageable>();
             if (damageable != null)
             {
-                damageable.DealDamage(DamageType.Sharp, Damage);
+                damageable.DealDamage(DamageType.Sharp, amount);
             }
         }
     }

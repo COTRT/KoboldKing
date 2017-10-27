@@ -11,6 +11,7 @@ TagManager:
   - PauseMenu
   - Pick Up
   - NPC
+  - Event Manager
   layers:
   - Default
   - TransparentFX
