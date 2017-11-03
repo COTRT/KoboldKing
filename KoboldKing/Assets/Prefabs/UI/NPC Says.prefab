@@ -41,7 +41,7 @@ GameObject:
   - component: {fileID: 114115915290278276}
   m_Layer: 5
   m_Name: NPC Says
-  m_TagString: Untagged
+  m_TagString: NPC Says
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Yo what is up my dude '
+  m_Text: Press x to talk
 --- !u!114 &114465227646805588
 MonoBehaviour:
   m_ObjectHideFlags: 1

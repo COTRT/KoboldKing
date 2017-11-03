@@ -12,6 +12,7 @@ TagManager:
   - Pick Up
   - NPC
   - Event Manager
+  - NPC Says
   layers:
   - Default
   - TransparentFX
