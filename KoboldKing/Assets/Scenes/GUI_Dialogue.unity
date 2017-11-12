@@ -409,30 +409,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb5a49b2eeed794090f34476af4dacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Text: {fileID: 114115915290278276, guid: 7a33595fabc645547b604717dac988c4, type: 2}
+  PromptCanvasText: {fileID: 114115915290278276, guid: 7a33595fabc645547b604717dac988c4,
+    type: 2}
   ChatPromptCanvas: {fileID: 223864756817667948, guid: 7a33595fabc645547b604717dac988c4,
     type: 2}
-  ConversatioPromptnName: First Test
-  ConversationPromptText: Press x to talk
+  PromptnName: Prompt to talk
+  PromptText: Press X to talk
   PromptClone: {fileID: 0}
-  ConversationBox: {fileID: 0}
+  ConversationBox: {fileID: 223756772773418738, guid: e09aded1ec9ffad45989d37d64c6251e,
+    type: 2}
+  ConversationCanvasText: {fileID: 114511785123165374, guid: e09aded1ec9ffad45989d37d64c6251e,
+    type: 2}
+  ConversationText: Hi!!!!
   ConversationClone: {fileID: 0}
 --- !u!4 &1659459539 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4263266136349070, guid: 03fd406b50927754aa432b87d76726cc,
     type: 2}
   m_PrefabInternal: {fileID: 2142345458}
---- !u!114 &1659459540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1659459536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f28cc4b1eb6661a45960c01528403c51, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1992483530
 GameObject:
   m_ObjectHideFlags: 0

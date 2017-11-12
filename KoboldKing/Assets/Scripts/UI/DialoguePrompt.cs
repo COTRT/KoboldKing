@@ -6,12 +6,15 @@ using UnityEngine.UI;
 public class DialoguePrompt : MonoBehaviour {
     private GameObject Player;
 
-    public Text Text;
+    public Text PromptCanvasText;
     public Canvas ChatPromptCanvas;
-    public string ConversatioPromptnName;
-    public string ConversationPromptText;
+    public string PromptnName;
+    public string PromptText;
     public Canvas PromptClone;
+
     public Canvas ConversationBox;
+    public Text ConversationCanvasText;
+    public string ConversationText;
     public Canvas ConversationClone;
 
 
@@ -22,22 +25,45 @@ public class DialoguePrompt : MonoBehaviour {
 
         if (other.gameObject.CompareTag("Player"))
         {
-            if (GameObject.Find("NPC Says")) {
+            if (GameObject.Find("NPC Says(Clone)")) {
                 PromptClone.enabled = true;
             }
             else
             {
-                Text.text = ConversationPromptText;
+                PromptCanvasText.text = PromptText;
                 PromptClone = Instantiate(ChatPromptCanvas);
-                var bob = GameObject.Find("NPC Says");
+                var bob = GameObject.Find("NPC Says(Clone)");
             }
         }
 
     }
-    public void OnTriggerExit(Collider other)
+     void OnTriggerExit(Collider other)
     {
+        ConversationClone.enabled = false;
         PromptClone.enabled = false;
+        //Instantiate(ChatPromptCanvas);
+    }
 
+    private void Update()
+    {
+        if(PromptClone.enabled = true)
+        {
+       
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                if (GameObject.Find("ConversationBox(Clone)"))
+                {
+                    ConversationClone.enabled = true;
+                }
+                else
+                {
+                    PromptClone.enabled = false;
+                    ConversationCanvasText.text = ConversationText;
+                    ConversationClone = Instantiate(ConversationBox);
+                    var bob = GameObject.Find("ConversationBox(Clone)");
+                }
+            }
+        }
     }
 
 }
