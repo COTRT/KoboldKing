@@ -9,15 +9,21 @@ public class DialoguePrompt : MonoBehaviour
 
     public Text PromptCanvasText;
     public Canvas ChatPromptCanvas;
-    public string PromptnName;
+    public string PromptName;
     public string PromptText;
     public Canvas PromptClone;
 
     public Canvas ConversationBox;
     public Text ConversationCanvasText;
-    public string ConversationText;
+    public string CurrentConversationText;
     public Canvas ConversationClone;
- 
+    public int ConversationPageNumber = 0;
+    public string[] AllConversationTexts;
+
+    public bool CanStartCoroutine = true;
+
+
+
 
 
     void OnTriggerEnter(Collider other)
@@ -56,18 +62,38 @@ public class DialoguePrompt : MonoBehaviour
                 if (GameObject.Find("ConversationBox(Clone)"))
                 {
                     ConversationClone.enabled = true;
+                    PromptClone.enabled = false;
+
                 }
                 else
                 {
                     PromptClone.enabled = false;
-                    ConversationCanvasText.text = ConversationText;
+                    ConversationCanvasText.text = CurrentConversationText;
                     ConversationClone = Instantiate(ConversationBox);
                     var bob = GameObject.Find("ConversationBox(Clone)");
                 }
             }
         }
+        if(ConversationClone.enabled == true)
+        {
+            while (CanStartCoroutine)
+            {
+                StartCoroutine("ConversationWait");
+ 
+            }
+            CurrentConversationText = AllConversationTexts[ConversationPageNumber];
+            var bob = ConversationClone.GetComponentInChildren<Text>();
+            bob.text = CurrentConversationText;            
+        }
     }
 
-
+   IEnumerator ConversationWait()
+    {
+        CanStartCoroutine = false;
+        yield return new WaitForSeconds(2.0f);
+        ConversationPageNumber = 1;
+       yield return new WaitForSeconds(2.0f);
+       ConversationPageNumber = 2;
+    } 
 
 }

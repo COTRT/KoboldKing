@@ -413,15 +413,21 @@ MonoBehaviour:
     type: 2}
   ChatPromptCanvas: {fileID: 223864756817667948, guid: 7a33595fabc645547b604717dac988c4,
     type: 2}
-  PromptnName: Prompt to talk
+  PromptName: 
   PromptText: Press X to talk
   PromptClone: {fileID: 0}
   ConversationBox: {fileID: 223756772773418738, guid: e09aded1ec9ffad45989d37d64c6251e,
     type: 2}
   ConversationCanvasText: {fileID: 114511785123165374, guid: e09aded1ec9ffad45989d37d64c6251e,
     type: 2}
-  ConversationText: Hey Dude
+  CurrentConversationText: 
   ConversationClone: {fileID: 0}
+  ConversationPageNumber: 0
+  AllConversationTexts:
+  - Hey Dude!
+  - Go get the sword
+  - Bye!
+  CanStartCoroutine: 1
 --- !u!4 &1659459539 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4263266136349070, guid: 03fd406b50927754aa432b87d76726cc,
