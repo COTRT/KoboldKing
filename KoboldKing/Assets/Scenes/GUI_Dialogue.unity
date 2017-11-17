@@ -420,7 +420,7 @@ MonoBehaviour:
     type: 2}
   ConversationCanvasText: {fileID: 114511785123165374, guid: e09aded1ec9ffad45989d37d64c6251e,
     type: 2}
-  ConversationText: Hi!!!!
+  ConversationText: Hey Dude
   ConversationClone: {fileID: 0}
 --- !u!4 &1659459539 stripped
 Transform:

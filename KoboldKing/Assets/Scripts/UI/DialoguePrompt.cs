@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialoguePrompt : MonoBehaviour {
+public class DialoguePrompt : MonoBehaviour
+{
     private GameObject Player;
 
     public Text PromptCanvasText;
@@ -16,16 +17,18 @@ public class DialoguePrompt : MonoBehaviour {
     public Text ConversationCanvasText;
     public string ConversationText;
     public Canvas ConversationClone;
+ 
 
 
-
-    void OnTriggerEnter (Collider other) {
+    void OnTriggerEnter(Collider other)
+    {
 
         Player = GameObject.FindGameObjectWithTag("Player");
 
         if (other.gameObject.CompareTag("Player"))
         {
-            if (GameObject.Find("NPC Says(Clone)")) {
+            if (GameObject.Find("NPC Says(Clone)"))
+            {
                 PromptClone.enabled = true;
             }
             else
@@ -37,18 +40,17 @@ public class DialoguePrompt : MonoBehaviour {
         }
 
     }
-     void OnTriggerExit(Collider other)
+    void OnTriggerExit(Collider other)
     {
         ConversationClone.enabled = false;
-        PromptClone.enabled = false;
         //Instantiate(ChatPromptCanvas);
     }
 
     private void Update()
     {
-        if(PromptClone.enabled = true)
+        if (PromptClone.enabled == true)
         {
-       
+
             if (Input.GetKeyDown(KeyCode.X))
             {
                 if (GameObject.Find("ConversationBox(Clone)"))
@@ -65,5 +67,7 @@ public class DialoguePrompt : MonoBehaviour {
             }
         }
     }
+
+
 
 }
