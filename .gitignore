@@ -30,3 +30,7 @@ sysinfo.txt
 *.unitypackage
 
 *.dll
+*.ide
+*.ide-wal
+*.ide-shm
+*.lock
