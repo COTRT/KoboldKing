@@ -12,7 +12,7 @@ TagManager:
   - Pick Up
   - NPC
   - Event Manager
-  - NPC Says
+  - DialogueText
   layers:
   - Default
   - TransparentFX

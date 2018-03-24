@@ -6,7 +6,7 @@
 /// The dictionary of responses contains the user's potential options for responses as keys
 /// Once a user selects one of the options, the key they selected is then used to look up another Dialogue object inside that dictionary.
 /// This dialogue object will then have it's own statement (to be made by the NPC), it's own set of responses, and a variety of potential conversation paths from there...
-/// At the moment, there is no other Dialogue options to go in the Dialogue object (for example, a combat class)SSS
+/// At the moment, there is no other Dialogue options to go in the Dialogue object (for example, a combat class)
 /// </summary>
 public class Dialogue  {
     public Dialogue()
