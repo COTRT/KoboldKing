@@ -807,8 +807,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 18, y: -179}
-  m_SizeDelta: {x: -532.1, y: -501.1}
+  m_AnchoredPosition: {x: 2.2, y: -210.3}
+  m_SizeDelta: {x: -194.6, y: -444.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &680040818
 MonoBehaviour:
@@ -877,8 +877,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.21417916}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000024796, y: -23.6}
-  m_SizeDelta: {x: 160, y: -4}
+  m_AnchoredPosition: {x: -0.000024796, y: -74}
+  m_SizeDelta: {x: 160, y: -51.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &685676961
 MonoBehaviour:
@@ -1124,8 +1124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.4, y: 15.29}
-  m_SizeDelta: {x: 501.79, y: 70.65}
+  m_AnchoredPosition: {x: 0.4, y: 8.8}
+  m_SizeDelta: {x: 501.8, y: 57.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &803656387
 MonoBehaviour:
@@ -2041,8 +2041,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000036716, y: 68.69}
-  m_SizeDelta: {x: -364.9, y: -82.75}
+  m_AnchoredPosition: {x: -0.000061034996, y: 164.67676}
+  m_SizeDelta: {x: -643.8, y: -285.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1448580130
 MonoBehaviour:
@@ -2545,8 +2545,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -3.0749931}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: 3.82}
+  m_SizeDelta: {x: 160, y: 16.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1770701686
 MonoBehaviour:
@@ -2700,6 +2700,7 @@ GameObject:
   - component: {fileID: 1911606066}
   - component: {fileID: 1911606068}
   - component: {fileID: 1911606067}
+  - component: {fileID: 1911606069}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2753,6 +2754,17 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1911606069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1911606065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ba1a4f864e50b498774c76971128c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1933335433 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400000, guid: a6456b9419960c543890384b83ae02ef, type: 3}
