@@ -15,6 +15,29 @@ public class PlayerWeaponController : MonoBehaviour
         characterStats = GetComponent<CharacterStats>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            PerformWeaponAttack();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            PerformWeaponSpecialAttack();
+        }
+    }
+
+    public void PerformWeaponAttack()
+    {
+        equippedWeapon.PerformAttack();
+    }
+
+    public void PerformWeaponSpecialAttack()
+    {
+        equippedWeapon.PerformAttack();
+    }
+
     public void EquipWeapon(Item itemToEquip)
     {
         if (EquippedWeapon != null)
@@ -31,13 +54,6 @@ public class PlayerWeaponController : MonoBehaviour
         EquippedWeapon.transform.SetParent(playerHand.transform);
         characterStats.AddStatBonus(itemToEquip.Stats);
         Debug.Log(equippedWeapon.Stats[0].GetCalculatedStatValue());
-
-
-    }
-
-    public void PerformWeaponAttack()
-    {
-        equippedWeapon.PerformAttack();
     }
 
 }
