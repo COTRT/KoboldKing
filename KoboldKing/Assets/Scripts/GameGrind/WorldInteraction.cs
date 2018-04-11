@@ -33,6 +33,11 @@ public class WorldInteraction : MonoBehaviour
             {
                 interactedObject.GetComponent<Interactable>().MoveToInteraction(playerAgent);
             }
+            else if(interactedObject.tag == "Enemy")
+            {
+                Debug.Log("move to enemy");
+                interactedObject.GetComponent<Interactable>().MoveToInteraction(playerAgent);
+            }
             else
             {
                 playerAgent.stoppingDistance = 0;
