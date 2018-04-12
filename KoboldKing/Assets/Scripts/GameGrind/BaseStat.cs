@@ -19,6 +19,7 @@ public class BaseStat
         this.StatName = statName;
         this.StatDescription = statDescription;
     }
+    [Newtonsoft.Json.JsonConstructor]
     public BaseStat(int baseValue, string statName)
     {
         this.BaseAdditives = new List<StatBonus>();
