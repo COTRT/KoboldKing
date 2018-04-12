@@ -31,6 +31,7 @@ public class Interactable : MonoBehaviour
                 {
                     Interact();
                 }
+
                 EnsureLookDirection();
                 hasInteracted = true;
             }
@@ -40,8 +41,7 @@ public class Interactable : MonoBehaviour
     void EnsureLookDirection()
     {
         playerAgent.updateRotation = false;
-        Vector3 lookDirection = new Vector3(transform.position.x, playerAgent.transform.position.y,
-            transform.position.z);
+        Vector3 lookDirection = new Vector3(transform.position.x, playerAgent.transform.position.y, transform.position.z);
         playerAgent.transform.LookAt(lookDirection);
         playerAgent.updateRotation = true;
     }
