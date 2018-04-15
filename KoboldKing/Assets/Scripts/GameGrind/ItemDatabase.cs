@@ -25,39 +25,20 @@ public class ItemDatabase : MonoBehaviour
         Items = JsonConvert.DeserializeObject<List<Item>>(Resources.Load<TextAsset>("GameGrind/JSON/Items").ToString());
         Debug.Log(Items[0].Stats[1].StatName + " level is " + Items[0].Stats[0].GetCalculatedStatValue());
         Debug.Log(Items[0].ItemName);
-<<<<<<< HEAD
-    }
-
-    //public Item GetItem(string itemSlug)
-    //{
-    //    foreach (Item item in Items)
-    //    {
-    //        if (item.ObjectSlug == itemSlug)
-    //            return item;
-
-    //        Debug.LogWarning("Couldn't find item: " + itemSlug);
-    //        return null;
-
-    //    }
-    //}
-=======
     }
 
     public Item GetItem(string itemSlug)
     {
-        foreach(Item item in Items)
+        // TODO: Lamba expression with where clause could be faster?
+        foreach (Item item in Items)
         {
             if (item.ObjectSlug == itemSlug)
-            {
                 return item;
-            }
-            else
-            {
-                Debug.LogWarning("Couldn't find item: " + itemSlug);
-            }
-           
         }
+
+        Debug.LogWarning("Couldn't find item: " + itemSlug);
         return null;
+
     }
->>>>>>> origin/#148_GameGrindSamples
+
 }
