@@ -1,22 +1,23 @@
-﻿using System.Collections;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class InventoryUI : MonoBehaviour
 {
     public RectTransform inventoryPanel;
     public RectTransform scrollViewContent;
-    private InventoryUIItem itemContainer { get; set; }
-    private bool menuIsActive { get; set; }
-    private Item currentSelectedItem { get; set; }
 
+    InventoryUIItem itemContainer { get; set; }
+    List<InventoryUIItem> itemUIList = new List<InventoryUIItem>();
+    bool menuIsActive { get; set; }
+    Item currentSelectedItem { get; set; }
+
+    // Use this for initialization
     void Start()
     {
-        itemContainer = Resources.Load<InventoryUIItem>("GameGrind/UI/Item_Container");
         UIEventHandler.OnItemAddedToInventory += ItemAdded;
+        itemContainer = Resources.Load<InventoryUIItem>("GameGrind/UI/Item_Container");
         inventoryPanel.gameObject.SetActive(false);
     }
-
 
     void Update()
     {
@@ -31,7 +32,7 @@ public class InventoryUI : MonoBehaviour
     {
         InventoryUIItem emptyItem = Instantiate(itemContainer);
         emptyItem.SetItem(item);
+        itemUIList.Add(emptyItem);
         emptyItem.transform.SetParent(scrollViewContent);
     }
-
 }

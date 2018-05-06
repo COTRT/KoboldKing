@@ -16,13 +16,13 @@ public class InventoryUIDetails : MonoBehaviour
         itemDescriptionText = transform.Find("Item_Description").GetComponent<Text>();
         itemInteractButton = transform.Find("Button").GetComponent<Button>();
         itemInteractButtonText = itemInteractButton.transform.Find("Text").GetComponent<Text>();
-
-
+        gameObject.SetActive(false);
     }
 
 
     public void SetItem(Item item, Button selectedButton)
     {
+        gameObject.SetActive(true);
         itemInteractButton.onClick.RemoveAllListeners();
         this.item = item;
         selectedItemButton = selectedButton;
@@ -44,6 +44,9 @@ public class InventoryUIDetails : MonoBehaviour
             InventoryController.Instance.EquipItem(item);
             Destroy(selectedItemButton.gameObject);
         }
+
+        item = null;
+        gameObject.SetActive(false);
 
 
     }

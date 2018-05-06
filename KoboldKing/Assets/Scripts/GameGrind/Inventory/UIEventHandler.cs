@@ -10,7 +10,11 @@ public class UIEventHandler : MonoBehaviour
 
     public static void ItemAddedToInventory(Item item)
     {
-        OnItemAddedToInventory(item);
+        if (OnItemAddedToInventory != null)
+        {
+            OnItemAddedToInventory(item);
+
+        }
     }
 
 }
