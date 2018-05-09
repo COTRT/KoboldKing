@@ -30,9 +30,9 @@ public class Sword : MonoBehaviour, IWeapon
         if (col.tag == "Enemy")
         {
             // This is broke I assume GameGrind will fix at some point.  Commenting out for now.  GitHub Code is below marked as //#github
-            //col.GetComponent<IEnemy>().TakeDamage(CharacterStats.GetStat(BaseStat.BaseStatType.Power).GetCalculatedStatValue());
+            col.GetComponent<IEnemy>().TakeDamage(CharacterStats.GetStat(BaseStat.BaseStatType.Power).GetCalculatedStatValue());
             // #github
-            col.GetComponent<IEnemy>().TakeDamage(CurrentDamage);
+            //col.GetComponent<IEnemy>().TakeDamage(CurrentDamage);
 
         }
     }
