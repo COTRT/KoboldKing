@@ -27,7 +27,9 @@ public class InventoryController : MonoBehaviour
         playerWeaponController = GetComponent<PlayerWeaponController>();
         consumableController = GetComponent<ConsumableController>();
         GiveItem("sword");
+        GiveItem("staff");
         GiveItem("potion_log");
+
     }
 
     public void GiveItem(string itemSlug)

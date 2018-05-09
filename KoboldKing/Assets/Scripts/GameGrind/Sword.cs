@@ -15,8 +15,9 @@ public class Sword : MonoBehaviour, IWeapon
         animator = GetComponent<Animator>();
     }
 
-    public void PerformAttack()
+    public void PerformAttack(int damage)
     {
+        CurrentDamage = damage;
         animator.SetTrigger("Base_Attack");
     }
 
@@ -29,10 +30,7 @@ public class Sword : MonoBehaviour, IWeapon
     {
         if (col.tag == "Enemy")
         {
-            // This is broke I assume GameGrind will fix at some point.  Commenting out for now.  GitHub Code is below marked as //#github
-            col.GetComponent<IEnemy>().TakeDamage(CharacterStats.GetStat(BaseStat.BaseStatType.Power).GetCalculatedStatValue());
-            // #github
-            //col.GetComponent<IEnemy>().TakeDamage(CurrentDamage);
+            col.GetComponent<IEnemy>().TakeDamage(CurrentDamage);
 
         }
     }

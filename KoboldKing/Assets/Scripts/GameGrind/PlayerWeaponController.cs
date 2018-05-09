@@ -6,9 +6,11 @@ public class PlayerWeaponController : MonoBehaviour
 {
     public GameObject playerHand;
     public GameObject EquippedWeapon { get; set; }
-    private IWeapon equippedWeapon;
-    Transform spawnProjectile;
 
+
+    Transform spawnProjectile;
+    private Item currentlyEquippedItem;
+    private IWeapon equippedWeapon;
 
     private CharacterStats characterStats;
 
@@ -33,18 +35,19 @@ public class PlayerWeaponController : MonoBehaviour
 
     public void PerformWeaponAttack()
     {
-        equippedWeapon.PerformAttack();
+        equippedWeapon.PerformAttack(CalculateDamage());
     }
 
     public void PerformWeaponSpecialAttack()
     {
-        equippedWeapon.PerformAttack();
+        equippedWeapon.PerformSpecialAttack();
     }
 
     public void EquipWeapon(Item itemToEquip)
     {
         if (EquippedWeapon != null)
         {
+            InventoryController.Instance.GiveItem(currentlyEquippedItem.ObjectSlug);
             characterStats.RemoveStatBonus(EquippedWeapon.GetComponent<IWeapon>().Stats);
             Destroy(playerHand.transform.GetChild(0).gameObject);
         }
@@ -60,8 +63,32 @@ public class PlayerWeaponController : MonoBehaviour
         }
         EquippedWeapon.GetComponent<IWeapon>().Stats = itemToEquip.Stats;
         EquippedWeapon.transform.SetParent(playerHand.transform);
+        equippedWeapon.Stats = itemToEquip.Stats;
+        currentlyEquippedItem = itemToEquip;
         characterStats.AddStatBonus(itemToEquip.Stats);
-        Debug.Log(equippedWeapon.Stats[0].GetCalculatedStatValue());
+        //Debug.Log(equippedWeapon.Stats[0].GetCalculatedStatValue());
+    }
+
+    private int CalculateDamage()
+    {
+        int damageToDeal = (characterStats.GetStat(BaseStat.BaseStatType.Power).GetCalculatedStatValue() * 2) + Random.Range(2, 8);
+        damageToDeal += CalculateCrit(damageToDeal);
+
+        Debug.Log("Damage dealt: " + damageToDeal);
+        return damageToDeal;
+    }
+
+    private int CalculateCrit(int damage)
+    {
+        // crit chance = 10% in this example.  Obviously this could be altered via modifiers.
+        if (Random.value <= .10f)
+        {
+            int critDamage = (int)(damage * Random.Range(.25f, .75f));
+            return critDamage;
+
+        }
+
+        return 0;
     }
 
 }
