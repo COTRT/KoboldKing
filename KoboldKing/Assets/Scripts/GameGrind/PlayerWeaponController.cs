@@ -15,7 +15,7 @@ public class PlayerWeaponController : MonoBehaviour
     void Start()
     {
         spawnProjectile = transform.Find("ProjectileSpawn");
-        characterStats = GetComponent<CharacterStats>();
+        characterStats = GetComponent<Player>().characterStats;
     }
 
     private void Update()
@@ -53,6 +53,7 @@ public class PlayerWeaponController : MonoBehaviour
         EquippedWeapon = (GameObject)Instantiate(Resources.Load<GameObject>("GameGrind/Weapons/" + itemToEquip.ObjectSlug),
             playerHand.transform.position, playerHand.transform.rotation);
         equippedWeapon = EquippedWeapon.GetComponent<IWeapon>();
+
         if (EquippedWeapon.GetComponent<IProjectileWeapon>() != null)
         {
             EquippedWeapon.GetComponent<IProjectileWeapon>().ProjectileSpawn = spawnProjectile;

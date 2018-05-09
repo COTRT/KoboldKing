@@ -6,6 +6,9 @@ public class Sword : MonoBehaviour, IWeapon
 {
     private Animator animator;
     public List<BaseStat> Stats { get; set; }
+    public CharacterStats CharacterStats { get; set; }
+    public int CurrentDamage { get; set; }
+
 
     void Start()
     {
@@ -26,7 +29,11 @@ public class Sword : MonoBehaviour, IWeapon
     {
         if (col.tag == "Enemy")
         {
-            col.GetComponent<IEnemy>().TakeDamage(Stats[0].GetCalculatedStatValue());
+            // This is broke I assume GameGrind will fix at some point.  Commenting out for now.  GitHub Code is below marked as //#github
+            //col.GetComponent<IEnemy>().TakeDamage(CharacterStats.GetStat(BaseStat.BaseStatType.Power).GetCalculatedStatValue());
+            // #github
+            col.GetComponent<IEnemy>().TakeDamage(CurrentDamage);
+
         }
     }
 }

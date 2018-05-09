@@ -1,30 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour
+public class CharacterStats
 {
     public List<BaseStat> stats = new List<BaseStat>();
 
-    void Start()
+    // if a character does not have a particular stat we can just zero out that value 
+    // (we assume this list of stats will continue to increase.).
+    public CharacterStats(int power, int toughness, int attackSpeed)
     {
-        // Start is going to be used on a temp basis only.  In the future each object/player/npc will define and pass in its own values.
-        stats.Add(new BaseStat(4, "Power", "Your power level."));
-        stats.Add(new BaseStat(2, "Vitality", "Your vitality level."));
+        stats = new List<BaseStat>()
+        {
+            new BaseStat(BaseStat.BaseStatType.Power, power, "Power"),
+            new BaseStat(BaseStat.BaseStatType.Toughness, toughness, "Toughness"),
+            new BaseStat(BaseStat.BaseStatType.AttackSpeed, attackSpeed, "Attack Speed")
+        };
+    }
 
-        //// For equipment - we would have a list of equipment as a list of stat bonus and then loop through lists.
-        //// buffs...etc....
-        //stats[0].AddStatBonus(new StatBonus(5));
-        //stats[0].AddStatBonus(new StatBonus(-7));
-        //stats[0].AddStatBonus(new StatBonus(21));
-        //Debug.Log(stats[0].GetCalculatedStatValue());
+
+    public BaseStat GetStat(BaseStat.BaseStatType stat)
+    {
+        return this.stats.Find(x => x.StatType == stat);
+
     }
 
     public void AddStatBonus(List<BaseStat> statBonuses)
     {
         foreach (var statBonus in statBonuses)
         {
-            stats.Find(x => x.StatName == statBonus.StatName).AddStatBonus(new StatBonus(statBonus.BaseValue));
+            GetStat(statBonus.StatType).AddStatBonus(new StatBonus(statBonus.BaseValue));
         }
     }
 
@@ -32,7 +38,7 @@ public class CharacterStats : MonoBehaviour
     {
         foreach (var statBonus in statBonuses)
         {
-            stats.Find(x => x.StatName == statBonus.StatName).RemoveStatBonus(new StatBonus(statBonus.BaseValue));
+            GetStat(statBonus.StatType).RemoveStatBonus(new StatBonus(statBonus.BaseValue));
         }
     }
 
