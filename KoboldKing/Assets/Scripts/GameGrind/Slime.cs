@@ -10,6 +10,11 @@ public class Slime : Interactable, IEnemy
     public LayerMask aggroLayerMask;
     public float currentHealth;
     public float maxHealth;
+    public int Id { get; set; }
+    public int Experience { get; set; }
+    public DropTable DropTable { get; set; }
+    public PickupItem pickupItem;
+    public Spawner Spawner { get; set; }
 
 
     private Player player;
@@ -24,6 +29,16 @@ public class Slime : Interactable, IEnemy
 
     void Start()
     {
+        DropTable = new DropTable();
+        DropTable.loot = new List<LootDrop>()
+        {
+            new LootDrop("sword", 25),
+            new LootDrop("staff", 25),
+            new LootDrop("potion_log", 25)
+        };
+
+        Id = 0;
+        Experience = 250;
         navAgent = GetComponent<NavMeshAgent>();
         characterStats = new CharacterStats(6, 10, 2);
         currentHealth = maxHealth;
@@ -37,6 +52,13 @@ public class Slime : Interactable, IEnemy
             ChasePlayer(withinAggroColliders[0].GetComponent<Player>());
         }
     }
+
+    public void PerformAttack()
+    {
+        Debug.Log("Enemy attacks for " + EnemyAttackDamage + " points of damage.");
+        player.TakeDamage(EnemyAttackDamage);
+    }
+
 
 
     public void TakeDamage(int amount)
@@ -66,14 +88,22 @@ public class Slime : Interactable, IEnemy
         }
     }
 
-    void Die()
+    public void Die()
     {
+        DropLoot();
+        CombatEvents.EnemyDied(this);
+        this.Spawner.Respawn();
         Destroy(gameObject);
     }
 
-    public void PerformAttack()
+    void DropLoot()
     {
-        Debug.Log("Enemy attacks for " + EnemyAttackDamage + " points of damage.");
-        player.TakeDamage(EnemyAttackDamage);
+        Item item = DropTable.GetDrop();
+        if (item != null)
+        {
+            PickupItem instance = Instantiate(pickupItem, transform.position, Quaternion.identity);
+            instance.ItemDrop = item;
+        }
     }
+
 }

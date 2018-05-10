@@ -5,8 +5,12 @@ using UnityEngine;
 public interface IEnemy
 {
 
-    void TakeDamage(int amount);
+    void Die();
+    int Experience { get; set; }
+    int Id { get; set; }
     void PerformAttack();
+    Spawner Spawner { get; set; }
+    void TakeDamage(int amount);
 
 
 }

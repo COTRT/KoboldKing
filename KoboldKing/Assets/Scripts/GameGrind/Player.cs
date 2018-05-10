@@ -8,9 +8,11 @@ public class Player : MonoBehaviour
     public CharacterStats characterStats;
     public int currentHealth;
     public int maxHealth;
+    public PlayerLevel PlayerLevel { get; set; }
 
     void Start()
     {
+        PlayerLevel = GetComponent<PlayerLevel>();
         this.currentHealth = this.maxHealth;
         characterStats = new CharacterStats(10, 10, 10);
         // GameGrind removed this becuase he could not find the null reference...
