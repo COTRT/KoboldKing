@@ -74,15 +74,20 @@ public class CharacterPanel : MonoBehaviour
 
     void UpdateEquippedWeapon(Item item)
     {
-        weaponIcon.sprite = Resources.Load<Sprite>("GameGrind/UI/Icons/Items" + item.ObjectSlug);
+        weaponIcon.sprite = Resources.Load<Sprite>("GameGrind/UI/Icons/Items/" + item.ObjectSlug);
         weaponNameText.text = item.ItemName;
 
         for (int i = 0; i < item.Stats.Count; i++)
         {
             weaponStatTexts.Add(Instantiate(weaponStatPrefab));
-            weaponStatTexts[i].transform.SetParent(weaponStatPanel);
-            weaponStatTexts[i].text = item.Stats[i].StatName + ": " +
-                                      item.Stats[i].GetCalculatedStatValue();
+
+            if (weaponStatTexts[i] != null)
+            {
+                weaponStatTexts[i].transform.SetParent(weaponStatPanel);
+                weaponStatTexts[i].text = item.Stats[i].StatName + ": " +
+                                          item.Stats[i].GetCalculatedStatValue();
+
+            }
         }
     }
 

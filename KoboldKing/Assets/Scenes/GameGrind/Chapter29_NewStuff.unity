@@ -1708,8 +1708,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -15, y: -360}
-  m_SizeDelta: {x: -93.6, y: -767.9}
+  m_AnchoredPosition: {x: -14.6, y: -364}
+  m_SizeDelta: {x: -1164.8, y: -767.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &680040818
 MonoBehaviour:
@@ -1833,10 +1833,10 @@ RectTransform:
   m_Father: {fileID: 680040817}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.21417916}
+  m_AnchorMin: {x: 0.5, y: 0.18330304}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.3000002, y: -24.099998}
-  m_SizeDelta: {x: 164.5, y: -6.4}
+  m_AnchoredPosition: {x: 15.5, y: -40.1}
+  m_SizeDelta: {x: 277.3, y: -34.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &685676961
 MonoBehaviour:
@@ -2298,8 +2298,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.39999998, y: 8.800001}
-  m_SizeDelta: {x: 501.8, y: 57.8}
+  m_AnchoredPosition: {x: -3.4, y: 18.7}
+  m_SizeDelta: {x: 638.7, y: 132.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &803656387
 MonoBehaviour:
@@ -2333,7 +2333,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Hello World!
+  m_Text: Hello!
 --- !u!222 &803656388
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2620,9 +2620,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAgent: {fileID: 0}
   dialogue:
-  - Looky! Cavey!
-  - People go in not out
-  - I speak gut English
+  - Thar be many pesky criters about.
+  - Oh, and watch out for yonder cave.  Folks go in but they don't come out.
+  - Why, thankie.  I do spake gud engrish.
   name: Bob
 --- !u!4 &939324973 stripped
 Transform:
@@ -3587,7 +3587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAgent: {fileID: 0}
   dialogue:
-  - This is not a cave!
+  - Beware! Dangerous save ahead.
 --- !u!1001 &1221477661
 Prefab:
   m_ObjectHideFlags: 0
@@ -3824,7 +3824,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4885635471043826, guid: 5b8005717f3cdde438cf0191d1043291, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -7.19
       objectReference: {fileID: 0}
     - target: {fileID: 4885635471043826, guid: 5b8005717f3cdde438cf0191d1043291, type: 2}
       propertyPath: m_LocalPosition.y
@@ -3832,7 +3832,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4885635471043826, guid: 5b8005717f3cdde438cf0191d1043291, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -5.12
       objectReference: {fileID: 0}
     - target: {fileID: 4885635471043826, guid: 5b8005717f3cdde438cf0191d1043291, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4160,9 +4160,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 3.53, y: 78.1}
-  m_SizeDelta: {x: -641.44, y: -86.69}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -4.136, y: -44}
+  m_SizeDelta: {x: -296.9, y: -178.72}
+  m_Pivot: {x: 0.5139306, y: 1.368237}
 --- !u!114 &1448580130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4230,6 +4230,7 @@ MonoBehaviour:
   dialogue:
   - Hi
   - Donuts!
+  - Respect my author-i-tay!
   name: Bill
 --- !u!23 &1486314503
 MeshRenderer:
@@ -5045,7 +5046,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 3.8199997}
+  m_AnchoredPosition: {x: 0, y: 3.8200073}
   m_SizeDelta: {x: 160, y: 16.21}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1770701686
@@ -5531,7 +5532,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 449, y: 0}
+  m_AnchoredPosition: {x: 820.22504, y: 0}
   m_SizeDelta: {x: 250, y: 425}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1974513869
@@ -5936,6 +5937,10 @@ Prefab:
     - target: {fileID: 4005587904825838, guid: 7d189b59ea46a0d43a45e7f376981ed0, type: 2}
       propertyPath: m_RootOrder
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1029980319649126, guid: 7d189b59ea46a0d43a45e7f376981ed0, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7d189b59ea46a0d43a45e7f376981ed0, type: 2}
