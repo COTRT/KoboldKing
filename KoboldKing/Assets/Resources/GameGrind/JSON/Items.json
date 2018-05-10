@@ -20,7 +20,7 @@
       {
         "StatType": "AttackSpeed",
         "BaseValue": 4,
-        "StatName": "Attack Speed"
+        "StatName": "Atk Spd"
       }
     ]
   },

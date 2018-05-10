@@ -6,13 +6,17 @@ public class Player : MonoBehaviour
 {
 
     public CharacterStats characterStats;
-    public float currentHealth;
-    public float maxHealth;
+    public int currentHealth;
+    public int maxHealth;
 
     void Start()
     {
         this.currentHealth = this.maxHealth;
         characterStats = new CharacterStats(10, 10, 10);
+        // GameGrind removed this becuase he could not find the null reference...
+        // ...which we avoided because of the null checks in UIEventHandler.cs
+        //UIEventHandler.HealthChanged(this.currentHealth, this.maxHealth);
+
     }
 
     public void TakeDamage(int amount)
@@ -25,11 +29,15 @@ public class Player : MonoBehaviour
             Die();
         }
 
+        UIEventHandler.HealthChanged(this.currentHealth, this.maxHealth);
+
+
     }
 
     private void Die()
     {
         Debug.Log("Player dead.  Reset health.");
         this.currentHealth = this.maxHealth;
+        UIEventHandler.HealthChanged(this.currentHealth, this.maxHealth);
     }
 }
