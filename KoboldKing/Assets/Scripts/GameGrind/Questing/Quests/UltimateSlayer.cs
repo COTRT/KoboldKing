@@ -19,7 +19,6 @@ public class UltimateSlayer : Quest
         Goals.Add(new KillGoal(this, 1, "Kill 2 Vampires", false, 0, 2));
         Goals.Add(new CollectionGoal(this, "potion_log", "Find a Log Potion", false, 0, 1));
 
-
         Goals.ForEach(x => x.Init());
 
 
