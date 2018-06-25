@@ -1,0 +1,13 @@
+﻿[
+  {
+    "Name": "Bob",
+    "Introduction": "Hello there! I am bob. Do you need anything?",
+    "Response": "Sure, show me to the nearest inn.",
+    "Conclusion": "Right this way."
+
+    //"ResponseA1": "Yes I'm looking for the inn",
+    //"ResponseA2": "Im good but thank you.",
+    //"NpcResponseA1": "yes just down the street to the left",
+    //"NpcResponseA2": "see you later then"
+  }
+]
