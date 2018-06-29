@@ -7,7 +7,7 @@ public class PlayerDialogueManager : MonoBehaviour {
     private Camera mainCamera;
 	// Use this for initialization
 	void Start () {
-       mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); ;
+       mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
     }
 	
 	// Update is called once per frame
