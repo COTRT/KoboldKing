@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2376386}
   - component: {fileID: 6432188}
   m_Layer: 0
-  m_Name: stone_bench_1b
+  m_Name: stone_bench1b
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

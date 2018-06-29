@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2348608}
   - component: {fileID: 6475802}
   m_Layer: 0
-  m_Name: small_table_1d
+  m_Name: small_table1d
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
