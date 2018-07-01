@@ -1,7 +1,7 @@
 ﻿
 /// <summary>
-/// This interface defines a simple base from which a variety of dialog functionalities can be made.  
-/// It's purpose?  Get A piece of dialog.  It doesn't care how.
+/// This interface is a base from which any kind of dialogue grabber can be made.
+/// Static?  Random?  Dependent on the environment?  It doesn't care.  Just get it it's dialogue, and it's happy.
 /// </summary>
 public interface IConverser
 {

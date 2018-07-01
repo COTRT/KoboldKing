@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json;
 
 public static class DialogueManager
 {
-    static Dictionary<string, ObjectDialogueTrees> _masterDialogueDict;
+    static Dictionary<string, ObjectDialogues> _masterDialogueDict;
 
 
-    public static Dictionary<string, ObjectDialogueTrees> MasterDialogueDict
+    public static Dictionary<string, ObjectDialogues> MasterDialogueDict
     {
         get
         {
@@ -24,9 +25,9 @@ public static class DialogueManager
     /// depending on the environment (say, follow the "Quest Completed" tree after a quest is completed)
     /// </summary>
     /// <returns></returns>
-    private static Dictionary<string,ObjectDialogueTrees> GetJSONDatabase()
+    private static Dictionary<string,ObjectDialogues> GetJSONDatabase()
     {
-        return JsonConvert.DeserializeObject<Dictionary<string, ObjectDialogueTrees>>(Resources.Load<TextAsset>("GameGrind/JSON/DialogueTest").ToString());
+        return JsonConvert.DeserializeObject<Dictionary<string, ObjectDialogues>>(Resources.Load<TextAsset>("GameGrind/JSON/DialogueTest").ToString());
 
     }
 }
