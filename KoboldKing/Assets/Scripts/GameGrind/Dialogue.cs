@@ -4,8 +4,8 @@ using UnityEngine;
 using Newtonsoft.Json;
 
 
-    public class Dialogue
-    {
+public class Dialogue
+{
     public string Conversation { get; set; }
     public Dialogue(string _Conversation)
     {
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
     public enum Dialogues { Name, Quest }
     [JsonConverter(typeof(Newtonsoft.Json.Converters.StringEnumConverter))]
     public Dialogues Talk { get; set; }
-    
+
     public string Name;
     public string Introduction;
     public string Response;
