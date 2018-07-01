@@ -4,10 +4,10 @@ using UnityEngine;
 using Newtonsoft.Json;
 
 
-public class Dialogue
+public class GGDialogue
 {
     public string Conversation { get; set; }
-    public Dialogue(string _Conversation)
+    public GGDialogue(string _Conversation)
     {
         this.Conversation = _Conversation;
     }
@@ -22,7 +22,7 @@ public class Dialogue
     public string Quest { get; set; }
 
     [Newtonsoft.Json.JsonConstructor]
-    public Dialogue(string _Name, string _Introduction, string _Response, string _Conclusion, string _Quest, Dialogues _talk)
+    public GGDialogue(string _Name, string _Introduction, string _Response, string _Conclusion, string _Quest, Dialogues _talk)
     {
         this.Name = _Name;
         this.Introduction = _Introduction;

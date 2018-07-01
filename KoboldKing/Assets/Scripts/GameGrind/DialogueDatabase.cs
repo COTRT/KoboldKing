@@ -9,7 +9,7 @@ namespace Assets.Scripts.GameGrind
     {
         public static DialogueDatabase Instance { get; set; }
         //private List<Item> Items { get; set; }
-        private List<Dialogue> Dialogues { get; set; }
+        private List<GGDialogue> Dialogues { get; set; }
         //public List<BaseStat> nothing { get; set; }
         public string npc = "bob";
        
@@ -31,15 +31,15 @@ namespace Assets.Scripts.GameGrind
         }
         private void BuildDatabase()
         {
-            Dialogues = JsonConvert.DeserializeObject<List<Dialogue>>(Resources.Load<TextAsset>("GameGrind/JSON/DialogueTest").ToString());
+            Dialogues = JsonConvert.DeserializeObject<List<GGDialogue>>(Resources.Load<TextAsset>("GameGrind/JSON/DialogueTest").ToString());
             //Debug.Log(Items[0].Stats[1].StatName + " level is " + Items[0].Stats[0].GetCalculatedStatValue());
             Debug.Log(Dialogues[0].Introduction);
         }
 
-        public Dialogue GetConversation(string Dialoguesv)
+        public GGDialogue GetConversation(string Dialoguesv)
         {
             // TODO: Lamba expression with where clause could be faster?
-            foreach (Dialogue talk in Dialogues)
+            foreach (GGDialogue talk in Dialogues)
             {
                 if (talk.Name == Dialoguesv)
                     return talk;
