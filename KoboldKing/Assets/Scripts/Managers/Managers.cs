@@ -71,14 +71,14 @@ namespace Assets.Scripts.Managers
 
                 if (numReady > lastReady)
                     Debug.Log("Progress: " + numReady + "/" + numModules);
-                Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
+                Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules, MessengerMode.DONT_REQUIRE_LISTENER);
 
                 // pause for one frame before checking again.
                 yield return null;
             }
 
             Debug.Log("All managers started up");
-            Messenger.Broadcast(StartupEvent.MANAGERS_STARTED);
+            Messenger.Broadcast(StartupEvent.MANAGERS_STARTED, MessengerMode.DONT_REQUIRE_LISTENER);
         }
     }
 

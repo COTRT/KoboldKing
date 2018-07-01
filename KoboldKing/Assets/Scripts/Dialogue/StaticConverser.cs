@@ -22,7 +22,7 @@ public class StaticConverser : MonoBehaviour, IConverser
             {
                 throw new KeyNotFoundException("No JSONDatabaseEntryName for GameObject of name " + name);
             }
-            Dialogues = DialogueManager.MasterDialogueDict[JSONDatabaseEntryName];
+            Dialogues = DialogueManager.Get(JSONDatabaseEntryName);
         }
 
         if (Dialogues.Values.Count == 0 || Dialogues.Values.Count > 1)

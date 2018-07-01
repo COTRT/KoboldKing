@@ -12,7 +12,7 @@ public class PlayerDialogueManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetButtonUp("EnterDialogue"))
+        if (Input.GetMouseButtonUp(0)||Input.GetKeyUp(KeyCode.Q))
         {
             RaycastHit hit;
             Ray raycast = mainCamera.ScreenPointToRay(Input.mousePosition);
@@ -22,6 +22,10 @@ public class PlayerDialogueManager : MonoBehaviour {
                 if (converser != null)
                 {
                     Debug.Log(converser.GetDialogue().Statement);
+                }
+                else
+                {
+                    Debug.LogWarning("Found no converser on the target object");
                 }
             }
         }

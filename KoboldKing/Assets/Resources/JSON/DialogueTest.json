@@ -1,0 +1,8 @@
+{
+	"Capsule": {
+		"It shouldn't matter what I put here, since the Capsule picks the only available item to speak":
+		{
+			"Statement":"Whaas Uuupppp.  I'm Capsule."
+		}
+	}
+}
