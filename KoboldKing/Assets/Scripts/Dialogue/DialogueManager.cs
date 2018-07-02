@@ -4,13 +4,16 @@ using Newtonsoft.Json;
 
 public  class DialogueManager : MonoBehaviour
 {
-    public string JSONFileName = "Dialogue.json";
+    /// <summary>
+    /// Please note:  No File Extensions.
+    /// </summary>
+    public string JSONFileName = "Dialogue";
     [HideInInspector]
     public static DialogueManager Instance;
-    Dictionary<string, ObjectDialogues> _masterDialogueDict;
+    DialogueDB _masterDialogueDict;
 
 
-    public  Dictionary<string, ObjectDialogues> MasterDialogueDict
+    public DialogueDB MasterDialogueDict
     {
         get
         {
@@ -28,14 +31,14 @@ public  class DialogueManager : MonoBehaviour
     /// depending on the environment (say, follow the "Quest Completed" tree after a quest is completed)
     /// </summary>
     /// <returns></returns>
-    private  Dictionary<string,ObjectDialogues> GetJSONDatabase()
+    private DialogueDB GetJSONDatabase()
     {
         var asset = Resources.Load<TextAsset>("JSON/" + JSONFileName);
         if (asset == null)
         {
             throw new System.IO.FileNotFoundException("The Target Dialogue File was not found");
         }
-        return JsonConvert.DeserializeObject<Dictionary<string, ObjectDialogues>>(asset.text);
+        return JsonConvert.DeserializeObject<DialogueDB>(asset.text);
 
     }
     public static ObjectDialogues Get(string ObjectName)

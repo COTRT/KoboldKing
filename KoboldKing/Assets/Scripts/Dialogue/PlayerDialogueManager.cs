@@ -18,7 +18,7 @@ public class PlayerDialogueManager : MonoBehaviour {
             Ray raycast = mainCamera.ScreenPointToRay(Input.mousePosition);
             if(Physics.Raycast(raycast,out hit))
             {
-                IConverser converser = hit.transform.gameObject.GetComponent<IConverser>();
+                Converser converser = hit.transform.gameObject.GetComponent<Converser>();
                 if (converser != null)
                 {
                     Debug.Log(converser.GetDialogue().Statement);
