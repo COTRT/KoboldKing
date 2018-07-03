@@ -6,12 +6,14 @@ namespace Assets.Scripts.TimWork
 {
     public class Encounter : MonoBehaviour
     {
-        [SerializeField] private int _encounterNumber;
-        [SerializeField] private string _name;
-        [SerializeField] private string _description;
+        //These commented things are presently unused.
+        //Uncomment them as needed.
+
+        //[SerializeField] private string _name;
+        //[SerializeField] private string _description;
         [SerializeField] private int _mobCount;
-        [SerializeField] private MobTypes _mobTypes;
-        [SerializeField] private MobRanks _mobRanks;
+        //[SerializeField] private MobTypes _mobTypes;
+        //[SerializeField] private MobRanks _mobRanks;
         [SerializeField] private GameObject _prefab;
         [SerializeField] private List<float> _xPos;
         [SerializeField] private List<float> _yPos;

@@ -22,7 +22,6 @@ public class Slime : Interactable, IEnemy
     private const int EnemyAttackDamage = 5;
     private const int EnemyAttackSpeed = 2;
     private NavMeshAgent navAgent;
-    private CharacterStats characterStats;
     private Collider[] withinAggroColliders;
 
 
@@ -40,7 +39,6 @@ public class Slime : Interactable, IEnemy
         Id = 0;
         Experience = 250;
         navAgent = GetComponent<NavMeshAgent>();
-        characterStats = new CharacterStats(6, 10, 2);
         currentHealth = maxHealth;
     }
 

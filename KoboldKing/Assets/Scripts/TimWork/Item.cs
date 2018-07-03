@@ -9,12 +9,10 @@ namespace Assets.Scripts.Item
         [SerializeField] private string _description;
 
         [SerializeField] Icon _icon;
-        [SerializeField] private List<Buff> _buffs;
+
+        //[SerializeField] private List<Buff> _buffs;
 
         [SerializeField] ItemTypes _itemTypes;
-
-
-
 
         //item type
         //-weapon
@@ -33,7 +31,7 @@ namespace Assets.Scripts.Item
 
         public string Description
         {
-            get { return _description;}
+            get { return _description; }
             set { _description = value; }
         }
 

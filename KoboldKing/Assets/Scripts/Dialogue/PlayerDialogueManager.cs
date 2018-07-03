@@ -23,10 +23,6 @@ public class PlayerDialogueManager : MonoBehaviour {
                 {
                     Debug.Log(converser.GetDialogue().Statement);
                 }
-                else
-                {
-                    Debug.LogWarning("Found no converser on the target object");
-                }
             }
         }
 	}

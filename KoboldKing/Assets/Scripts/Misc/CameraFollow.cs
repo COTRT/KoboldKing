@@ -9,7 +9,10 @@ public class CameraFollow : MonoBehaviour
     private Vector3 offset;
 
     // Use this for initialization
-
+    private void Start()
+    {
+        offset = _player.transform.position - transform.position;
+    }
 
     // Update is called once per frame after update
     void LateUpdate()
