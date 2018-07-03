@@ -8,10 +8,8 @@ public class QuestGiver : NPC
     public bool AssignedQuest { get; set; }
     public bool Helped { get; set; }
 
-#pragma warning disable CS0649
     [SerializeField] private GameObject quests;
     [SerializeField] private string questType;
-#pragma warning restore CS0649
 
     private Quest Quest { get; set; }
 
