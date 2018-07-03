@@ -71,7 +71,7 @@ namespace Assets.Scripts.Managers
 
                 if (numReady > lastReady)
                     Debug.Log("Progress: " + numReady + "/" + numModules);
-                Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules, MessengerMode.DONT_REQUIRE_LISTENER);
+                Messenger<int, int>.Broadcast(StartupEvent.MANAGERS_PROGRESS, numReady, numModules);
 
                 // pause for one frame before checking again.
                 yield return null;
