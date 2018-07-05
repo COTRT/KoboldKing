@@ -25,7 +25,6 @@ public class PlayerDialogueManager : MonoBehaviour
                 if (converser != null)
                 {
                     Messenger<Dialogue>.Broadcast(UIEvent.SHOW_DIALOGUE, converser.GetDialogue());
-                    Debug.Log(converser.GetDialogue().Statement);
                 }
                 else
                 {

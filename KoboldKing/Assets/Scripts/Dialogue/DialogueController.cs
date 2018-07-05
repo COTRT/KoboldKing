@@ -11,9 +11,8 @@ public class DialogueController : MonoBehaviour
     private Transform dialogueParent;
     private Text statement;
     private Transform responses;
-    private IEnumerable<Button> responseButtons = new Button[0];
+    private Button[] responseButtons = new Button[0];
     private Button responseButtonPrefab;
-    private bool dismissing = false;
 
     void Start()
     {
@@ -29,15 +28,10 @@ public class DialogueController : MonoBehaviour
     public void ShowDialogue(Dialogue dialogue)
     {
         foreach (var b in responseButtons) Destroy(b.gameObject);
-        if (dismissing)
-        {
-            dialogueParent.gameObject.SetActive(false);
-        }
         statement.text = dialogue.Statement;
         dialogueParent.gameObject.SetActive(true);
         if (dialogue.Responses != null)
         {
-            dismissing = false;
             responseButtons = dialogue.Responses.Select(kv =>
             {
                 var rb = Instantiate(responseButtonPrefab, responses);
@@ -48,13 +42,16 @@ public class DialogueController : MonoBehaviour
                     Messenger<Dialogue>.Broadcast(UIEvent.SHOW_DIALOGUE, kv.Value);
                 });
                 return rb;
-            });
+            }).ToArray();
         }
         else
         {
-            dismissing = true;
-            var rb = Instantiate(responseButtonPrefab);
+            var rb = Instantiate(responseButtonPrefab, responses);
             rb.transform.GetChild(0).GetComponent<Text>().text = "Dismiss";
+            rb.onClick.AddListener(() =>
+            {
+                dialogueParent.gameObject.SetActive(false);
+            });
             responseButtons = new Button[]
             {
                 rb

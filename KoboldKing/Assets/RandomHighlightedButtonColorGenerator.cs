@@ -15,7 +15,6 @@ public class RandomHighlightedButtonColorGenerator : MonoBehaviour
         float hue = Random.Range(HueRange.x, HueRange.y);
         float saturation = Random.Range(SaturationRange.x, SaturationRange.y);
         float value = Random.Range(ValueRange.x, ValueRange.y);
-        Debug.LogFormat("H: {0}, S:  {1}, V:  {2}", hue, saturation, value);
         Button button = GetComponent<Button>();
         var colors = button.colors;
         colors.highlightedColor = Color.HSVToRGB(hue, saturation, value);
