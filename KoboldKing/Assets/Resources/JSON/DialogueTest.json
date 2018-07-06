@@ -32,7 +32,7 @@
 		}
 	},
 	"NPC Guy": {
-		"This situation key also shouldn't matter, since the RandomConverser just picks a random Dialogue.":
+		"Quest_Completed":
 		{
 			"Statement":"Well hi, this feels really.... statement #1"
 		},
