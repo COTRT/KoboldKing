@@ -31,22 +31,36 @@
       }
 		}
 	},
-	"NPC Guy": {
-		"Quest_Completed":
-		{
-			"Statement":"Well hi, this feels really.... statement #1"
-		},
-		"jsdhfl":
-		{
-			"Statement":"EEEK!!! Why are you clicking me?"
-		},
-		"#3":
-		{
-			"Statement":"Sometimes, I just don't seem to get it in life, you know?"
-		},
-		"#4":
-		{
-			"Statement":"I really don't like getting clicked...."
-		}
-	}
+  "NPC Guy": {
+    "Quest_Completed": {
+      "Statement": "Well hi, this feels really.... statement #1"
+    },
+    "jsdhfl": {
+      "Statement": "EEEK!!! Why are you clicking me?"
+    },
+    "#3": {
+      "Statement": "Sometimes, I just don't seem to get it in life, you know?"
+    },
+    "#4": {
+      "Statement": "I really don't like getting clicked...."
+    }
+  },
+  "TestQuestGiver": {
+    "Assign_Quest": {
+      "Statement": "Hey, Guess what?  I want to give you a quest",
+      "Responses": {
+        "GIMME GIMME GIMME": {
+          "Action": "GiveQuest UltimateSlayer",
+          "Statement": "You gotta Quest"
+        },
+        "NO, PLEASE, NO": {
+          "Statement": "Fine, fine, fine..."
+        }
+      }
+        
+    },
+    "Quest_Assigned": {
+      "Statement": "I've already given you that quest, dinglebat'"
+    }
+  }
 }

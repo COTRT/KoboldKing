@@ -24,7 +24,7 @@ public class PlayerDialogueManager : MonoBehaviour
                 Converser converser = hit.transform.gameObject.GetComponent<Converser>();
                 if (converser != null)
                 {
-                    Messenger<Dialogue>.Broadcast(UIEvent.SHOW_DIALOGUE, converser.GetDialogue());
+                    Messenger<Dialogue,GameObject>.Broadcast(UIEvent.SHOW_DIALOGUE, converser.GetDialogue(),hit.collider.gameObject);
                 }
                 else
                 {

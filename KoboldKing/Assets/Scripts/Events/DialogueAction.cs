@@ -12,5 +12,9 @@ namespace Assets.Scripts.Events
         /// Give an item to the player
         /// </summary>
         public static string GiveItem = "GiveItem";
+        /// <summary>
+        /// Give a quest to the player
+        /// </summary>
+        public static string GiveQuest = "GiveQuest";
     }
 }

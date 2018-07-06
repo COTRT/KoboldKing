@@ -21,11 +21,11 @@ public class DialogueController : MonoBehaviour
         responses = dialogueParent.Find("Responses");
         dialogueParent.gameObject.SetActive(false);
         responseButtonPrefab = Resources.Load<Button>("UI/DialogueResponse");
-        Messenger<Dialogue>.AddListener(UIEvent.SHOW_DIALOGUE, ShowDialogue);
+        Messenger<Dialogue, GameObject>.AddListener(UIEvent.SHOW_DIALOGUE, ShowDialogue);
     }
 
 
-    public void ShowDialogue(Dialogue dialogue)
+    public void ShowDialogue(Dialogue dialogue, GameObject speaker)
     {
         foreach (var b in responseButtons) Destroy(b.gameObject);
         statement.text = dialogue.Statement;
@@ -33,10 +33,10 @@ public class DialogueController : MonoBehaviour
         if (dialogue.Action != null)
         {
             string[] actionSegments = dialogue.Action.Split(' ');
-            string command = actionSegments[0];
+            string action = actionSegments[0];
             var arguments = actionSegments.Skip(1);
-            Debug.Log("Attempting to perform command:  " + command);
-            Messenger<string[]>.Broadcast(DialogueAction.GiveItem, arguments.ToArray(),MessengerMode.DONT_REQUIRE_LISTENER);
+            Debug.Log("Attempting to perform command:  " + action);
+            Messenger<string[],GameObject>.Broadcast(action, arguments.ToArray(), speaker,MessengerMode.DONT_REQUIRE_LISTENER);
         }
         if (dialogue.Responses != null)
         {

@@ -10,9 +10,9 @@ public class GiveItem : ManagerBase
 {
     public override void Startup(DataService dataService)
     {
-        Messenger<string[]>.AddListener(DialogueAction.GiveItem, HandleGiveItemAction);
+        Messenger<string[],GameObject>.AddListener(DialogueAction.GiveItem, HandleGiveItemAction);
     }
-    private void HandleGiveItemAction(string[] arguments)
+    private void HandleGiveItemAction(string[] arguments,GameObject speaker)
     {
         foreach(string argument in arguments)
         {
