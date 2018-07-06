@@ -30,6 +30,14 @@ public class DialogueController : MonoBehaviour
         foreach (var b in responseButtons) Destroy(b.gameObject);
         statement.text = dialogue.Statement;
         dialogueParent.gameObject.SetActive(true);
+        if (dialogue.Action != null)
+        {
+            string[] actionSegments = dialogue.Action.Split(' ');
+            string command = actionSegments[0];
+            var arguments = actionSegments.Skip(1);
+            Debug.Log("Attempting to perform command:  " + command);
+            Messenger<string[]>.Broadcast(DialogueAction.GiveItem, arguments.ToArray(),MessengerMode.DONT_REQUIRE_LISTENER);
+        }
         if (dialogue.Responses != null)
         {
             responseButtons = dialogue.Responses.Select(kv =>

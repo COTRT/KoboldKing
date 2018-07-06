@@ -15,5 +15,4 @@ namespace Assets.Scripts.Events
         /// Called when the player chooses a response to a dialogue statement
         /// </summary>
         public static string DIALOGUE_RESPONSE = "DIALOGUE_RESPONSE";
-    }
-}
+} }

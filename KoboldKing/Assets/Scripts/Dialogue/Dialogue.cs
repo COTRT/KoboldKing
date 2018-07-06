@@ -23,5 +23,6 @@ public class Dialogue  {
         this.Responses = Responses;
     }
     public string Statement { get; set; }
+    public string Action { get; set; }
     public Dictionary<string,Dialogue> Responses { get; set; }
 }                                     

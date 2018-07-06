@@ -8,7 +8,17 @@
           "Statement": "How's life?",
           "Responses": {
             "Peachy": {
-              "Statement": "Cool... Bye"
+              "Statement": "Wow.  Are you sure not Appley?",
+              "Responses": {
+                "Challenge Accepted": {
+                  "Action": "GiveItem sword",
+                  "Statement": "DUDE!  You done got a quest"
+                },
+                "Very sure": {
+                  "Statement": "Kay Bye"
+                }
+              
+              }
             },
             "Delightful": {
               "Statement": "Exciting.  Go away now"
