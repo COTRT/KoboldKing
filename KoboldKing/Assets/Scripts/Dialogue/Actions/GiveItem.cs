@@ -16,7 +16,8 @@ public class GiveItem : ManagerBase
     {
         foreach(string argument in arguments)
         {
-            InventoryController.Instance.GiveItem(argument);
+            //InventoryController.Instance.GiveItem(argument);
+            Debug.Log("Pretend the Inventory System works and we just created a " + argument);
         }
     }
 }

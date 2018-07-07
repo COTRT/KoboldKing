@@ -12,7 +12,7 @@ public class DataManager : ManagerBase
 
     private string _filename;
 
-    public override void Startup(DataService dataService)
+    protected override void StartManager(DataService dataService)
     {
         Debug.Log("Data manager starting...");
 

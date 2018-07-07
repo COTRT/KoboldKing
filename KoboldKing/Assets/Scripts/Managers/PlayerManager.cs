@@ -13,7 +13,7 @@ namespace Assets.Scripts.Managers
 
         //private NetworkService _network;
 
-        public override void Startup(DataService dataService)
+        protected override void StartManager(DataService dataService)
         {
             Debug.Log("Player manager starting...");
 

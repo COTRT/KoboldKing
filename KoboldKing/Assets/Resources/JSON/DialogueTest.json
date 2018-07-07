@@ -12,7 +12,7 @@
               "Responses": {
                 "Challenge Accepted": {
                   "Action": "GiveItem sword",
-                  "Statement": "DUDE!  You done got a quest"
+                  "Statement": "DUDE!  You done got a sword"
                 },
                 "Very sure": {
                   "Statement": "Kay Bye"
@@ -46,7 +46,7 @@
     }
   },
   "TestQuestGiver": {
-    "Assign_Quest": {
+    "Quest_Assign": {
       "Statement": "Hey, Guess what?  I want to give you a quest",
       "Responses": {
         "GIMME GIMME GIMME": {
@@ -59,8 +59,14 @@
       }
         
     },
-    "Quest_Assigned": {
-      "Statement": "I've already given you that quest, dinglebat'"
+    "Quest_Incomplete": {
+      "Statement": "I've already given you that quest, dinglebat"
+    },
+    "Quest_Completing": {
+      "Statement": "Thanks for all that, dude.  Here's some rewards and stuff."
+    },
+    "Quest_Completed": {
+      "Statement": "Hey, I've already rewarded you.  Kids these days, always trying to take more than their share, psha.  Scat!"
     }
   }
 }

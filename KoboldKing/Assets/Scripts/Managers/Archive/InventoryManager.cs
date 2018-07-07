@@ -14,7 +14,7 @@ namespace Assets.Scripts.Managers
         private Dictionary<string, int> _items;
         public string EquippedItem { get; private set; }
 
-        public override void Startup(DataService dataService)
+        protected override void StartManager(DataService dataService)
         {
             Debug.Log("Inventory manager starting...");
 

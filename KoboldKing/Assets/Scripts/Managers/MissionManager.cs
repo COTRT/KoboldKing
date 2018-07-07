@@ -15,7 +15,7 @@ namespace Assets.Scripts.Managers
         public int CurLevel { get; private set; }
         public int MaxLevel { get; private set; }
 
-        public override void Startup(DataService dataService)
+        protected override void StartManager(DataService dataService)
         {
             Debug.Log("Mission manager starting...");
 

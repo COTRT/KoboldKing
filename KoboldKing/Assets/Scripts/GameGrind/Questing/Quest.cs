@@ -14,7 +14,7 @@ public class Quest : MonoBehaviour
     public bool Completed { get; set; }
     public bool HasGivenReward { get; set; }
 
-    public void Start()
+    public void Awake()
     {
         Goals = new List<Goal>();
         HasGivenReward = false;
