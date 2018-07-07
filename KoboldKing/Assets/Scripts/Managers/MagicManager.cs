@@ -10,7 +10,7 @@ namespace Assets.Scripts.Managers
     public class MagicManager : ManagerBase
     {
         public bool hothStarted = false;
-        public override void Startup(DataService dataService)
+        protected override void StartManager(DataService dataService)
         {
             dataService.Register(this, "Magic");
             hothStarted = true;

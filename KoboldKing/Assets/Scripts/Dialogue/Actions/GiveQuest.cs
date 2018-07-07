@@ -21,7 +21,7 @@ public class GiveQuest : ManagerBase
         }
     }
 
-    public override void Startup(DataService dataService)
+    protected override void StartManager(DataService dataService)
     {
         Messenger<string[],GameObject>.AddListener(DialogueAction.GiveQuest, HandleGiveQuestAction);
     }

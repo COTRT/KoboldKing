@@ -47,7 +47,8 @@ public class DialogueController : MonoBehaviour
                 rb.onClick.AddListener(() =>
                 {
                     Messenger<string>.Broadcast(UIEvent.DIALOGUE_RESPONSE, kv.Key, MessengerMode.DONT_REQUIRE_LISTENER);
-                    Messenger<Dialogue>.Broadcast(UIEvent.SHOW_DIALOGUE, kv.Value);
+                    Debug.Log(kv.Key + ":  A-" + kv.Value.Action+"S-"+kv.Value.Statement+"R-"+(kv.Value.Responses==null).ToString());
+                    Messenger<Dialogue,GameObject>.Broadcast(UIEvent.SHOW_DIALOGUE, kv.Value,speaker);
                 });
                 return rb;
             }).ToArray();

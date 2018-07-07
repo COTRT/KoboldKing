@@ -36,9 +36,6 @@ public class QuestGiver : NPC
     {
         AssignedQuest = true;
         Quest = (Quest)quests.AddComponent(System.Type.GetType(questType));
-
-
-
     }
 
     void CheckQuest()

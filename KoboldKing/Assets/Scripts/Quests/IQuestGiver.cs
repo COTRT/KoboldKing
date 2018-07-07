@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-public interface IQuestGiver
+﻿public interface IQuestGiver
 {
     void QuestAssigned(Quest quest);
 }
