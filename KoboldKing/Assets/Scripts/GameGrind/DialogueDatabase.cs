@@ -32,8 +32,6 @@ namespace Assets.Scripts.GameGrind
         private void BuildDatabase()
         {
             Dialogues = JsonConvert.DeserializeObject<List<GGDialogue>>(Resources.Load<TextAsset>("GameGrind/JSON/DialogueTest").ToString());
-            //Debug.Log(Items[0].Stats[1].StatName + " level is " + Items[0].Stats[0].GetCalculatedStatValue());
-            Debug.Log(Dialogues[0].Introduction);
         }
 
         public GGDialogue GetConversation(string Dialoguesv)

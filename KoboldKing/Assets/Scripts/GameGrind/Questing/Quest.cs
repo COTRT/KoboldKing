@@ -12,11 +12,16 @@ public class Quest : MonoBehaviour
     public int ExperienceReward { get; set; }
     public Item ItemReward { get; set; }
     public bool Completed { get; set; }
+    public bool HasGivenReward { get; set; }
 
-
-    public void CheckGoals()
+    public void Start()
     {
         Goals = new List<Goal>();
+        HasGivenReward = false;
+    }
+    public void CheckGoals()
+    {
+        
         Completed = Goals.All(x => x.Completed);
     }
 
@@ -26,6 +31,7 @@ public class Quest : MonoBehaviour
         {
             InventoryController.Instance.GiveItem(ItemReward);
         }
+        HasGivenReward = true;
     }
 
 

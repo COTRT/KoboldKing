@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class QuestGiver : NPC
+public class GGQuestGiver : NPC
 {
 
     public bool AssignedQuest { get; set; }
