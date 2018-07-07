@@ -11,9 +11,9 @@ namespace Assets.Scripts.TimWork.Mobs
         [SerializeField] private int _currentValue;
         [SerializeField] private int _baseValue;
 
-        [SerializeField] private Icon _icon;
+        //[SerializeField] private Icon _icon;
 
-        [SerializeField] private AttributeTypes _attribute;
+        //[SerializeField] private AttributeTypes _attribute;
 
 
         // do we want them in an enum for faster ref

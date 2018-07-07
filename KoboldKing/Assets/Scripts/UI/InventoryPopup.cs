@@ -42,7 +42,7 @@ public class InventoryPopup : MonoBehaviour
 
                 int count = Managers.Inventory.GetItemCount(item);
                 string message = "x" + count;
-                if (item == Managers.Inventory.equippedItem)
+                if (item == Managers.Inventory.EquippedItem)
                 {
                     message = "Equipped\n" + message;
                 }

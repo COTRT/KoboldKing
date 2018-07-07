@@ -7,13 +7,12 @@ using System.IO;
 using Assets.Scripts.Data;
 using Assets.Scripts.Managers;
 
-public class DataManager : MonoBehaviour, IGameManager
+public class DataManager : ManagerBase
 {
-    public ManagerStatus status { get; private set; }
 
     private string _filename;
 
-    public void Startup()
+    public override void Startup(DataService dataService)
     {
         Debug.Log("Data manager starting...");
 
@@ -21,7 +20,7 @@ public class DataManager : MonoBehaviour, IGameManager
         _filename = Path.Combine(Application.persistentDataPath, "game.dat");
 
         // any long-running startup tasks go here, and set status to 'Initializing' until those tasks are complete
-        status = ManagerStatus.STARTED;
+        Status = ManagerStatus.STARTED;
     }
 
     public void SaveGameState()
@@ -29,10 +28,10 @@ public class DataManager : MonoBehaviour, IGameManager
         // dictionary that will be serialized.
         Dictionary<string, object> gamestate = new Dictionary<string, object>();
         gamestate.Add("inventory", Managers.Inventory.GetData());
-        gamestate.Add("health", Managers.Player.health);
-        gamestate.Add("maxHealth", Managers.Player.maxHealth);
-        gamestate.Add("curLevel", Managers.Mission.curLevel);
-        gamestate.Add("maxLevel", Managers.Mission.maxLevel);
+        gamestate.Add("health", Managers.Player.Health);
+        gamestate.Add("maxHealth", Managers.Player.MaxHealth);
+        gamestate.Add("curLevel", Managers.Mission.CurLevel);
+        gamestate.Add("maxLevel", Managers.Mission.MaxLevel);
 
         // create a file at the file path.
         FileStream stream = File.Create(_filename);
@@ -65,12 +64,5 @@ public class DataManager : MonoBehaviour, IGameManager
         Managers.Player.UpdateData((int)gamestate["health"], (int)gamestate["maxHealth"]);
         Managers.Mission.UpdateData((int)gamestate["curLevel"], (int)gamestate["maxLevel"]);
         Managers.Mission.RestartCurrent();
-    }
-
-    public event UnhandledExceptionEventHandler OnException;
-    public ManagerStatus Status { get; private set; }
-    public void Startup(DataService dataService)
-    {
-        throw new NotImplementedException();
     }
 }

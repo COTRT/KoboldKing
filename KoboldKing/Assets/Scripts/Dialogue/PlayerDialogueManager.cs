@@ -26,10 +26,6 @@ public class PlayerDialogueManager : MonoBehaviour
                 {
                     Messenger<Dialogue,GameObject>.Broadcast(UIEvent.SHOW_DIALOGUE, converser.GetDialogue(),hit.collider.gameObject);
                 }
-                else
-                {
-                    Debug.LogWarning("Found no converser on the target object");
-                }
             }
         }
     }
