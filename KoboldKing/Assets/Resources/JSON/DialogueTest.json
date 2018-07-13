@@ -32,16 +32,16 @@
 		}
 	},
   "NPC Guy": {
-    "Quest_Completed": {
+    "0": {
       "Statement": "Well hi, this feels really.... statement #1"
     },
-    "jsdhfl": {
+    "1": {
       "Statement": "EEEK!!! Why are you clicking me?"
     },
-    "#3": {
+    "2": {
       "Statement": "Sometimes, I just don't seem to get it in life, you know?"
     },
-    "#4": {
+    "3": {
       "Statement": "I really don't like getting clicked...."
     }
   },
@@ -62,7 +62,7 @@
     "Quest_Incomplete": {
       "Statement": "I've already given you that quest, dinglebat"
     },
-    "Quest_Completing": {
+    "Quest_Reward": {
       "Statement": "Thanks for all that, dude.  Here's some rewards and stuff."
     },
     "Quest_Completed": {
