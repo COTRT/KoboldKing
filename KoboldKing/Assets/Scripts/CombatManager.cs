@@ -1,6 +1,6 @@
 ﻿using Assets.Scripts.Models;
 using UnityEngine;
-using Assets.Scripts.Item;
+using Assets.Scripts.ItemX;
 using Random = System.Random;
 
 namespace Assets.Scripts

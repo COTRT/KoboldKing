@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Item;
+﻿using Assets.Scripts.ItemX;
 using UnityEngine;
 
 // do my players inherit from mobs or do we need a base class.

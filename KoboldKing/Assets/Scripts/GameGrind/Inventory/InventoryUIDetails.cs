@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class InventoryUIDetails : MonoBehaviour
 {
-    private Item item;
+    private ItemX item;
     private Button selectedItemButton, itemInteractButton;
     private Text itemNameText, itemDescriptionText, itemInteractButtonText;
 
@@ -21,7 +21,7 @@ public class InventoryUIDetails : MonoBehaviour
     }
 
 
-    public void SetItem(Item item, Button selectedButton)
+    public void SetItem(ItemX item, Button selectedButton)
     {
         gameObject.SetActive(true);
         statText.text = "";
@@ -43,12 +43,12 @@ public class InventoryUIDetails : MonoBehaviour
 
     public void OnItemInteract()
     {
-        if (item.ItemType == Item.ItemTypes.Consumable)
+        if (item.ItemTypeX == ItemX.ItemTypes.Consumable)
         {
             InventoryController.Instance.ConsumeItem(item);
             Destroy(selectedItemButton.gameObject);
         }
-        else if (item.ItemType == Item.ItemTypes.Weapon)
+        else if (item.ItemTypeX == ItemX.ItemTypes.Weapon)
         {
             InventoryController.Instance.EquipItem(item);
             Destroy(selectedItemButton.gameObject);

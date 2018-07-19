@@ -96,7 +96,7 @@ public class Slime : Interactable, IEnemy
 
     void DropLoot()
     {
-        Item item = DropTable.GetDrop();
+        ItemX item = DropTable.GetDrop();
         if (item != null)
         {
             PickupItem instance = Instantiate(pickupItem, transform.position, Quaternion.identity);

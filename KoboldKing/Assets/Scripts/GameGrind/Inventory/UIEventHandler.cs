@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UIEventHandler : MonoBehaviour
 {
-    public delegate void ItemEventHandler(Item item);
+    public delegate void ItemEventHandler(ItemX item);
     public static event ItemEventHandler OnItemAddedToInventory;
     public static event ItemEventHandler OnItemEquipped;
 
@@ -18,7 +18,7 @@ public class UIEventHandler : MonoBehaviour
     public delegate void PlayerLevelEventHandler();
     public static event PlayerLevelEventHandler OnPlayerLevelChange;
 
-    public static void ItemAddedToInventory(Item item)
+    public static void ItemAddedToInventory(ItemX item)
     {
         if (OnItemAddedToInventory != null)
         {
@@ -27,7 +27,7 @@ public class UIEventHandler : MonoBehaviour
         }
     }
 
-    public static void ItemEquipped(Item item)
+    public static void ItemEquipped(ItemX item)
     {
         if (OnItemEquipped != null)
         {

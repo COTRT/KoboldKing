@@ -9,7 +9,7 @@ public class InventoryController : MonoBehaviour
     public PlayerWeaponController playerWeaponController;
     public ConsumableController consumableController;
     public InventoryUIDetails inventoryDetailsPanel;
-    public List<Item> playerItems = new List<Item>();
+    public List<ItemX> playerItems = new List<ItemX>();
 
 
 
@@ -34,28 +34,28 @@ public class InventoryController : MonoBehaviour
 
     public void GiveItem(string itemSlug)
     {
-        Item item = ItemDatabase.Instance.GetItem(itemSlug);
+        ItemX item = ItemDatabase.Instance.GetItem(itemSlug);
         playerItems.Add(item);
         UIEventHandler.ItemAddedToInventory(item);
     }
 
-    public void GiveItem(Item item)
+    public void GiveItem(ItemX item)
     {
         playerItems.Add(item);
         UIEventHandler.ItemAddedToInventory(item);
     }
 
-    public void SetItemDetails(Item item, Button selectedButton)
+    public void SetItemDetails(ItemX item, Button selectedButton)
     {
         inventoryDetailsPanel.SetItem(item, selectedButton);
     }
 
-    public void EquipItem(Item itemToEquip)
+    public void EquipItem(ItemX itemToEquip)
     {
         playerWeaponController.EquipWeapon(itemToEquip);
     }
 
-    public void ConsumeItem(Item itemtoConsume)
+    public void ConsumeItem(ItemX itemtoConsume)
     {
         consumableController.ConsumeItem(itemtoConsume);
     }

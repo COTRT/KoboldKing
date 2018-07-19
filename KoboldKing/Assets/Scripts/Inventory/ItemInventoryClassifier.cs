@@ -16,7 +16,7 @@ public class ItemInventoryClassifier : MonoBehaviour {
     /// <summary>
     /// This will help us classify if it is a weapon, coin, armor, etc.
     /// </summary>
-    public ItemType ItemType;
+    public ItemTypeX ItemTypeX;
     /// <summary>
     /// This will be the image that people see in the inventory for this object.
     /// </summary>
@@ -30,7 +30,7 @@ public class ItemInventoryClassifier : MonoBehaviour {
 }
 
 [Flags]
-public enum ItemType
+public enum ItemTypeX
 {
     Weapon = 2^0,
     Armor = 2^1,

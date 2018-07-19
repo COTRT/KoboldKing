@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class InventoryUIItem : MonoBehaviour
 {
-    public Item item;
+    public ItemX item;
 
     public Text itemText;
     public Image itemImage;
 
-    public void SetItem(Item item)
+    public void SetItem(ItemX item)
     {
         this.item = item;
         SetupItemValues();

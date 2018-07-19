@@ -5,8 +5,6 @@ using UnityEngine;
 public class CollectionGoal : Goal
 {
     public string ItemId { get; set; }
-
-
     public CollectionGoal(Quest quest, string itemId, string description, bool completed, int currentAmount, int requiredAmount)
     {
         this.Quest = quest;
@@ -23,7 +21,7 @@ public class CollectionGoal : Goal
         UIEventHandler.OnItemAddedToInventory += ItemPickedUp;
     }
 
-    void ItemPickedUp(Item item)
+    void ItemPickedUp(ItemX item)
     {
         if (item.ObjectSlug == this.ItemId)
         {

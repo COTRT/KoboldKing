@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Assets.Scripts.Item;
+using Assets.Scripts.ItemX;
 
 namespace Assets.Scripts.Models.Enemies
 {
