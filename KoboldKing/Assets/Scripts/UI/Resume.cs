@@ -6,7 +6,7 @@ using UnityEngine;
 public class Resume : MonoBehaviour
 {
     private GameObject Canvas;
-    private GameObject resume;
+    //private GameObject resume;
 
     void OnMouseDown()
     {

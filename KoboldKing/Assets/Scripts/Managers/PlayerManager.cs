@@ -6,15 +6,14 @@ using UnityEngine;
 // Inherit a class and implement an interface
 namespace Assets.Scripts.Managers
 {
-    public class PlayerManager : MonoBehaviour, IGameManager
+    public class PlayerManager : ManagerBase
     {
-        public ManagerStatus status { get; private set; }
-        public int health { get; private set; }
-        public int maxHealth { get; private set; }
+        public int Health { get; private set; }
+        public int MaxHealth { get; private set; }
 
         //private NetworkService _network;
 
-        public void Startup()
+        protected override void StartManager(DataService dataService)
         {
             Debug.Log("Player manager starting...");
 
@@ -24,30 +23,30 @@ namespace Assets.Scripts.Managers
             UpdateData(50, 100);
 
             // any long-running startup tasks go here, and set status to 'Initializing' until those tasks are complete
-            status = ManagerStatus.STARTED;
+            Status = ManagerStatus.STARTED;
         }
 
         public void UpdateData(int health, int maxHealth)
         {
-            this.health = health;
-            this.maxHealth = maxHealth;
+            this.Health = health;
+            this.MaxHealth = maxHealth;
         }
 
         public void ChangeHealth(int value)
         {
 
             // other scripts can't set health directly but can call this method.
-            health += value;
-            if (health > maxHealth)
+            Health += value;
+            if (Health > MaxHealth)
             {
-                health = maxHealth;
+                Health = MaxHealth;
             }
-            else if (health < 0)
+            else if (Health < 0)
             {
-                health = 0;
+                Health = 0;
             }
 
-            if (health == 0)
+            if (Health == 0)
             {
                 Messenger.Broadcast(GameEvent.LEVEL_FAILED);
                
@@ -63,11 +62,5 @@ namespace Assets.Scripts.Managers
             UpdateData(50, 100);
         }
 
-        public event UnhandledExceptionEventHandler OnException;
-        public ManagerStatus Status { get; private set; }
-        public void Startup(DataService dataService)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

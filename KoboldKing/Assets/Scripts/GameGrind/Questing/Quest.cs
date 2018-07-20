@@ -6,16 +6,22 @@ using System.Linq;
 public class Quest : MonoBehaviour
 {
 
-    public List<Goal> Goals { get; set; } = new List<Goal>();
+    public List<Goal> Goals { get; set; }
     public string QuestName { get; set; }
     public string Description { get; set; }
     public int ExperienceReward { get; set; }
     public Item ItemReward { get; set; }
     public bool Completed { get; set; }
+    public bool HasGivenReward { get; set; }
 
-
+    public void Awake()
+    {
+        Goals = new List<Goal>();
+        HasGivenReward = false;
+    }
     public void CheckGoals()
     {
+        
         Completed = Goals.All(x => x.Completed);
     }
 
@@ -25,6 +31,7 @@ public class Quest : MonoBehaviour
         {
             InventoryController.Instance.GiveItem(ItemReward);
         }
+        HasGivenReward = true;
     }
 
 

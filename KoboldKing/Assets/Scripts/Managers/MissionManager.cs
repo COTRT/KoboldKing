@@ -9,27 +9,26 @@ using UnityEngine.SceneManagement;
 
 namespace Assets.Scripts.Managers
 {
-    public class MissionManager : MonoBehaviour, IGameManager
+    public class MissionManager : ManagerBase
     {
-        public ManagerStatus status { get; private set; }
 
-        public int curLevel { get; private set; }
-        public int maxLevel { get; private set; }
+        public int CurLevel { get; private set; }
+        public int MaxLevel { get; private set; }
 
-        public void Startup()
+        protected override void StartManager(DataService dataService)
         {
             Debug.Log("Mission manager starting...");
 
             UpdateData(0, 3);
 
             // any long-running startup tasks go here, and set status to 'Initializing' until those tasks are complete
-            status = ManagerStatus.STARTED;
+            Status = ManagerStatus.STARTED;
         }
 
         public void UpdateData(int curLevel, int maxLevel)
         {
-            this.curLevel = curLevel;
-            this.maxLevel = maxLevel;
+            this.CurLevel = curLevel;
+            this.MaxLevel = maxLevel;
         }
 
         public void ReachObjective()
@@ -40,10 +39,10 @@ namespace Assets.Scripts.Managers
 
         public void GoToNext()
         {
-            if (curLevel < maxLevel)
+            if (CurLevel < MaxLevel)
             {
-                curLevel++;
-                string name = "Level" + curLevel;
+                CurLevel++;
+                string name = "Level" + CurLevel;
                 Debug.Log("Loading " + name);
                 SceneManager.LoadScene(name);
             }
@@ -56,17 +55,10 @@ namespace Assets.Scripts.Managers
 
         public void RestartCurrent()
         {
-            string name = "Level" + curLevel;
+            string name = "Level" + CurLevel;
             Debug.Log("Loading " + name);
             SceneManager.LoadScene(name);
         }
 
-        public event UnhandledExceptionEventHandler OnException;
-        public ManagerStatus Status { get; private set; }
-
-        public void Startup(DataService dataService)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

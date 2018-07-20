@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -23,11 +24,11 @@ public class MainMenu : MonoBehaviour
         }
         else if (load == true)
         {
-            Application.LoadLevel(2);
+            SceneManager.LoadScene(2);
         }
         else
         {
-            Application.LoadLevel(1); //If you click on other button it loads game!
+            SceneManager.LoadScene(1); //If you click on other button it loads game!
         }
     }
     void Update()

@@ -66,7 +66,6 @@ public class PlayerWeaponController : MonoBehaviour
         characterStats.AddStatBonus(itemToEquip.Stats);
         UIEventHandler.ItemEquipped(itemToEquip);
         UIEventHandler.StatsChanged();
-        //Debug.Log(equippedWeapon.Stats[0].GetCalculatedStatValue());
     }
 
     public void UnequipWeapon()

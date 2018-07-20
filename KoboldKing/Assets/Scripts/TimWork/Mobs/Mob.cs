@@ -24,7 +24,7 @@ namespace Assets.Scripts.Item
 
         [SerializeField] private string _mobTag = "Enemy";
 
-        [SerializeField] private GameObject _prefab;
+        //[SerializeField] private GameObject _prefab;
         
         [SerializeField] private Icon _icon;
         [SerializeField] private List<Buff> _buffs;

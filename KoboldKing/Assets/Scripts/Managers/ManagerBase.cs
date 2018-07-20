@@ -76,7 +76,12 @@ namespace Assets.Scripts.Managers
             }
         }
 
-        public abstract void Startup(DataService dataService);
+        protected abstract void StartManager(DataService dataService);
+        public void Startup(DataService dataService)
+        {
+            StartManager(dataService);
+            Startup_Complete();
+        }
 
         protected void Startup_Complete()
         {

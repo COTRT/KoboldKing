@@ -90,7 +90,6 @@ namespace Assets.Scripts.Data
                     throw new ArgumentException("Folder with name: " + FolderName + " already exists.  Please select a different folder name");
                 }
             }
-            Log("Registering Object with identification name:  " + identificationName + "...");
             Type oType = objectToRegister.GetType();
             //We don't load all Type Infos off the bat; instead, we load the infos as soon an object of a certain type is registered, and then we add it to a dictionary so the TypeSaveInfo object only has to be created once.
             if (!TypeSaveInfos.ContainsKey(oType))
@@ -101,7 +100,6 @@ namespace Assets.Scripts.Data
             ObjectSaveInfo osi = new ObjectSaveInfo(objectToRegister, TypeSaveInfos[oType], FolderName);
             RegisteredObjects.Add(FolderName, osi);
             FindPaths(osi);
-            Log("Successfully Registered Object with identification name:  " + identificationName + "!");
             return FolderName;
         }
 
