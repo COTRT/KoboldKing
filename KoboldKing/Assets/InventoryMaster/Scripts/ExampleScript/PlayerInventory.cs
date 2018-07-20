@@ -33,7 +33,7 @@ public class PlayerInventory : MonoBehaviour
     float currentDamage = 0;
     float currentArmor = 0;
 
-    int normalSize = 3;
+    int normalSize = 16;
 
     public void OnEnable()
     {
@@ -87,7 +87,7 @@ public class PlayerInventory : MonoBehaviour
                     mainInventory = inventory.GetComponent<Inventory>();
                 mainInventory.sortItems();
                 if (item.itemAttributes[i].attributeName == "Slots")
-                    changeInventorySize(item.itemAttributes[i].attributeValue);
+                    changeInventorySize(normalSize + item.itemAttributes[i].attributeValue);
             }
         }
     }
@@ -139,6 +139,13 @@ public class PlayerInventory : MonoBehaviour
             mainInventory.updateSlotAmount();
             mainInventory.adjustInventorySize();
         }
+        else if (size == 46)
+        {
+            mainInventory.width = 23;
+            mainInventory.height = 2;
+            mainInventory.updateSlotAmount();
+            mainInventory.adjustInventorySize();
+        }
     }
 
     void dropTheRestItems(int size)
@@ -157,18 +164,18 @@ public class PlayerInventory : MonoBehaviour
 
     void Start()
     {
-        //if (HPMANACanvas != null)
-        //{
-        //    hpText = HPMANACanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+        if (HPMANACanvas != null)
+        {
+            hpText = HPMANACanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
 
-        //    manaText = HPMANACanvas.transform.GetChild(2).GetChild(0).GetComponent<Text>();
+            manaText = HPMANACanvas.transform.GetChild(2).GetChild(0).GetComponent<Text>();
 
-        //    hpImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
-        //    manaImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
+            hpImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
+            manaImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
 
-        //    UpdateHPBar();
-        //    UpdateManaBar();
-        //}
+            UpdateHPBar();
+            UpdateManaBar();
+        }
 
         if (inputManagerDatabase == null)
             inputManagerDatabase = (InputManager)Resources.Load("InputManager");
@@ -186,19 +193,19 @@ public class PlayerInventory : MonoBehaviour
             craftSystemInventory = craftSystem.GetComponent<Inventory>();
     }
 
-    //void UpdateHPBar()
-    //{
-    //    hpText.text = (currentHealth + "/" + maxHealth);
-    //    float fillAmount = currentHealth / maxHealth;
-    //    hpImage.fillAmount = fillAmount;
-    //}
+    void UpdateHPBar()
+    {
+        hpText.text = (currentHealth + "/" + maxHealth);
+        float fillAmount = currentHealth / maxHealth;
+        hpImage.fillAmount = fillAmount;
+    }
 
-    //void UpdateManaBar()
-    //{
-    //    manaText.text = (currentMana + "/" + maxMana);
-    //    float fillAmount = currentMana / maxMana;
-    //    manaImage.fillAmount = fillAmount;
-    //}
+    void UpdateManaBar()
+    {
+        manaText.text = (currentMana + "/" + maxMana);
+        float fillAmount = currentMana / maxMana;
+        manaImage.fillAmount = fillAmount;
+    }
 
 
     public void OnConsumeItem(Item item)
