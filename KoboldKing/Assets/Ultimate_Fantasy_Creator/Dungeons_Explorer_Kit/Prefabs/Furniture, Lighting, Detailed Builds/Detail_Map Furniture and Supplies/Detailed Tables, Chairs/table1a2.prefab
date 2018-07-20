@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - component: {fileID: 486808}
   m_Layer: 0
-  m_Name: table_1a_2
+  m_Name: table1a2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,6 +105,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: a33a4de9f2c93794c905a1f18bc0c42e, type: 2}
   m_StaticBatchInfo:
@@ -139,6 +140,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
   m_Materials:
   - {fileID: 2100000, guid: a33a4de9f2c93794c905a1f18bc0c42e, type: 2}
   m_StaticBatchInfo:
