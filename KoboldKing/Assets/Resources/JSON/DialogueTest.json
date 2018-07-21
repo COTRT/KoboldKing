@@ -40,7 +40,7 @@
   //    }
   //  }
   //},
-  "TestQuestGiver": {
+  "Bill": {
     "Quest_Assign": {
       "Statement": "Hey, Guess what?  I want to give you a quest",
       "Responses": {
