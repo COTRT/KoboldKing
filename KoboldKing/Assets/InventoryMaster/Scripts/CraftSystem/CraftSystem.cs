@@ -5,6 +5,7 @@ using UnityEditor;
 #endif
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 public class CraftSystem : MonoBehaviour
 {
@@ -30,11 +31,34 @@ public class CraftSystem : MonoBehaviour
     public Image arrowImage;
 
     //List<CraftSlot> slots = new List<CraftSlot>();
-    public List<Item> itemInCraftSystem = new List<Item>();
-    public List<GameObject> itemInCraftSystemGameObject = new List<GameObject>();
+    public List<CraftSystemItem> itemsInCraftSystem = new List<CraftSystemItem>();
+    public class CraftSystemItem
+    {
+
+        public Item item;
+        public GameObject gameObject;
+
+        public CraftSystemItem(Item item, GameObject gameObject)
+        {
+            this.item = item;
+            this.gameObject = gameObject;
+        }
+        public CraftSystemItem(ItemOnObject ioo)
+        {
+            this.item = ioo.item;
+            this.gameObject = ioo.gameObject;
+        }
+    }
     BlueprintDatabase blueprintDatabase;
     public List<Item> possibleItems = new List<Item>();
-    public List<bool> possibletoCreate = new List<bool>();
+
+    Transform slots;
+    Transform resultSlot;
+    Transform leftArrow;
+    Transform rightArrow;
+    RectTransform leftRect;
+    RectTransform rightRect;
+    RectTransform resultRect;
 
 
     //PlayerScript PlayerstatsScript;
@@ -44,11 +68,18 @@ public class CraftSystem : MonoBehaviour
     {
         blueprintDatabase = (BlueprintDatabase)Resources.Load("BlueprintDatabase");
         //playerStatsScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
+        slots = transform.GetChild(1);
+        resultSlot = transform.GetChild(3);
+        leftArrow = transform.GetChild(4);
+        rightArrow = transform.GetChild(5);
+        leftRect = leftArrow.GetComponent<RectTransform>();
+        rightRect = rightArrow.GetComponent<RectTransform>();
+        resultRect = resultSlot.GetComponent<RectTransform>();
     }
 
 #if UNITY_EDITOR
     [MenuItem("Master System/Create/Craft System")]
-    public static void menuItemCreateInventory()
+    public static void MenuItemCreateInventory()
     {
         GameObject Canvas = null;
         if (GameObject.FindGameObjectWithTag("Canvas") == null)
@@ -84,12 +115,12 @@ public class CraftSystem : MonoBehaviour
     }
 
 
-    public void setImages()
+    public void SetImages()
     {
-        finalSlotImage = transform.GetChild(3).GetComponent<Image>();
-        arrowImage = transform.GetChild(4).GetComponent<Image>();
+        finalSlotImage = resultSlot.GetComponent<Image>();
+        arrowImage = leftArrow.GetComponent<Image>();
 
-        Image image = transform.GetChild(5).GetComponent<Image>();
+        Image image = rightArrow.GetComponent<Image>();
         image.sprite = arrowImage.sprite;
         image.color = arrowImage.color;
         image.material = arrowImage.material;
@@ -98,11 +129,8 @@ public class CraftSystem : MonoBehaviour
     }
 
 
-    public void setArrowSettings()
+    public void SetArrowSettings()
     {
-        RectTransform leftRect = transform.GetChild(4).GetComponent<RectTransform>();
-        RectTransform rightRect = transform.GetChild(5).GetComponent<RectTransform>();
-
         leftRect.localPosition = new Vector3(leftArrowPositionX, leftArrowPositionY, 0);
         rightRect.localPosition = new Vector3(rightArrowPositionX, rightArrowPositionY, 0);
 
@@ -110,109 +138,90 @@ public class CraftSystem : MonoBehaviour
         rightRect.eulerAngles = new Vector3(0, 0, rightArrowRotation);
     }
 
-    public void setPositionFinalSlot()
+    public void SetPositionFinalSlot()
     {
-        RectTransform rect = transform.GetChild(3).GetComponent<RectTransform>();
-        rect.localPosition = new Vector3(finalSlotPositionX, finalSlotPositionY, 0);
+        resultRect.localPosition = new Vector3(finalSlotPositionX, finalSlotPositionY, 0);
     }
 
-    public int getSizeX()
+    public int GetSizeX()
     {
         return (int)GetComponent<RectTransform>().sizeDelta.x;
     }
 
-    public int getSizeY()
+    public int GetSizeY()
     {
         return (int)GetComponent<RectTransform>().sizeDelta.y;
     }
 
-    public void backToInventory()
+    public void BackToInventory()
     {
-        int length = itemInCraftSystem.Count;
-        for (int i = 0; i < length; i++)
+        foreach (CraftSystemItem ccitem in itemsInCraftSystem)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>().inventory.GetComponent<Inventory>().addItemToInventory(itemInCraftSystem[i].itemID, itemInCraftSystem[i].itemValue);
-            Destroy(itemInCraftSystemGameObject[i]);
+            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>().inventory.GetComponent<Inventory>().addItemToInventory(ccitem.item.itemID, ccitem.item.itemValue);
+            Destroy(ccitem.gameObject);
         }
 
-        itemInCraftSystem.Clear();
-        itemInCraftSystemGameObject.Clear();
+        itemsInCraftSystem.Clear();
     }
 
 
 
     public void ListWithItem()
     {
-        itemInCraftSystem.Clear();
+        itemsInCraftSystem.Clear();
         possibleItems.Clear();
-        possibletoCreate.Clear();
-        itemInCraftSystemGameObject.Clear();
 
-        for (int i = 0; i < transform.GetChild(1).childCount; i++)
+        for (int i = 0; i < slots.childCount; i++)
         {
-            Transform trans = transform.GetChild(1).GetChild(i);
+            Transform trans = slots.GetChild(i);
             if (trans.childCount != 0)
             {
-                itemInCraftSystem.Add(trans.GetChild(0).GetComponent<ItemOnObject>().item);
-                itemInCraftSystemGameObject.Add(trans.GetChild(0).gameObject);
+                itemsInCraftSystem.Add(new CraftSystemItem(trans.GetChild(0).GetComponent<ItemOnObject>()));
             }
         }
 
-        for (int k = 0; k < blueprintDatabase.blueprints.Count; k++)
+        foreach (var blueprint in blueprintDatabase.blueprints)
         {
-            int amountOfTrue = 0;
-            for (int z = 0; z < blueprintDatabase.blueprints[k].ingredients.Count; z++)
+            var ccItemIds = itemsInCraftSystem.Select(c => c.item.itemID).ToArray();
+            if (blueprint.ingredients.All(ingredient => ccItemIds.Contains(ingredient)))
             {
-                for (int d = 0; d < itemInCraftSystem.Count; d++)
-                {
-                    if (blueprintDatabase.blueprints[k].ingredients[z] == itemInCraftSystem[d].itemID && blueprintDatabase.blueprints[k].amount[z] <= itemInCraftSystem[d].itemValue)
-                    {
-                        amountOfTrue++;
-                        break;
-                    }
-                }
-                if (amountOfTrue == blueprintDatabase.blueprints[k].ingredients.Count)
-                {
-                    possibleItems.Add(blueprintDatabase.blueprints[k].finalItem);
-                    possibleItems[possibleItems.Count - 1].itemValue = blueprintDatabase.blueprints[k].amountOfFinalItem;
-                    possibletoCreate.Add(true);
-                }
+                Item item = blueprint.finalItem;
+                item.itemValue = blueprint.amountOfFinalItem;
+                possibleItems.Add(item);
             }
         }
 
     }
 
-    public void deleteItems(Item item)
+    public bool RemoveItemIngredients(Item item)
     {
-        for (int i = 0; i < blueprintDatabase.blueprints.Count; i++)
+        var blueprint = blueprintDatabase.blueprints.Find(b => b.finalItem == item);
+        var ingredientIndices = blueprint.ingredients.Select(
+            ingredient =>
+                itemsInCraftSystem.FindIndex(ccitem =>
+                    ccitem.item.itemID == ingredient)); //Search the items in the crafting system for all ingredients of Blueprint.
+        if (ingredientIndices.Any(i => i == -1)) return false; //Kick out if any ingredient is missing
+        foreach (var index in ingredientIndices)
         {
-            if (blueprintDatabase.blueprints[i].finalItem.Equals(item))
+            var ingItem = itemsInCraftSystem[index];
+            var blueprintAmount = blueprint.amount[index]; //BAD, FIX
+            if (ingItem.item.itemValue > blueprintAmount)
             {
-                for (int k = 0; k < blueprintDatabase.blueprints[i].ingredients.Count; k++)
-                {
-                    for (int z = 0; z < itemInCraftSystem.Count; z++)
-                    {
-                        if (itemInCraftSystem[z].itemID == blueprintDatabase.blueprints[i].ingredients[k])
-                        {
-                            if (itemInCraftSystem[z].itemValue == blueprintDatabase.blueprints[i].amount[k])
-                            {
-                                itemInCraftSystem.RemoveAt(z);
-                                Destroy(itemInCraftSystemGameObject[z]);
-                                itemInCraftSystemGameObject.RemoveAt(z);
-                                ListWithItem();
-                                break;
-                            }
-                            else if (itemInCraftSystem[z].itemValue >= blueprintDatabase.blueprints[i].amount[k])
-                            {
-                                itemInCraftSystem[z].itemValue = itemInCraftSystem[z].itemValue - blueprintDatabase.blueprints[i].amount[k];
-                                ListWithItem();
-                                break;
-                            }
-                        }
-                    }
-                }
+                ingItem.item.itemValue -= blueprint.amount[index]; //I dissaprove of this system so greatly
+                //Actually, let me make a "TODO:  Change Blueprint Ingredient System" out of this.
+            }
+            else if (ingItem.item.itemValue == blueprintAmount)
+            {
+                Destroy(ingItem.gameObject);
+                itemsInCraftSystem.RemoveAt(index);
+            }
+            else
+            {
+                return false;
             }
         }
+        ListWithItem();
+        return true;
     }
 
 

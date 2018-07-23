@@ -328,7 +328,7 @@ public class PlayerInventory : MonoBehaviour
             else
             {
                 if (cS != null)
-                    cS.backToInventory();
+                    cS.BackToInventory();
                 if (toolTip != null)
                     toolTip.deactivateTooltip();
                 craftSystemInventory.closeInventory();

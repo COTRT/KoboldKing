@@ -42,7 +42,7 @@ public class CraftSystemEditor : Editor
         rightArrowPositionY = serializedObject.FindProperty("rightArrowPositionY");
         leftArrowRotation = serializedObject.FindProperty("leftArrowRotation");
         rightArrowRotation = serializedObject.FindProperty("rightArrowRotation");
-        cS.setImages();
+        cS.SetImages();
     }
 
     public override void OnInspectorGUI()
@@ -56,11 +56,11 @@ public class CraftSystemEditor : Editor
         if (showFinalSlot)
         {
             EditorGUI.indentLevel++;
-            finalSlotPositionX.intValue = EditorGUILayout.IntSlider("Position X", finalSlotPositionX.intValue, -cS.getSizeX() / 2, cS.getSizeX() / 2);
-            finalSlotPositionY.intValue = EditorGUILayout.IntSlider("Position Y", finalSlotPositionY.intValue, -cS.getSizeY() / 2, cS.getSizeY() / 2);
+            finalSlotPositionX.intValue = EditorGUILayout.IntSlider("Position X", finalSlotPositionX.intValue, -cS.GetSizeX() / 2, cS.GetSizeX() / 2);
+            finalSlotPositionY.intValue = EditorGUILayout.IntSlider("Position Y", finalSlotPositionY.intValue, -cS.GetSizeY() / 2, cS.GetSizeY() / 2);
             if (EditorGUI.EndChangeCheck())
             {
-                cS.setPositionFinalSlot();
+                cS.SetPositionFinalSlot();
             }
             EditorGUI.indentLevel--;
         }
@@ -76,12 +76,12 @@ public class CraftSystemEditor : Editor
             if (showLeftArrow)
             {
                 EditorGUI.indentLevel++;
-                leftArrowPositionX.intValue = EditorGUILayout.IntSlider("Position X", leftArrowPositionX.intValue, -cS.getSizeX() / 2, cS.getSizeX() / 2);
-                leftArrowPositionY.intValue = EditorGUILayout.IntSlider("Position Y", leftArrowPositionY.intValue, -cS.getSizeY() / 2, cS.getSizeY() / 2);
+                leftArrowPositionX.intValue = EditorGUILayout.IntSlider("Position X", leftArrowPositionX.intValue, -cS.GetSizeX() / 2, cS.GetSizeX() / 2);
+                leftArrowPositionY.intValue = EditorGUILayout.IntSlider("Position Y", leftArrowPositionY.intValue, -cS.GetSizeY() / 2, cS.GetSizeY() / 2);
                 leftArrowRotation.intValue = EditorGUILayout.IntSlider("Rotation", leftArrowRotation.intValue, 0, 360);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    cS.setArrowSettings();
+                    cS.SetArrowSettings();
                 }
                 EditorGUI.indentLevel--;
             }
@@ -91,12 +91,12 @@ public class CraftSystemEditor : Editor
             {
                 EditorGUI.indentLevel++;
                 EditorGUI.BeginChangeCheck();
-                rightArrowPositionX.intValue = EditorGUILayout.IntSlider("Position X", rightArrowPositionX.intValue, -cS.getSizeX() / 2, cS.getSizeX() / 2);
-                rightArrowPositionY.intValue = EditorGUILayout.IntSlider("Position Y", rightArrowPositionY.intValue, -cS.getSizeY() / 2, cS.getSizeY() / 2);
+                rightArrowPositionX.intValue = EditorGUILayout.IntSlider("Position X", rightArrowPositionX.intValue, -cS.GetSizeX() / 2, cS.GetSizeX() / 2);
+                rightArrowPositionY.intValue = EditorGUILayout.IntSlider("Position Y", rightArrowPositionY.intValue, -cS.GetSizeY() / 2, cS.GetSizeY() / 2);
                 rightArrowRotation.intValue = EditorGUILayout.IntSlider("Rotation", rightArrowRotation.intValue, 0, 360);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    cS.setArrowSettings();
+                    cS.SetArrowSettings();
                 }
                 EditorGUI.indentLevel--;
             }
@@ -146,7 +146,7 @@ public class CraftSystemEditor : Editor
             }
             if (EditorGUI.EndChangeCheck())
             {
-                cS.setImages();
+                cS.SetImages();
             }
             EditorGUI.indentLevel--;
         }
