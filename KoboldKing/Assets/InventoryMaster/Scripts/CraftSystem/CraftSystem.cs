@@ -31,24 +31,7 @@ public class CraftSystem : MonoBehaviour
     public Image arrowImage;
 
     //List<CraftSlot> slots = new List<CraftSlot>();
-    public List<CraftSystemItem> itemsInCraftSystem = new List<CraftSystemItem>();
-    public class CraftSystemItem
-    {
-
-        public Item item;
-        public GameObject gameObject;
-
-        public CraftSystemItem(Item item, GameObject gameObject)
-        {
-            this.item = item;
-            this.gameObject = gameObject;
-        }
-        public CraftSystemItem(ItemOnObject ioo)
-        {
-            this.item = ioo.item;
-            this.gameObject = ioo.gameObject;
-        }
-    }
+    public List<ItemOnObject> itemsInCraftSystem = new List<ItemOnObject>();
     BlueprintDatabase blueprintDatabase;
     public List<Item> possibleItems = new List<Item>();
 
@@ -155,7 +138,7 @@ public class CraftSystem : MonoBehaviour
 
     public void BackToInventory()
     {
-        foreach (CraftSystemItem ccitem in itemsInCraftSystem)
+        foreach (ItemOnObject ccitem in itemsInCraftSystem)
         {
             GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>().inventory.GetComponent<Inventory>().addItemToInventory(ccitem.item.itemID, ccitem.item.itemValue);
             Destroy(ccitem.gameObject);
@@ -176,7 +159,7 @@ public class CraftSystem : MonoBehaviour
             Transform trans = slots.GetChild(i);
             if (trans.childCount != 0)
             {
-                itemsInCraftSystem.Add(new CraftSystemItem(trans.GetChild(0).GetComponent<ItemOnObject>()));
+                itemsInCraftSystem.Add(trans.GetChild(0).GetComponent<ItemOnObject>());
             }
         }
 
