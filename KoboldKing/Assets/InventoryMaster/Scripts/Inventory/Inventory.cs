@@ -28,15 +28,9 @@ public class Inventory : MonoBehaviour
 
     //GameObjects which are alive
     [SerializeField]
-    private string inventoryTitle;
-    [SerializeField]
     private RectTransform PanelRectTransform;
     [SerializeField]
-    private Image PanelImage;
-    [SerializeField]
     private GameObject SlotContainer;
-    [SerializeField]
-    private GameObject DraggingItemContainer;
     [SerializeField]
     private RectTransform SlotContainerRectTransform;
     [SerializeField]
@@ -87,11 +81,13 @@ public class Inventory : MonoBehaviour
     public delegate void ItemDelegate(Item item);
     public static event ItemDelegate ItemConsumed;
     public static event ItemDelegate ItemEquip;
-    public static event ItemDelegate UnEquipItem;
+    public static event ItemDelegate ItemUnequip;
 
     public delegate void InventoryOpened();
     public static event InventoryOpened InventoryOpen;
     public static event InventoryOpened AllInventoriesClosed;
+
+    
 
     void Start()
     {
@@ -103,7 +99,22 @@ public class Inventory : MonoBehaviour
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
     }
 
-    public void sortItems()
+    public void UpdateItemDisplay()
+    {
+        if (ItemsInInventory.Count != SlotContainer.transform.childCount)
+        {
+            throw new System.Exception("ItemsInInventory is not of equal length to the slots in the inventory.  This is almost certainly an internal glitch.");
+        }
+        for(int i = 0; i < ItemsInInventory.Count; i++)
+        {
+            if (ItemsInInventory[i] != SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item)
+            {
+
+            }
+        }
+    }
+
+    public void SortItems()
     {
         int empty = -1;
         for (int i = 0; i < SlotContainer.transform.childCount; i++)
@@ -117,7 +128,7 @@ public class Inventory : MonoBehaviour
                     if (SlotContainer.transform.GetChild(i).childCount != 0)
                     {
                         RectTransform rect = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<RectTransform>();
-                        SlotContainer.transform.GetChild(i).GetChild(0).transform.SetParent(SlotContainer.transform.GetChild(empty).transform);
+                        rect.transform.SetParent(SlotContainer.transform.GetChild(empty).transform);
                         rect.localPosition = Vector3.zero;
                         i = empty + 1;
                         empty = i;
@@ -133,7 +144,7 @@ public class Inventory : MonoBehaviour
     }
 
 
-    public void setAsMain()
+    public void SetAsMain()
     {
         if (mainInventory)
             this.gameObject.tag = "Untagged";
@@ -146,20 +157,20 @@ public class Inventory : MonoBehaviour
         updateItemList();
     }
 
-    public void closeInventory()
+    public void CloseInventory()
     {
         this.gameObject.SetActive(false);
-        checkIfAllInventoryClosed();
+        CheckIfAllInventoryClosed();
     }
 
-    public void openInventory()
+    public void OpenInventory()
     {
         this.gameObject.SetActive(true);
         if (InventoryOpen != null)
             InventoryOpen();
     }
 
-    public void checkIfAllInventoryClosed()
+    public void CheckIfAllInventoryClosed()
     {
         GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
 
@@ -193,16 +204,16 @@ public class Inventory : MonoBehaviour
             ItemConsumed(item);
     }
 
-    public void EquiptItem(Item item)
+    public void EquipItem(Item item)
     {
         if (ItemEquip != null)
             ItemEquip(item);
     }
 
-    public void UnEquipItem1(Item item)
+    public void UnEquipItem(Item item)
     {
-        if (UnEquipItem != null)
-            UnEquipItem(item);
+        if (ItemUnequip != null)
+            ItemUnequip(item);
     }
 
 #if UNITY_EDITOR
@@ -283,7 +294,7 @@ public class Inventory : MonoBehaviour
             Transform trans = SlotContainer.transform.GetChild(i);
             if (trans.childCount != 0)
             {
-                ItemsInInventory.Add(trans.GetChild(0).GetComponent<ItemOnObject>().item);
+                ItemsInInventory.Add(trans.GetChild(0).GetComponent<ItemOnObject>().Item);
             }
         }
 
@@ -402,8 +413,8 @@ public class Inventory : MonoBehaviour
             ItemOnObject itemInSlot = go.GetComponentInChildren<ItemOnObject>();
             if (itemInSlot != null)
             {
-                itemsToMove.Add(itemInSlot.item);
-                ItemsInInventory.Remove(itemInSlot.item);
+                itemsToMove.Add(itemInSlot.Item);
+                ItemsInInventory.Remove(itemInSlot.Item);
             }
             slotList.Remove(go);
             DestroyImmediate(go);
@@ -424,7 +435,7 @@ public class Inventory : MonoBehaviour
         {
             foreach (Item i in itemsToMove)
             {
-                addItemToInventory(i.itemID);
+                addItemToInventory(i.ItemID);
             }
         }
 
@@ -463,8 +474,8 @@ public class Inventory : MonoBehaviour
             ItemOnObject itemInSlot = go.GetComponentInChildren<ItemOnObject>();
             if (itemInSlot != null)
             {
-                itemsToMove.Add(itemInSlot.item);
-                ItemsInInventory.Remove(itemInSlot.item);
+                itemsToMove.Add(itemInSlot.Item);
+                ItemsInInventory.Remove(itemInSlot.Item);
             }
             slotList.Remove(go);
             DestroyImmediate(go);
@@ -485,7 +496,7 @@ public class Inventory : MonoBehaviour
         {
             foreach (Item i in itemsToMove)
             {
-                addItemToInventory(i.itemID);
+                addItemToInventory(i.ItemID);
             }
         }
 
@@ -546,10 +557,10 @@ public class Inventory : MonoBehaviour
                 if (SlotContainer.transform.GetChild(i).childCount == 0)
                 {
                     GameObject item = (GameObject)Instantiate(prefabItem);
-                    item.GetComponent<ItemOnObject>().item = ItemsInInventory[k];
+                    item.GetComponent<ItemOnObject>().Item = ItemsInInventory[k];
                     item.transform.SetParent(SlotContainer.transform.GetChild(i));
                     item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                    item.transform.GetChild(0).GetComponent<Image>().sprite = ItemsInInventory[k].itemIcon;
+                    item.transform.GetChild(0).GetComponent<Image>().sprite = ItemsInInventory[k].ItemIcon;
                     updateItemSize();
                     break;
                 }
@@ -565,17 +576,16 @@ public class Inventory : MonoBehaviour
         int stack;
         for (int i = 0; i < ItemsInInventory.Count; i++)
         {
-            if (ItemsInInventory[i].itemID == itemID)
+            if (ItemsInInventory[i].ItemID == itemID)
             {
-                stack = ItemsInInventory[i].itemValue + itemValue;
-                if (stack <= ItemsInInventory[i].maxStack)
+                stack = ItemsInInventory[i].ItemValue + itemValue;
+                if (stack <= ItemsInInventory[i].MaxStack)
                 {
-                    ItemsInInventory[i].itemValue = stack;
-                    GameObject temp = getItemGameObject(ItemsInInventory[i]);
-                    if (temp != null && temp.GetComponent<ConsumeItem>().duplication != null)
-                        temp.GetComponent<ConsumeItem>().duplication.GetComponent<ItemOnObject>().item.itemValue = stack;
+                    ItemsInInventory[i].ItemValue = stack;
                     return true;
                 }
+                //TODO:  Add an "Else" to this statement
+                //Also TODO:  Probably, don't change the inventory when we're supposed to be doing a "check"
             }
         }
         return false;
@@ -588,11 +598,11 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(i).childCount == 0)
             {
                 GameObject item = (GameObject)Instantiate(prefabItem);
-                item.GetComponent<ItemOnObject>().item = itemDatabase.getItemByID(id);
+                item.GetComponent<ItemOnObject>().Item = itemDatabase.getItemByID(id);
                 item.transform.SetParent(SlotContainer.transform.GetChild(i));
                 item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                item.transform.GetChild(0).GetComponent<Image>().sprite = item.GetComponent<ItemOnObject>().item.itemIcon;
-                item.GetComponent<ItemOnObject>().item.indexItemInList = ItemsInInventory.Count - 1;
+                item.transform.GetChild(0).GetComponent<Image>().sprite = item.GetComponent<ItemOnObject>().Item.ItemIcon;
+                item.GetComponent<ItemOnObject>().Item.IndexItemInList = ItemsInInventory.Count - 1;
                 break;
             }
         }
@@ -610,15 +620,15 @@ public class Inventory : MonoBehaviour
             {
                 GameObject item = (GameObject)Instantiate(prefabItem);
                 ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.item = itemDatabase.getItemByID(id);
-                if (itemOnObject.item.itemValue <= itemOnObject.item.maxStack && value <= itemOnObject.item.maxStack)
-                    itemOnObject.item.itemValue = value;
+                itemOnObject.Item = itemDatabase.getItemByID(id);
+                if (itemOnObject.Item.ItemValue <= itemOnObject.Item.MaxStack && value <= itemOnObject.Item.MaxStack)
+                    itemOnObject.Item.ItemValue = value;
                 else
-                    itemOnObject.item.itemValue = 1;
+                    itemOnObject.Item.ItemValue = 1;
                 item.transform.SetParent(SlotContainer.transform.GetChild(i));
                 item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                item.transform.GetChild(0).GetComponent<Image>().sprite = itemOnObject.item.itemIcon;
-                itemOnObject.item.indexItemInList = ItemsInInventory.Count - 1;
+                item.transform.GetChild(0).GetComponent<Image>().sprite = itemOnObject.Item.ItemIcon;
+                itemOnObject.Item.IndexItemInList = ItemsInInventory.Count - 1;
                 if (inputManagerDatabase == null)
                     inputManagerDatabase = (InputManager)Resources.Load("InputManager");
                 return item;
@@ -640,14 +650,14 @@ public class Inventory : MonoBehaviour
             {
                 GameObject item = (GameObject)Instantiate(prefabItem);
                 ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.item = itemDatabase.getItemByID(itemID);
-                if (itemOnObject.item.itemValue < itemOnObject.item.maxStack && value <= itemOnObject.item.maxStack)
-                    itemOnObject.item.itemValue = value;
+                itemOnObject.Item = itemDatabase.getItemByID(itemID);
+                if (itemOnObject.Item.ItemValue < itemOnObject.Item.MaxStack && value <= itemOnObject.Item.MaxStack)
+                    itemOnObject.Item.ItemValue = value;
                 else
-                    itemOnObject.item.itemValue = 1;
+                    itemOnObject.Item.ItemValue = 1;
                 item.transform.SetParent(SlotContainer.transform.GetChild(i));
                 item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                itemOnObject.item.indexItemInList = 999;
+                itemOnObject.Item.IndexItemInList = 999;
                 if (inputManagerDatabase == null)
                     inputManagerDatabase = (InputManager)Resources.Load("InputManager");
                 updateItemSize();
@@ -692,11 +702,11 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(i).childCount > 0)
             {
                 ItemOnObject item = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>();
-                if (item.item.maxStack > 1)
+                if (item.Item.MaxStack > 1)
                 {
                     RectTransform textRectTransform = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<RectTransform>();
                     Text text = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<Text>();
-                    text.text = "" + item.item.itemValue;
+                    text.text = "" + item.Item.ItemValue;
                     text.enabled = stackable;
                     textRectTransform.localPosition = posi;
                 }
@@ -722,7 +732,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < SlotContainer.transform.childCount; i++)
         {
             if (SlotContainer.transform.GetChild(i).childCount != 0)
-                theList.Add(SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().item);
+                theList.Add(SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item);
         }
         return theList;
     }
@@ -734,11 +744,11 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(i).childCount > 0)
             {
                 ItemOnObject item = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>();
-                if (item.item.maxStack > 1)
+                if (item.Item.MaxStack > 1)
                 {
                     RectTransform textRectTransform = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<RectTransform>();
                     Text text = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<Text>();
-                    text.text = "" + item.item.itemValue;
+                    text.text = "" + item.Item.ItemValue;
                     text.enabled = stackable;
                     textRectTransform.localPosition = new Vector3(positionNumberX, positionNumberY, 0);
                 }
@@ -759,8 +769,8 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(k).childCount != 0)
             {
                 GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().item;
-                if (itemObject.itemName.Equals(item.itemName))
+                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
+                if (itemObject.ItemName.Equals(item.ItemName))
                 {
                     return itemGameObject;
                 }
@@ -776,7 +786,7 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(k).childCount != 0)
             {
                 GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().item;
+                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
                 if (itemObject.Equals(item))
                 {
                     return itemGameObject;
@@ -803,7 +813,7 @@ public class Inventory : MonoBehaviour
         for (int i = 0; i < ItemsInInventory.Count; i++)
         {
             if (item.Equals(ItemsInInventory[i]))
-                ItemsInInventory.RemoveAt(item.indexItemInList);
+                ItemsInInventory.RemoveAt(item.IndexItemInList);
         }
     }
 
@@ -833,7 +843,7 @@ public class Inventory : MonoBehaviour
             if (SlotContainer.transform.GetChild(k).childCount != 0)
             {
                 GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().item;
+                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
                 if (itemObject.Equals(item))
                 {
                     Destroy(itemGameObject);
@@ -849,7 +859,7 @@ public class Inventory : MonoBehaviour
         {
             if (SlotContainer.transform.GetChild(i).childCount != 0)
             {
-                Item item2 = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().item;
+                Item item2 = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item;
                 if (item.Equals(item2))
                     return i;
             }
@@ -866,14 +876,14 @@ public class Inventory : MonoBehaviour
             {
                 GameObject item = (GameObject)Instantiate(prefabItem);
                 ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.item = itemDatabase.getItemByID(itemID);
-                if (itemOnObject.item.itemValue < itemOnObject.item.maxStack && itemValue <= itemOnObject.item.maxStack)
-                    itemOnObject.item.itemValue = itemValue;
+                itemOnObject.Item = itemDatabase.getItemByID(itemID);
+                if (itemOnObject.Item.ItemValue < itemOnObject.Item.MaxStack && itemValue <= itemOnObject.Item.MaxStack)
+                    itemOnObject.Item.ItemValue = itemValue;
                 else
-                    itemOnObject.item.itemValue = 1;
+                    itemOnObject.Item.ItemValue = 1;
                 item.transform.SetParent(SlotContainer.transform.GetChild(i));
                 item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                itemOnObject.item.indexItemInList = 999;
+                itemOnObject.Item.IndexItemInList = 999;
                 updateItemSize();
                 stackableSettings();
                 break;
@@ -890,7 +900,7 @@ public class Inventory : MonoBehaviour
     {
         for (int i = 0; i < ItemsInInventory.Count; i++)
         {
-            ItemsInInventory[i].indexItemInList = i;
+            ItemsInInventory[i].IndexItemInList = i;
         }
     }
 }

@@ -16,7 +16,7 @@ public class CloseInventory : MonoBehaviour, IPointerDownHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            inv.closeInventory();
+            inv.CloseInventory();
         }
     }
 }

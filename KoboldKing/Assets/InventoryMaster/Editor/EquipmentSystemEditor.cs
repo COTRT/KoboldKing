@@ -21,7 +21,7 @@ public class EquipmentSystemEditor : Editor
 
     public override void OnInspectorGUI()
     {
-        eS.getSlotsInTotal();
+        eS.UpdateSlotsInTotal();
         serializedObject.Update();
         GUILayout.BeginVertical("Box");
         for (int i = 0; i < slotsInTotal.intValue; i++)

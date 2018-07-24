@@ -140,7 +140,7 @@ public class CraftSystem : MonoBehaviour
     {
         foreach (ItemOnObject ccitem in itemsInCraftSystem)
         {
-            GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>().inventory.GetComponent<Inventory>().addItemToInventory(ccitem.item.itemID, ccitem.item.itemValue);
+            PlayerInventory.Instance.mainInventory.addItemToInventory(ccitem.Item.ItemID, ccitem.Item.ItemValue);
             Destroy(ccitem.gameObject);
         }
 
@@ -165,11 +165,11 @@ public class CraftSystem : MonoBehaviour
 
         foreach (var blueprint in blueprintDatabase.blueprints)
         {
-            var ccItemIds = itemsInCraftSystem.Select(c => c.item.itemID).ToArray();
+            var ccItemIds = itemsInCraftSystem.Select(c => c.Item.ItemID).ToArray();
             if (blueprint.ingredients.All(ingredient => ccItemIds.Contains(ingredient)))
             {
                 Item item = blueprint.finalItem;
-                item.itemValue = blueprint.amountOfFinalItem;
+                item.ItemValue = blueprint.amountOfFinalItem;
                 possibleItems.Add(item);
             }
         }
@@ -180,23 +180,26 @@ public class CraftSystem : MonoBehaviour
     {
         var blueprint = blueprintDatabase.blueprints.Find(b => b.finalItem == item);
         var ingredientIndices = blueprint.ingredients.Select(
-            ingredient =>
-                itemsInCraftSystem.FindIndex(ccitem =>
-                    ccitem.item.itemID == ingredient)); //Search the items in the crafting system for all ingredients of Blueprint.
-        if (ingredientIndices.Any(i => i == -1)) return false; //Kick out if any ingredient is missing
-        foreach (var index in ingredientIndices)
-        {
-            var ingItem = itemsInCraftSystem[index];
-            var blueprintAmount = blueprint.amount[index]; //BAD, FIX
-            if (ingItem.item.itemValue > blueprintAmount)
+            (ingredient,indice) => new
             {
-                ingItem.item.itemValue -= blueprint.amount[index]; //I dissaprove of this system so greatly
+                inventoryIndex = itemsInCraftSystem.FindIndex(ccitem =>
+                    ccitem.Item.ItemID == ingredient),
+                ingredientIndex = indice
+            }); //Search the items in the crafting system for all ingredients of Blueprint.
+        if (ingredientIndices.Any(i => i.inventoryIndex == -1)) return false; //Kick out if any ingredient is missing
+        foreach (var indexPair in ingredientIndices)
+        {
+            var ingItem = itemsInCraftSystem[indexPair.inventoryIndex];
+            var blueprintAmount = blueprint.amount[indexPair.ingredientIndex]; //BAD, FIX
+            if (ingItem.Item.ItemValue > blueprintAmount)
+            {
+                ingItem.Item.ItemValue -= blueprint.amount[indexPair.ingredientIndex]; //I dissaprove of this system so greatly
                 //Actually, let me make a "TODO:  Change Blueprint Ingredient System" out of this.
             }
-            else if (ingItem.item.itemValue == blueprintAmount)
+            else if (ingItem.Item.ItemValue == blueprintAmount)
             {
                 Destroy(ingItem.gameObject);
-                itemsInCraftSystem.RemoveAt(index);
+                itemsInCraftSystem.RemoveAt(indexPair.inventoryIndex);
             }
             else
             {

@@ -12,7 +12,7 @@ public class ItemDataBaseList : ScriptableObject
     {
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].itemID == id)
+            if (itemList[i].ItemID == id)
                 return itemList[i].getCopy();
         }
         return null;
@@ -22,7 +22,7 @@ public class ItemDataBaseList : ScriptableObject
     {
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].itemName.ToLower().Equals(name.ToLower()))
+            if (itemList[i].ItemName.ToLower().Equals(name.ToLower()))
                 return itemList[i].getCopy();
         }
         return null;

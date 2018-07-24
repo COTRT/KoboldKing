@@ -58,13 +58,13 @@ public class Hotbar : MonoBehaviour
         {
             if (Input.GetKeyDown(keyCodesForSlots[i]))
             {
-                if (transform.GetChild(1).GetChild(i).childCount != 0 && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().item.itemType != ItemType.UFPS_Ammo)
+                if (transform.GetChild(1).GetChild(i).childCount != 0 && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item.ItemType != ItemType.UFPS_Ammo)
                 {
-                    if (transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ConsumeItem>().duplication != null && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().item.maxStack == 1)
+                    if (transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemSlot>().duplication != null && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item.MaxStack == 1)
                     {
-                        Destroy(transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ConsumeItem>().duplication);
+                        Destroy(transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemSlot>().duplication);
                     }
-                    transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ConsumeItem>().consumeIt();
+                    transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemSlot>().ConsumeIt();
                 }
             }
         }

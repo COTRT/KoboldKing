@@ -43,7 +43,7 @@ public class StorageInventoryEditor : Editor
         string[] items = new string[inventoryItemList.itemList.Count];                                                      //create a string array in length of the itemcount
         for (int i = 1; i < items.Length; i++)                                                                              //go through the item array
         {
-            items[i] = inventoryItemList.itemList[i].itemName;                                                              //and paste all names into the array
+            items[i] = inventoryItemList.itemList[i].ItemName;                                                              //and paste all names into the array
         }
         itemID = EditorGUILayout.Popup("", itemID, items, EditorStyles.popup);                                              //create a popout with all itemnames in it and save the itemID of it
         itemValue = EditorGUILayout.IntField("", itemValue, GUILayout.Width(40));

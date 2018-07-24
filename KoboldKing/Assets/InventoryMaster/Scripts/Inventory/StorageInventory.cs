@@ -47,7 +47,7 @@ public class StorageInventory : MonoBehaviour
     public void addItemToStorage(int id, int value)
     {
         Item item = itemDatabase.getItemByID(id);
-        item.itemValue = value;
+        item.ItemValue = value;
         storageItems.Add(item);
     }
 
@@ -69,11 +69,11 @@ public class StorageInventory : MonoBehaviour
             int randomItemNumber = Random.Range(1, inventoryItemList.itemList.Count - 1);
             int raffle = Random.Range(1, 100);
 
-            if (raffle <= inventoryItemList.itemList[randomItemNumber].rarity)
+            if (raffle <= inventoryItemList.itemList[randomItemNumber].Rarity)
             {
-                int randomValue = Random.Range(1, inventoryItemList.itemList[randomItemNumber].getCopy().maxStack);
+                int randomValue = Random.Range(1, inventoryItemList.itemList[randomItemNumber].getCopy().MaxStack);
                 Item item = inventoryItemList.itemList[randomItemNumber].getCopy();
-                item.itemValue = randomValue;
+                item.ItemValue = randomValue;
                 storageItems.Add(item);
                 creatingItemsForChest++;
             }
@@ -176,7 +176,7 @@ public class StorageInventory : MonoBehaviour
         Inventory iV = inventory.GetComponent<Inventory>();
         for (int i = 0; i < storageItems.Count; i++)
         {
-            iV.addItemToInventory(storageItems[i].itemID, storageItems[i].itemValue);
+            iV.addItemToInventory(storageItems[i].ItemID, storageItems[i].ItemValue);
         }
         iV.stackableSettings();
     }

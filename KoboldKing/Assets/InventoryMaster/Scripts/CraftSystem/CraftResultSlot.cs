@@ -24,7 +24,7 @@ public class CraftResultSlot : MonoBehaviour
         itemGameObject.GetComponent<DragItem>().enabled = false;
         itemGameObject.SetActive(false);
         itemGameObject.transform.GetChild(1).GetComponent<Text>().enabled = true;
-        itemGameObject.transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(GameObject.FindGameObjectWithTag("MainInventory").GetComponent<Inventory>().positionNumberX, GameObject.FindGameObjectWithTag("MainInventory").GetComponent<Inventory>().positionNumberY);
+        itemGameObject.transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(PlayerInventory.Instance.mainInventory.positionNumberX, PlayerInventory.Instance.mainInventory.positionNumberY);
 
     }
 
@@ -33,7 +33,7 @@ public class CraftResultSlot : MonoBehaviour
     {
         if (craftSystem.possibleItems.Count != 0)
         {
-            itemGameObject.GetComponent<ItemOnObject>().item = craftSystem.possibleItems[temp];
+            itemGameObject.GetComponent<ItemOnObject>().Item = craftSystem.possibleItems[temp];
             itemGameObject.SetActive(true);
         }
         else
