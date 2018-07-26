@@ -12,10 +12,6 @@ public class FirstPersonController : MonoBehaviour
 
     float verticalRotation = 0;
 
-    GameObject _inventory;
-    GameObject _tooltip;
-    GameObject _character;
-    GameObject _dropBox;
     public bool showInventory = false;
     float verticalVelocity = 0;
 
@@ -34,13 +30,11 @@ public class FirstPersonController : MonoBehaviour
 
         if (GameObject.FindGameObjectWithTag("Player") != null)
         {
-            PlayerInventory playerInv = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerInventory>();
-            if (playerInv.inventory != null)
-                inventory = playerInv.inventory;
-            if (playerInv.craftSystem != null)
-                craftSystem = playerInv.craftSystem;
-            if (playerInv.characterSystem != null)
-                characterSystem = playerInv.characterSystem;
+            PlayerInventory playerInv = PlayerInventory.Instance;
+
+            inventory = playerInv.mainInventory.gameObject;
+            craftSystem = playerInv.craftSystem.gameObject;
+            characterSystem = playerInv.characterSystem.gameObject;
         }
     }
 

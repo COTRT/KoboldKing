@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 /// <summary>
 /// Aka item slot
@@ -11,10 +9,11 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
     private Text itemCountText;  //text for the itemValue
     private Image image;
 
-    public Item Item { get; set; }
+    public Item Item;
 
     void Start()
     {
+        if (Item == null) Item = new Item() { ItemValue=0, ItemID=0,ItemName="Empty"};
         image = transform.GetChild(0).GetComponent<Image>();
         itemCountText = transform.GetChild(1).GetComponent<Text>();  //get the text(itemValue GameObject) of the item
     }

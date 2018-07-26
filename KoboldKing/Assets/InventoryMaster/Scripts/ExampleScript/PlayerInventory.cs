@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
+using System.Linq;
+using System.Collections.Generic;
+using System;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public GameObject inventory;
-    public GameObject characterSystem;
-    public GameObject craftSystem;
-    public Inventory craftSystemInventory;
+    public Inventory craftSystem;
+    [HideInInspector]
     public CraftSystem cS;
     public Inventory mainInventory;
-    public  Inventory characterSystemInventory;
+    public  Inventory characterSystem;
     private Tooltip toolTip;
 
     private InputManager inputManagerDatabase;
@@ -23,25 +22,66 @@ public class PlayerInventory : MonoBehaviour
     Image hpImage;
     Image manaImage;
 
-    float maxHealth = 100;
-    float maxMana = 100;
-    float maxDamage = 0;
-    float maxArmor = 0;
+    public float maxHealth = 100;
+    public float maxMana = 100;
+    public float maxDamage = 0;
+    public float maxArmor = 0;
 
     public float currentHealth = 60;
-    float currentMana = 100;
-    float currentDamage = 0;
-    float currentArmor = 0;
+    public float currentMana = 100;
+    public float currentDamage = 0;
+    public float currentArmor = 0;
 
     int normalSize = 16;
 
     public static PlayerInventory Instance;
+    private readonly Dictionary<int, Vector2> DimensionsDict = new Dictionary<int, Vector2>()
+    {
+        { 3, new Vector2(3,1) }, //For 3 slots, make the inventory 3 wide by 1 high
+        {6, new Vector2(3,2) },
+        {12, new Vector2(3,4) },
+        {16, new Vector2(4,4) },
+        {20,new Vector2(4,5) },
+        {24,new Vector3(4,6) },
+        {30, new Vector2(5,6) },
+        {36, new Vector2(6,6) }
+    };
 
     public void Awake()
     {
         if (Instance == null) Instance = this;
-        else Destroy(gameObject); //Everybody loves inline if/else's
-        mainInventory = inventory.GetComponent<Inventory>();
+        else Destroy(gameObject);
+    }
+
+    public void Start()
+    {
+        if (HPMANACanvas != null)
+        {
+            hpText = HPMANACanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+
+            manaText = HPMANACanvas.transform.GetChild(2).GetChild(0).GetComponent<Text>();
+
+            hpImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
+            manaImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
+
+            UpdateHPBar();
+            UpdateManaBar();
+        }
+
+        if (inputManagerDatabase == null)
+            inputManagerDatabase = (InputManager)Resources.Load("InputManager");
+
+        if (new[] { craftSystem, mainInventory, characterSystem }.Any(i => i == null))
+        {
+            throw new ArgumentException("Please supply the PlayerInventory Script with the Craft System, Character System, and Main Inventory panels in the inspector");
+        }
+        cS = craftSystem.GetComponent<CraftSystem>();
+
+        if (GameObject.FindGameObjectWithTag("Tooltip") != null)
+            toolTip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
+        {
+            normalSize = mainInventory.width * mainInventory.height;
+        }
     }
 
     public void OnEnable()
@@ -90,163 +130,86 @@ public class PlayerInventory : MonoBehaviour
     {
         if (item.ItemType == ItemType.Backpack)
         {
-            for (int i = 0; i < item.itemAttributes.Count; i++)
-            {
-                if (mainInventory == null)
-                    mainInventory = inventory.GetComponent<Inventory>();
-                mainInventory.SortItems();
-                if (item.itemAttributes[i].attributeName == "Slots")
-                    changeInventorySize(normalSize + item.itemAttributes[i].attributeValue);
-            }
+            mainInventory.SortItems();
+            var slots = item.itemAttributes.Find(att => att.attributeName == "Slots");
+            ChangeInventorySize(normalSize + slots.attributeValue);
         }
     }
 
     void UnEquipBackpack(Item item)
     {
         if (item.ItemType == ItemType.Backpack)
-            changeInventorySize(normalSize);
+            ChangeInventorySize(normalSize);
     }
 
-    void changeInventorySize(int size)
-    {
-        dropTheRestItems(size);
-        if (size == 3)
-        {
-            mainInventory.width = 3;
-            mainInventory.height = 1;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-        if (size == 6)
-        {
-            mainInventory.width = 3;
-            mainInventory.height = 2;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-        else if (size == 12)
-        {
-            mainInventory.width = 4;
-            mainInventory.height = 3;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-        else if (size == 16)
-        {
-            mainInventory.width = 4;
-            mainInventory.height = 4;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-        else if (size == 24)
-        {
-            mainInventory.width = 6;
-            mainInventory.height = 4;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-        else if (size == 46)
-        {
-            mainInventory.width = 23;
-            mainInventory.height = 2;
-            mainInventory.updateSlotAmount();
-            mainInventory.adjustInventorySize();
-        }
-    }
-
-    void dropTheRestItems(int size)
+    void ChangeInventorySize(int size)
     {
         if (size < mainInventory.ItemsInInventory.Count)
         {
-            for (int i = size; i < mainInventory.ItemsInInventory.Count; i++)
-            {
-                GameObject dropItem = (GameObject)Instantiate(mainInventory.ItemsInInventory[i].ItemModel);
-                dropItem.AddComponent<PickUpItem>();
-                dropItem.GetComponent<PickUpItem>().item = mainInventory.ItemsInInventory[i];
+            foreach(var item in mainInventory.ItemsInInventory.Skip(size)) { 
+                GameObject dropItem = Instantiate(item.ItemModel);
+                dropItem.AddComponent<PickUpItem>().item = item;
                 dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
             }
         }
-    }
 
-    void Start()
-    {
-        if (HPMANACanvas != null)
+        Vector2 dimensions;
+        if(!DimensionsDict.TryGetValue(size,out dimensions)) //Check first to see if the given dimensions are in the dimensions dictionary
         {
-            hpText = HPMANACanvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
-
-            manaText = HPMANACanvas.transform.GetChild(2).GetChild(0).GetComponent<Text>();
-
-            hpImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
-            manaImage = HPMANACanvas.transform.GetChild(1).GetComponent<Image>();
-
-            UpdateHPBar();
-            UpdateManaBar();
+            //Some very fancy math to calculate the most even grid possible for the given size.
+            for(float h = Mathf.Ceil(Mathf.Sqrt(size)); h > 1; h--) //Count down from the Square Root (i.e., square inventory) of the total size (i.e. number of slots)
+            {
+                if ((size/h) % 1 == 0) //If the given number can divide the size evenly...
+                {
+                    dimensions = new Vector2(size / h, h); //Use that number as the height and the quotient as the width
+                    break;
+                }
+            }
         }
-
-        if (inputManagerDatabase == null)
-            inputManagerDatabase = (InputManager)Resources.Load("InputManager");
-
-        if (craftSystem != null)
-            cS = craftSystem.GetComponent<CraftSystem>();
-
-        if (GameObject.FindGameObjectWithTag("Tooltip") != null)
-            toolTip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
-        if (inventory != null)
-            mainInventory = inventory.GetComponent<Inventory>();
-        if (characterSystem != null)
-            characterSystemInventory = characterSystem.GetComponent<Inventory>();
-        if (craftSystem != null)
-            craftSystemInventory = craftSystem.GetComponent<Inventory>();
+        mainInventory.width = (int)dimensions.x;
+        mainInventory.height = (int)dimensions.y;
+        mainInventory.updateSlotAmount();
+        mainInventory.adjustInventorySize();
     }
+
+   
 
     void UpdateHPBar()
     {
         hpText.text = (currentHealth + "/" + maxHealth);
-        float fillAmount = currentHealth / maxHealth;
-        hpImage.fillAmount = fillAmount;
+        hpImage.fillAmount = currentHealth / maxHealth;
     }
 
     void UpdateManaBar()
     {
         manaText.text = (currentMana + "/" + maxMana);
-        float fillAmount = currentMana / maxMana;
-        manaImage.fillAmount = fillAmount;
+        manaImage.fillAmount = currentMana / maxMana;
     }
 
 
     public void OnConsumeItem(Item item)
     {
-        for (int i = 0; i < item.itemAttributes.Count; i++)
+        var HealthAtt = item.itemAttributes.Find(att => att.attributeName == "Health");
+        if (HealthAtt != null)
         {
-            if (item.itemAttributes[i].attributeName == "Health")
-            {
-                if ((currentHealth + item.itemAttributes[i].attributeValue) > maxHealth)
-                    currentHealth = maxHealth;
-                else
-                    currentHealth += item.itemAttributes[i].attributeValue;
-            }
-            if (item.itemAttributes[i].attributeName == "Mana")
-            {
-                if ((currentMana + item.itemAttributes[i].attributeValue) > maxMana)
-                    currentMana = maxMana;
-                else
-                    currentMana += item.itemAttributes[i].attributeValue;
-            }
-            if (item.itemAttributes[i].attributeName == "Armor")
-            {
-                if ((currentArmor + item.itemAttributes[i].attributeValue) > maxArmor)
-                    currentArmor = maxArmor;
-                else
-                    currentArmor += item.itemAttributes[i].attributeValue;
-            }
-            if (item.itemAttributes[i].attributeName == "Damage")
-            {
-                if ((currentDamage + item.itemAttributes[i].attributeValue) > maxDamage)
-                    currentDamage = maxDamage;
-                else
-                    currentDamage += item.itemAttributes[i].attributeValue;
-            }
+            currentHealth = Mathf.Max(currentHealth + HealthAtt.attributeValue, maxHealth);
         }
+        var ManaAtt = item.itemAttributes.Find(att => att.attributeName == "Mana");
+        if (ManaAtt != null)
+        {
+            currentMana = Mathf.Max(currentMana + ManaAtt.attributeValue, maxMana);
+        }
+        var ArmorAtt = item.itemAttributes.Find(att => att.attributeName == "Armor");
+        if (ArmorAtt != null)
+        {
+            currentArmor = Mathf.Max(currentArmor + ArmorAtt.attributeValue, maxArmor);
+        }
+        var DamageAtt = item.itemAttributes.Find(att => att.attributeName == "Damage");
+        if (DamageAtt != null)
+        {
+            currentDamage = Mathf.Max(currentDamage + DamageAtt.attributeValue, maxDamage);
+        }
+
         //if (HPMANACanvas != null)
         //{
         //    UpdateManaBar();
@@ -256,37 +219,31 @@ public class PlayerInventory : MonoBehaviour
 
     public void OnGearItem(Item item)
     {
-        for (int i = 0; i < item.itemAttributes.Count; i++)
-        {
-            if (item.itemAttributes[i].attributeName == "Health")
-                maxHealth += item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Mana")
-                maxMana += item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Armor")
-                maxArmor += item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Damage")
-                maxDamage += item.itemAttributes[i].attributeValue;
-        }
+        AdjustMaximums(item, 1);
         //if (HPMANACanvas != null)
         //{
         //    UpdateManaBar();
         //    UpdateHPBar();
         //}
     }
+    private void AdjustMaximums(Item item, float multiplier)
+    {
+        foreach (var itemAttribute in item.itemAttributes)
+        {
+            if (itemAttribute.attributeName == "Health")
+                maxHealth += itemAttribute.attributeValue * multiplier;
+            if (itemAttribute.attributeName == "Mana")
+                maxMana += itemAttribute.attributeValue * multiplier;
+            if (itemAttribute.attributeName == "Armor")
+                maxArmor += itemAttribute.attributeValue * multiplier;
+            if (itemAttribute.attributeName == "Damage")
+                maxDamage += itemAttribute.attributeValue * multiplier;
+        }
+    }
 
     public void OnUnEquipItem(Item item)
     {
-        for (int i = 0; i < item.itemAttributes.Count; i++)
-        {
-            if (item.itemAttributes[i].attributeName == "Health")
-                maxHealth -= item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Mana")
-                maxMana -= item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Armor")
-                maxArmor -= item.itemAttributes[i].attributeValue;
-            if (item.itemAttributes[i].attributeName == "Damage")
-                maxDamage -= item.itemAttributes[i].attributeValue;
-        }
+        AdjustMaximums(item, -1);
         //if (HPMANACanvas != null)
         //{
         //    UpdateManaBar();
@@ -301,21 +258,22 @@ public class PlayerInventory : MonoBehaviour
     {
         if (Input.GetKeyDown(inputManagerDatabase.CharacterSystemKeyCode))
         {
-            if (!characterSystem.activeSelf)
+            if (!characterSystem.gameObject.activeSelf)
             {
-                characterSystemInventory.OpenInventory();
+                if (!mainInventory.gameObject.activeSelf) mainInventory.OpenInventory();
+                characterSystem.OpenInventory();
             }
             else
             {
                 if (toolTip != null)
                     toolTip.deactivateTooltip();
-                characterSystemInventory.CloseInventory();
+                characterSystem.CloseInventory();
             }
         }
 
         if (Input.GetKeyDown(inputManagerDatabase.InventoryKeyCode))
         {
-            if (!inventory.activeSelf)
+            if (!mainInventory.gameObject.activeSelf)
             {
                 mainInventory.OpenInventory();
             }
@@ -329,15 +287,18 @@ public class PlayerInventory : MonoBehaviour
 
         if (Input.GetKeyDown(inputManagerDatabase.CraftSystemKeyCode))
         {
-            if (!craftSystem.activeSelf)
-                craftSystemInventory.OpenInventory();
+            if (!craftSystem.gameObject.activeSelf)
+            {
+                if (!mainInventory.gameObject.activeSelf) mainInventory.OpenInventory();
+                craftSystem.OpenInventory();
+            }
             else
             {
                 if (cS != null)
                     cS.BackToInventory();
                 if (toolTip != null)
                     toolTip.deactivateTooltip();
-                craftSystemInventory.CloseInventory();
+                craftSystem.CloseInventory();
             }
         }
 

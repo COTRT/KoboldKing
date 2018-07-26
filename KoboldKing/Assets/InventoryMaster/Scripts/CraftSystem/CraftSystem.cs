@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -31,7 +30,7 @@ public class CraftSystem : MonoBehaviour
     public Image arrowImage;
 
     //List<CraftSlot> slots = new List<CraftSlot>();
-    public List<ItemOnObject> itemsInCraftSystem = new List<ItemOnObject>();
+    public List<ItemSlot> itemsInCraftSystem = new List<ItemSlot>();
     BlueprintDatabase blueprintDatabase;
     public List<Item> possibleItems = new List<Item>();
 
@@ -59,6 +58,7 @@ public class CraftSystem : MonoBehaviour
         rightRect = rightArrow.GetComponent<RectTransform>();
         resultRect = resultSlot.GetComponent<RectTransform>();
     }
+
 
 #if UNITY_EDITOR
     [MenuItem("Master System/Create/Craft System")]
@@ -159,7 +159,7 @@ public class CraftSystem : MonoBehaviour
             Transform trans = slots.GetChild(i);
             if (trans.childCount != 0)
             {
-                itemsInCraftSystem.Add(trans.GetChild(0).GetComponent<ItemOnObject>());
+                itemsInCraftSystem.Add(trans.GetChild(0).GetComponent<ItemSlot>());
             }
         }
 

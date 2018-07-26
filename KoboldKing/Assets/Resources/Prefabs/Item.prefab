@@ -25,13 +25,11 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 22400002}
-  - component: {fileID: 11400002}
   - component: {fileID: 11400004}
   - component: {fileID: 22500000}
   - component: {fileID: 11400008}
   - component: {fileID: 11400010}
   - component: {fileID: 11400012}
-  - component: {fileID: 11453366}
   m_Layer: 0
   m_Name: Item
   m_TagString: Item
@@ -100,30 +98,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e183a0fcf91889441a73da5cab2cf034, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item:
-    itemName: 
-    itemID: 0
-    itemDesc: 
-    itemIcon: {fileID: 0}
-    itemModel: {fileID: 0}
-    itemValue: 0
-    itemType: 0
-    itemWeight: 0
-    maxStack: 0
-    indexItemInList: 0
-    rarity: 0
-    itemAttributes: []
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -208,50 +182,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeee4d1094181f94eb55424d868d1e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item:
+  Item:
+    itemAttributes: []
     itemName: 
     itemID: 0
     itemDesc: 
     itemIcon: {fileID: 0}
     itemModel: {fileID: 0}
-    itemValue: 1
+    itemValue: 0
     itemType: 0
-    itemWeight: 0
-    maxStack: 1
-    indexItemInList: 999
+    maxStack: 0
+    indexItemInList: 0
     rarity: 0
-    itemAttributes: []
-  itemTypeOfSlot: 
   duplication: {fileID: 0}
---- !u!114 &11453366
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3db362bcc11cd845a3922b9d93b11e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  item:
-    itemName: 
-    itemID: 0
-    itemDesc: 
-    itemIcon: {fileID: 0}
-    itemModel: {fileID: 0}
-    itemValue: 1
-    itemType: 0
-    itemWeight: 0
-    maxStack: 1
-    indexItemInList: 999
-    rarity: 0
-    itemAttributes: []
-  itemTypeOfSlot: 
-  duplication: {fileID: 0}
-  inv: {fileID: 0}
-  FP_Inventory: {fileID: 0}
-  playerScript: {fileID: 0}
+  RootInventory: {fileID: 0}
 --- !u!114 &11483248
 MonoBehaviour:
   m_ObjectHideFlags: 1

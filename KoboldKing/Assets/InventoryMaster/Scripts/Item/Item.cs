@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 
@@ -10,188 +9,198 @@ public class Item : INotifyPropertyChanged
     public List<ItemAttribute> itemAttributes = new List<ItemAttribute>();
 
     //Thank you, Mr. Sun of Miracle Salad, for that Sequencer of yours.
-    private string _itemName;
+    [SerializeField]
+    private string itemName;
     public string ItemName
     {
         get
         {
-            return _itemName;
+            return itemName;
         }
 
         set
         {
-            _itemName = value;
+            itemName = value;
             OnPropertyChanged("ItemName");
         }
     }
 
-    private int _itemID;
+    [SerializeField]
+    private int itemID;
     public int ItemID
     {
         get
         {
-            return _itemID;
+            return itemID;
         }
 
         set
         {
-            _itemID = value;
+            itemID = value;
             OnPropertyChanged("ItemID");
         }
     }
 
-    private string _itemDesc;
+    [SerializeField]
+    private string itemDesc;
     public string ItemDesc
     {
         get
         {
-            return _itemDesc;
+            return itemDesc;
         }
 
         set
         {
-            _itemDesc = value;
+            itemDesc = value;
             OnPropertyChanged("ItemDesc");
         }
     }
 
-    private Sprite _itemIcon;
+    [SerializeField]
+    private Sprite itemIcon;
     public Sprite ItemIcon
     {
         get
         {
-            return _itemIcon;
+            return itemIcon;
         }
 
         set
         {
-            _itemIcon = value;
+            itemIcon = value;
             OnPropertyChanged("ItemIcon");
         }
     }
 
-    private GameObject _itemModel;
+    [SerializeField]
+    private GameObject itemModel;
     public GameObject ItemModel
     {
         get
         {
-            return _itemModel;
+            return itemModel;
         }
 
         set
         {
-            _itemModel = value;
+            itemModel = value;
             OnPropertyChanged("ItemModel");
         }
     }
 
-    private int _itemValue;
+    [SerializeField]
+    private int itemValue;
     public int ItemValue
     {
         get
         {
-            return _itemValue;
+            return itemValue;
         }
 
         set
         {
-            _itemValue = value;
+            itemValue = value;
             OnPropertyChanged("ItemValue");
         }
     }
 
-    private ItemType _itemType;
+    [SerializeField]
+    private ItemType itemType;
     public ItemType ItemType
     {
         get
         {
-            return _itemType;
+            return itemType;
         }
 
         set
         {
-            _itemType = value;
+            itemType = value;
             OnPropertyChanged("ItemType");
         }
     }
 
-    private float _itemWeight;
+    private float itemWeight;
     public float ItemWeight
     {
         get
         {
-            return _itemWeight;
+            return itemWeight;
         }
 
         set
         {
-            _itemWeight = value;
+            itemWeight = value;
             OnPropertyChanged("ItemWeight");
         }
     }
 
-    private int _maxStack;
+    [SerializeField]
+    private int maxStack;
     public int MaxStack
     {
         get
         {
-            return _maxStack;
+            return maxStack;
         }
 
         set
         {
-            _maxStack = value;
+            maxStack = value;
             OnPropertyChanged("MaxStack");
         }
     }
 
-    private int _indexItemInList;
+    [SerializeField]
+    private int indexItemInList;
     public int IndexItemInList
     {
         get
         {
-            return _indexItemInList;
+            return indexItemInList;
         }
 
         set
         {
-            _indexItemInList = value;
+            indexItemInList = value;
             OnPropertyChanged("IndexItemInList");
         }
     }
 
-    private int _rarity;
+    [SerializeField]
+    private int rarity;
     public int Rarity
     {
         get
         {
-            return _rarity;
+            return rarity;
         }
 
         set
         {
-            _rarity = value;
+            rarity = value;
             OnPropertyChanged("Rarity");
         }
     }
 
-    private bool _empty;
+    private bool empty;
     public bool Empty
     {
         get
         {
-            return _empty;
+            return empty;
         }
 
         set
         {
-            _empty = value;
+            empty = value;
             OnPropertyChanged("Empty");
         }
     }
 
 
-    public Item(){}
+    public Item() { }
 
     public Item(string name, int id, string desc, Sprite icon, GameObject model, int maxStack, ItemType type, string sendmessagetext, List<ItemAttribute> itemAttributes)                 //function to create a instance of the Item
     {
@@ -215,10 +224,10 @@ public class Item : INotifyPropertyChanged
     }
     public Item getCopy()
     {
-        return (Item)this.MemberwiseClone();        
-    }   
-    
-    
+        return (Item)this.MemberwiseClone();
+    }
+
+
 }
 
 

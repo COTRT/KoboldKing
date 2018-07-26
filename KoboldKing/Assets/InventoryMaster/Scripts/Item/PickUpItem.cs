@@ -9,9 +9,8 @@ public class PickUpItem : MonoBehaviour
 
     void Start()
     {
-        _player = GameObject.FindGameObjectWithTag("Player");
-        if (_player != null)
-            _inventory = _player.GetComponent<PlayerInventory>().inventory.GetComponent<Inventory>();
+        _inventory = PlayerInventory.Instance.mainInventory;
+        _player = PlayerInventory.Instance.gameObject;
     }
 
     // Update is called once per frame

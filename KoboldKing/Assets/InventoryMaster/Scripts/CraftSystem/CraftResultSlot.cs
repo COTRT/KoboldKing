@@ -8,7 +8,7 @@ public class CraftResultSlot : MonoBehaviour
 
     CraftSystem craftSystem;
     public int temp = 0;
-    GameObject itemGameObject;
+    ItemSlot itemGameObject;
     //Inventory inventory;
 
 
@@ -18,11 +18,11 @@ public class CraftResultSlot : MonoBehaviour
         //inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
         craftSystem = transform.parent.GetComponent<CraftSystem>();
 
-        itemGameObject = (GameObject)Instantiate(Resources.Load("Prefabs/Item") as GameObject);
+        itemGameObject = Instantiate(Resources.Load("Prefabs/Item") as GameObject).GetComponent<ItemSlot>();
         itemGameObject.transform.SetParent(this.gameObject.transform);
         itemGameObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
         itemGameObject.GetComponent<DragItem>().enabled = false;
-        itemGameObject.SetActive(false);
+        itemGameObject.gameObject.SetActive(false);
         itemGameObject.transform.GetChild(1).GetComponent<Text>().enabled = true;
         itemGameObject.transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(PlayerInventory.Instance.mainInventory.positionNumberX, PlayerInventory.Instance.mainInventory.positionNumberY);
 
@@ -33,11 +33,11 @@ public class CraftResultSlot : MonoBehaviour
     {
         if (craftSystem.possibleItems.Count != 0)
         {
-            itemGameObject.GetComponent<ItemOnObject>().Item = craftSystem.possibleItems[temp];
-            itemGameObject.SetActive(true);
+            itemGameObject.Item = craftSystem.possibleItems[temp];
+            itemGameObject.gameObject.SetActive(true);
         }
         else
-            itemGameObject.SetActive(false);
+            itemGameObject.gameObject.SetActive(false);
 
     }
 
