@@ -1,11 +1,12 @@
 {
-  "Capsule": {
+  "Bob": {
     "It shouldn't matter what I put here, since the Capsule picks the only available item to speak": {
       "Statement": "Whaas Uuupppp.  I'm Capsule.",
       "Responses": {
         "Hi": {
           "Statement": "How's life?",
           "Responses": {
+            //"S": null,
             "Peachy": {
               "Statement": "Wow.  Are you sure not Appley?",
               "Responses": {
@@ -30,36 +31,61 @@
       }
     }
   },
-  //"Bob": {
-  //  "It shouldn't matter what I put here, since the Capsule picks the only available item to speak": {
-  //    "Statement": "Thar be many pesky criters about.",
-  //    "Responses": {
-  //      "Really? I don't see any?"
-  //    }
-  //  }
-  //},
-    "TestQuestGiver": {
-      "Quest_Assign": {
-        "Statement": "Hey, Guess what?  I want to give you a quest",
-        "Responses": {
-          "GIMME GIMME GIMME": {
-            "Action": "GiveQuest UltimateSlayer",
-            "Statement": "You gotta Quest"
-          },
-          "NO, PLEASE, NO": {
-            "Statement": "Fine, fine, fine..."
-          }
-        }
+  "Bill": {
+    "Quest_Completed": {
+      "Statement": "Well hi, this feels really.... statement #1"
+    },
+    "jsdhfl": {
+      "Statement": "EEEK!!! Why are you clicking me?"
+    },
+    "#3": {
+      "Statement": "Sometimes, I just don't seem to get it in life, you know?"
+    },
+    "#4": {
+      "Statement": "I really don't like getting clicked...."
+    }
+  },
 
-      },
-      "Quest_Incomplete": {
-        "Statement": "I've already given you that quest, dinglebat"
-      },
-      "Quest_Reward": {
-        "Statement": "Thanks for all that, dude.  Here's some rewards and stuff."
-      },
-      "Quest_Completed": {
-        "Statement": "Hey, I've already rewarded you.  Kids these days, always trying to take more than their share, psha.  Scat!"
+
+  "DrKirlinstien": {
+    "Quest_Assign": {
+      "Statement": "Hey, Guess what?  I want to give you a quest",
+      "Responses": {
+        "You know I have wanted one of those latly.": {
+          "Action": "GiveQuest UltimateSlayer",
+          "Statement": "You gotta Quest"
+        },
+        "I have gotten so many of those ill just pass.": {
+          "Statement": "Fine, fine, fine..."
+        }
+      }
+
+    },
+    "Quest_Incomplete": {
+      "Statement": "I've already given you that quest, dinglebat"
+    },
+    "Quest_Reward": {
+      "Statement": "Thanks for all that, dude.  Here's some rewards and stuff."
+    },
+    "Quest_Completed": {
+      "Statement": "Hey, I've already rewarded you.  Kids these days, always trying to take more than their share, psha.  Scat!"
+    }
+  },
+  "QuestGiverEXAMPLE": {
+    "Quest_Assign": {
+      "Statement": "Hey, Guess what?  I want to give you a quest",
+      "Responses": {
+        "GIMME GIMME GIMME": {
+          "Action": "GiveQuest UltimateSlayer",
+          "Statement": "You gotta Quest"
+        },
+        "NO, PLEASE, NO": {
+          "Statement": "Fine, fine, fine..."
+        }
       }
     }
+
   }
+}
+  
+
