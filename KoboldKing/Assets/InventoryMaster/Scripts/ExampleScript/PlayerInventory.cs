@@ -35,17 +35,6 @@ public class PlayerInventory : MonoBehaviour
     int normalSize = 16;
 
     public static PlayerInventory Instance;
-    private readonly Dictionary<int, Vector2> DimensionsDict = new Dictionary<int, Vector2>()
-    {
-        { 3, new Vector2(3,1) }, //For 3 slots, make the inventory 3 wide by 1 high
-        {6, new Vector2(3,2) },
-        {12, new Vector2(3,4) },
-        {16, new Vector2(4,4) },
-        {20,new Vector2(4,5) },
-        {24,new Vector3(4,6) },
-        {30, new Vector2(5,6) },
-        {36, new Vector2(6,6) }
-    };
 
     public void Awake()
     {
@@ -132,45 +121,17 @@ public class PlayerInventory : MonoBehaviour
         {
             mainInventory.SortItems();
             var slots = item.itemAttributes.Find(att => att.attributeName == "Slots");
-            ChangeInventorySize(normalSize + slots.attributeValue);
+            mainInventory.ChangeInventorySize(normalSize + slots.attributeValue);
         }
     }
 
     void UnEquipBackpack(Item item)
     {
         if (item.ItemType == ItemType.Backpack)
-            ChangeInventorySize(normalSize);
+            mainInventory.ChangeInventorySize(normalSize);
     }
 
-    void ChangeInventorySize(int size)
-    {
-        if (size < mainInventory.ItemsInInventory.Count)
-        {
-            foreach(var item in mainInventory.ItemsInInventory.Skip(size)) { 
-                GameObject dropItem = Instantiate(item.ItemModel);
-                dropItem.AddComponent<PickUpItem>().item = item;
-                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
-            }
-        }
 
-        Vector2 dimensions;
-        if(!DimensionsDict.TryGetValue(size,out dimensions)) //Check first to see if the given dimensions are in the dimensions dictionary
-        {
-            //Some very fancy math to calculate the most even grid possible for the given size.
-            for(float h = Mathf.Ceil(Mathf.Sqrt(size)); h > 1; h--) //Count down from the Square Root (i.e., square inventory) of the total size (i.e. number of slots)
-            {
-                if ((size/h) % 1 == 0) //If the given number can divide the size evenly...
-                {
-                    dimensions = new Vector2(size / h, h); //Use that number as the height and the quotient as the width
-                    break;
-                }
-            }
-        }
-        mainInventory.width = (int)dimensions.x;
-        mainInventory.height = (int)dimensions.y;
-        mainInventory.updateSlotAmount();
-        mainInventory.adjustInventorySize();
-    }
 
    
 
