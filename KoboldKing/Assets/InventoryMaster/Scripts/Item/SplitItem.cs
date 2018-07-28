@@ -25,6 +25,7 @@ public class SplitItem : MonoBehaviour, IPointerDownHandler
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
     }
 
+    //TODO refactor with array inventory system
     public void OnPointerDown(PointerEventData data)                    //splitting the item now
     {
         inv = transform.parent.parent.parent.GetComponent<Inventory>();
@@ -32,16 +33,13 @@ public class SplitItem : MonoBehaviour, IPointerDownHandler
         {
             ItemOnObject itemOnObject = GetComponent<ItemOnObject>();                                                   //we take the ItemOnObject script of the item in the slot
 
-            if (itemOnObject.Item.ItemValue > 1)                                                                         //we split the item only when we have more than 1 in the stack
+            if (itemOnObject.Item.Quantity > 1)                                                                         //we split the item only when we have more than 1 in the stack
             {
-                int splitPart = itemOnObject.Item.ItemValue;                                                           //we take the value and store it in there
-                itemOnObject.Item.ItemValue = (int)itemOnObject.Item.ItemValue / 2;                                     //calculate the new value for the splitted item
-                splitPart = splitPart - itemOnObject.Item.ItemValue;                                                   //take the different
+                int splitPart = itemOnObject.Item.Quantity;                                                           //we take the value and store it in there
+                itemOnObject.Item.Quantity = (int)itemOnObject.Item.Quantity / 2;                                     //calculate the new value for the splitted item
+                splitPart = splitPart - itemOnObject.Item.Quantity;                                                   //take the different
 
-                inv.addItemToInventory(itemOnObject.Item.ItemID, splitPart);                                            //and add a new item to the inventory
-                inv.stackableSettings();
-                inv.updateItemList();
-
+                inv.AddItemToInventory(itemOnObject.Item.ID, splitPart);                                            //and add a new item to the inventory
             }
         }
     }

@@ -51,7 +51,6 @@ public class EquipmentSystem : MonoBehaviour
         Inventory inv = panel.AddComponent<Inventory>();
         GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
         draggingItem.transform.SetParent(Canvas.transform, true);
-        inv.getPrefabs();
     }
 #endif
 

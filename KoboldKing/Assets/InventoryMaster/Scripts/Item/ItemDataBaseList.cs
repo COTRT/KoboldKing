@@ -12,8 +12,8 @@ public class ItemDataBaseList : ScriptableObject
     {
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].ItemID == id)
-                return itemList[i].getCopy();
+            if (itemList[i].ID == id)
+                return itemList[i].GetCopy();
         }
         return null;
     }
@@ -22,8 +22,8 @@ public class ItemDataBaseList : ScriptableObject
     {
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].ItemName.ToLower().Equals(name.ToLower()))
-                return itemList[i].getCopy();
+            if (itemList[i].Name.ToLower().Equals(name.ToLower()))
+                return itemList[i].GetCopy();
         }
         return null;
     }

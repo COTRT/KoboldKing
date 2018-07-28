@@ -34,7 +34,6 @@ public class Hotbar : MonoBehaviour
             Inventory inv = panel.AddComponent<Inventory>();
             panel.AddComponent<InventoryDesign>();
             panel.AddComponent<Hotbar>();
-            inv.getPrefabs();
         }
         else
         {
@@ -47,7 +46,6 @@ public class Hotbar : MonoBehaviour
             GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
             draggingItem.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
             panel.AddComponent<InventoryDesign>();
-            inv.getPrefabs();
         }
     }
 #endif
@@ -58,7 +56,7 @@ public class Hotbar : MonoBehaviour
         {
             if (Input.GetKeyDown(keyCodesForSlots[i]))
             {
-                if (transform.GetChild(1).GetChild(i).childCount != 0 && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item.ItemType != ItemType.UFPS_Ammo)
+                if (transform.GetChild(1).GetChild(i).childCount != 0 && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item.Type != ItemType.UFPS_Ammo)
                 {
                     if (transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemSlot>().duplication != null && transform.GetChild(1).GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item.MaxStack == 1)
                     {

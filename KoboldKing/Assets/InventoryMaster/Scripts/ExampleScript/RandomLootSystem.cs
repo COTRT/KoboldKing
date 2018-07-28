@@ -27,11 +27,11 @@ public class RandomLootSystem : MonoBehaviour
             float z = Random.Range(5, terrain.terrainData.size.z - 5);
 
 
-            if (inventoryItemList.itemList[randomNumber].ItemModel == null)
+            if (inventoryItemList.itemList[randomNumber].Model == null)
                 counter--;
             else
             {
-                GameObject randomLootItem = (GameObject)Instantiate(inventoryItemList.itemList[randomNumber].ItemModel);
+                GameObject randomLootItem = (GameObject)Instantiate(inventoryItemList.itemList[randomNumber].Model);
                 PickUpItem item = randomLootItem.AddComponent<PickUpItem>();
                 item.item = inventoryItemList.itemList[randomNumber];
 

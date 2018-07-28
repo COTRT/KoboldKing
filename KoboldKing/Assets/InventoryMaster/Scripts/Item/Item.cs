@@ -11,7 +11,7 @@ public class Item : INotifyPropertyChanged
     //Thank you, Mr. Sun of Miracle Salad, for that Sequencer of yours.
     [SerializeField]
     private string itemName;
-    public string ItemName
+    public string Name
     {
         get
         {
@@ -27,7 +27,7 @@ public class Item : INotifyPropertyChanged
 
     [SerializeField]
     private int itemID;
-    public int ItemID
+    public int ID
     {
         get
         {
@@ -43,7 +43,7 @@ public class Item : INotifyPropertyChanged
 
     [SerializeField]
     private string itemDesc;
-    public string ItemDesc
+    public string Description
     {
         get
         {
@@ -59,7 +59,7 @@ public class Item : INotifyPropertyChanged
 
     [SerializeField]
     private Sprite itemIcon;
-    public Sprite ItemIcon
+    public Sprite Icon
     {
         get
         {
@@ -75,7 +75,7 @@ public class Item : INotifyPropertyChanged
 
     [SerializeField]
     private GameObject itemModel;
-    public GameObject ItemModel
+    public GameObject Model
     {
         get
         {
@@ -90,24 +90,24 @@ public class Item : INotifyPropertyChanged
     }
 
     [SerializeField]
-    private int itemValue;
-    public int ItemValue
+    private int itemQuantity;
+    public int Quantity
     {
         get
         {
-            return itemValue;
+            return itemQuantity;
         }
 
         set
         {
-            itemValue = value;
+            itemQuantity = value;
             OnPropertyChanged("ItemValue");
         }
     }
 
     [SerializeField]
     private ItemType itemType;
-    public ItemType ItemType
+    public ItemType Type
     {
         get
         {
@@ -122,7 +122,7 @@ public class Item : INotifyPropertyChanged
     }
 
     private float itemWeight;
-    public float ItemWeight
+    public float Weight
     {
         get
         {
@@ -153,22 +153,6 @@ public class Item : INotifyPropertyChanged
     }
 
     [SerializeField]
-    private int indexItemInList;
-    public int IndexItemInList
-    {
-        get
-        {
-            return indexItemInList;
-        }
-
-        set
-        {
-            indexItemInList = value;
-            OnPropertyChanged("IndexItemInList");
-        }
-    }
-
-    [SerializeField]
     private int rarity;
     public int Rarity
     {
@@ -184,32 +168,16 @@ public class Item : INotifyPropertyChanged
         }
     }
 
-    private bool empty;
-    public bool Empty
-    {
-        get
-        {
-            return empty;
-        }
-
-        set
-        {
-            empty = value;
-            OnPropertyChanged("Empty");
-        }
-    }
-
-
     public Item() { }
 
-    public Item(string name, int id, string desc, Sprite icon, GameObject model, int maxStack, ItemType type, string sendmessagetext, List<ItemAttribute> itemAttributes)                 //function to create a instance of the Item
+    public Item(string name, int id, string desc, Sprite icon, GameObject model, int maxStack, ItemType type, List<ItemAttribute> itemAttributes)                 //function to create a instance of the Item
     {
-        ItemName = name;
-        ItemID = id;
-        ItemDesc = desc;
-        ItemIcon = icon;
-        ItemModel = model;
-        ItemType = type;
+        Name = name;
+        ID = id;
+        Description = desc;
+        Icon = icon;
+        Model = model;
+        Type = type;
         this.MaxStack = maxStack;
         this.itemAttributes = itemAttributes;
     }
@@ -222,7 +190,7 @@ public class Item : INotifyPropertyChanged
             PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
     }
-    public Item getCopy()
+    public Item GetCopy()
     {
         return (Item)this.MemberwiseClone();
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEditor;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Linq;
 
 [CustomEditor(typeof(Inventory))]
 public class InventoryEditor : Editor
@@ -66,7 +67,7 @@ public class InventoryEditor : Editor
         EditorGUILayout.PropertyField(mainInventory, new GUIContent("Player Inventory"));
         if (EditorGUI.EndChangeCheck())
         {
-            inv.SetAsMain();
+            inv.SetMain(mainInventory.boolValue);
         }
         GUILayout.EndVertical();
 
@@ -81,7 +82,7 @@ public class InventoryEditor : Editor
         }
         GUILayout.EndVertical();
 
-        if (!inv.characterSystem())
+        if (!inv.CharacterSystem())
         {
             GUILayout.BeginVertical("Box");
             showStackableItemsSettings = EditorGUILayout.Foldout(showStackableItemsSettings, "Stacking/Splitting");
@@ -108,14 +109,15 @@ public class InventoryEditor : Editor
 
     void stackableItemsSettings()
     {
+        EditorGUI.BeginChangeCheck();
         EditorGUILayout.PropertyField(inventoryStackable, new GUIContent("Splitting/Stacking"));
+        if (EditorGUI.EndChangeCheck()) inv.UpdateStackNumberSettings();
         if (inventoryStackable.boolValue)
         {
             EditorGUI.indentLevel++;
             showStackableItems = EditorGUILayout.Foldout(showStackableItems, "StackNumberPosition");
             if (showStackableItems)
             {
-                inventoryStackable.boolValue = true;
                 EditorGUI.BeginChangeCheck();
                 EditorGUI.indentLevel++;
                 positionNumberX.intValue = EditorGUILayout.IntSlider("Position X:", positionNumberX.intValue, -(inventorySlotSize.intValue / 2), inventorySlotSize.intValue / 2);
@@ -123,21 +125,11 @@ public class InventoryEditor : Editor
                 EditorGUI.indentLevel--;
                 if (EditorGUI.EndChangeCheck())
                 {
-                    inv.stackableSettings();
+                    inv.UpdateStackNumberSettings();
                 }
-            }
-            else
-            {
-                inv.stackableSettings();
             }
             EditorGUI.indentLevel--;
         }
-        else
-        {
-            inv.stackableSettings();
-        }
-
-
     }
 
     void sizeOfInventoryGUI()
@@ -149,28 +141,17 @@ public class InventoryEditor : Editor
         EditorGUILayout.IntSlider(inventoryWidth, 1, 10, new GUIContent("Width"));
         if (EditorGUI.EndChangeCheck())
         {
-            inv.setImportantVariables();
-            inv.updateSlotAmount();
-            inv.adjustInventorySize();
-            inv.updatePadding(slotsPaddingBetweenX.intValue, slotsPaddingBetweenY.intValue);
-            inv.updateSlotSize(inventorySlotSize.intValue);
-            inv.stackableSettings();
+            inv.UpdateItemDisplay();
+            inv.AdjustInventorySize();
+            inv.UpdatePadding(slotsPaddingBetweenX.intValue, slotsPaddingBetweenY.intValue);
         }
 
         EditorGUI.BeginChangeCheck();
         EditorGUILayout.IntSlider(inventorySlotSize, 20, 100, new GUIContent("Slot Size"));                                                                                        //intfield for the slotsize
-        if (EditorGUI.EndChangeCheck())                                                                                                        //if intfield got changed
-        {
-            inv.setImportantVariables();
-            inv.adjustInventorySize();
-            inv.updateSlotSize(inventorySlotSize.intValue);
-        }
-
-        EditorGUI.BeginChangeCheck();
         EditorGUILayout.IntSlider(inventoryIconSize, 20, 100, new GUIContent("Icon Size"));                                                                                        //intfield for the slotsize
         if (EditorGUI.EndChangeCheck())                                                                                                        //if intfield got changed
         {
-            inv.updateIconSize(inventoryIconSize.intValue);
+            inv.UpdateSlotSize(inventorySlotSize.intValue, inventoryIconSize.intValue);
         }
 
         GUILayout.BeginVertical("Box");
@@ -189,8 +170,8 @@ public class InventoryEditor : Editor
             EditorGUI.indentLevel--;
             if (EditorGUI.EndChangeCheck())
             {
-                inv.adjustInventorySize();
-                inv.updatePadding(slotsPaddingBetweenX.intValue, slotsPaddingBetweenY.intValue);
+                inv.AdjustInventorySize();
+                inv.UpdatePadding(slotsPaddingBetweenX.intValue, slotsPaddingBetweenY.intValue);
             }
 
         }
@@ -202,30 +183,53 @@ public class InventoryEditor : Editor
 
     void addItemGUI()                                                                                                       //add a item to the inventory through the inspector
     {
-        if (!inv.characterSystem())
+        if (!inv.CharacterSystem())
         {
             GUILayout.Label("Add an item:");
-            inv.setImportantVariables();                                                                                                            //space to the top gui element
             EditorGUILayout.BeginHorizontal();                                                                                  //starting horizontal GUI elements
             ItemDataBaseList inventoryItemList = (ItemDataBaseList)Resources.Load("ItemDatabase");                            //loading the itemdatabase
-            string[] items = new string[inventoryItemList.itemList.Count];                                                      //create a string array in length of the itemcount
-            for (int i = 1; i < items.Length; i++)                                                                              //go through the item array
-            {
-                items[i] = inventoryItemList.itemList[i].ItemName;                                                              //and paste all names into the array
-            }
+            string[] items = inventoryItemList.itemList.Select(i => i.Name).ToArray();
             itemID = EditorGUILayout.Popup("", itemID, items, EditorStyles.popup);                                              //create a popout with all itemnames in it and save the itemID of it
             itemValue = EditorGUILayout.IntField("", itemValue, GUILayout.Width(40));
             GUI.color = Color.green;                                                                                            //set the color of all following guielements to green
             if (GUILayout.Button("Add Item"))                                                                                   //creating button with name "AddItem"
             {                
-                inv.addItemToInventory(itemID, itemValue);                                                                      //and set the settings for possible stackedItems
-                inv.stackableSettings();
+                inv.AddItemToInventory(itemID, itemValue);                                                                      //and set the settings for possible stackedItems
             }
-            inv.OnUpdateItemList();
 
             EditorGUILayout.EndHorizontal();                                                                                    //end the horizontal gui layout
         }
     }
 
-
+    [MenuItem("Master System/Create/Inventory and Storage")]        //creating the menu item
+    public static void MenuItemCreateInventory()       //create the inventory at start
+    {
+        GameObject Canvas = null;
+        if (GameObject.FindGameObjectWithTag("Canvas") == null)
+        {
+            GameObject inventory = new GameObject();
+            inventory.name = "Inventories";
+            Canvas = (GameObject)Instantiate(Resources.Load("Prefabs/Canvas - Inventory") as GameObject);
+            Canvas.transform.SetParent(inventory.transform, true);
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Inventory") as GameObject);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            panel.transform.SetParent(Canvas.transform, true);
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            draggingItem.transform.SetParent(Canvas.transform, true);
+            Inventory temp = panel.AddComponent<Inventory>();
+            Instantiate(Resources.Load("Prefabs/EventSystem") as GameObject);
+            panel.AddComponent<InventoryDesign>();
+        }
+        else
+        {
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Inventory") as GameObject);
+            panel.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            Inventory temp = panel.AddComponent<Inventory>();
+            panel.AddComponent<InventoryDesign>();
+            DestroyImmediate(GameObject.FindGameObjectWithTag("DraggingItem"));
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            draggingItem.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+        }
+    }
 }

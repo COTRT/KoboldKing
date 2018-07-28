@@ -180,18 +180,18 @@ public class IM_Manager : EditorWindow
                 GUILayout.BeginVertical("Box", GUILayout.Width(position.width - 23));
                 try
                 {
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemName = EditorGUILayout.TextField("Item Name", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemName, GUILayout.Width(position.width - 30));          //textfield for the itemname which you wanna create
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemID = inventoryItemList.itemList.Count - 1;                                             //itemID getting set automaticly ...its unique...better do not change it :D  
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Name = EditorGUILayout.TextField("Item Name", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Name, GUILayout.Width(position.width - 30));          //textfield for the itemname which you wanna create
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ID = inventoryItemList.itemList.Count - 1;                                             //itemID getting set automaticly ...its unique...better do not change it :D  
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Item Description");                                                                                                                        //label ItemDescription
                     GUILayout.Space(47);
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemDesc = EditorGUILayout.TextArea(inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemDesc, GUILayout.Width(position.width - 180), GUILayout.Height(70));     //Text area for the itemDesc
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Description = EditorGUILayout.TextArea(inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Description, GUILayout.Width(position.width - 180), GUILayout.Height(70));     //Text area for the itemDesc
                     GUILayout.EndHorizontal();
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemIcon = (Sprite)EditorGUILayout.ObjectField("Item Icon", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemIcon, typeof(Sprite), false, GUILayout.Width(position.width - 33));         //objectfield for the itemicon for your new item
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemModel = (GameObject)EditorGUILayout.ObjectField("Item Model", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemModel, typeof(GameObject), false, GUILayout.Width(position.width - 33));      //objectfield for the itemmodel for your new item
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Icon = (Sprite)EditorGUILayout.ObjectField("Item Icon", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Icon, typeof(Sprite), false, GUILayout.Width(position.width - 33));         //objectfield for the itemicon for your new item
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Model = (GameObject)EditorGUILayout.ObjectField("Item Model", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Model, typeof(GameObject), false, GUILayout.Width(position.width - 33));      //objectfield for the itemmodel for your new item
 
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].ItemType, GUILayout.Width(position.width - 33));                                      //the itemtype which you want to have can be selected with the enumpopup
+                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Type = (ItemType)EditorGUILayout.EnumPopup("Item Type", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Type, GUILayout.Width(position.width - 33));                                      //the itemtype which you want to have can be selected with the enumpopup
                     inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].MaxStack = EditorGUILayout.IntField("Max Stack", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].MaxStack, GUILayout.Width(position.width - 33));
                     inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Rarity = EditorGUILayout.IntSlider("Rarity", inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].Rarity, 0, 100);
                     GUILayout.BeginVertical("Box", GUILayout.Width(position.width - 33));
@@ -242,7 +242,6 @@ public class IM_Manager : EditorWindow
 
                     }
                     GUILayout.EndVertical();
-                    inventoryItemList.itemList[inventoryItemList.itemList.Count - 1].IndexItemInList = 999;
 
 
 
@@ -270,7 +269,7 @@ public class IM_Manager : EditorWindow
                     {
                         manageItem.Add(false);                                                                                                  //foldout is closed at default
                         GUILayout.BeginVertical("Box");
-                        manageItem[i] = EditorGUILayout.Foldout(manageItem[i], "" + inventoryItemList.itemList[i].ItemName);                   //create for every item which you have in the itemdatabase a foldout
+                        manageItem[i] = EditorGUILayout.Foldout(manageItem[i], "" + inventoryItemList.itemList[i].Name);                   //create for every item which you have in the itemdatabase a foldout
                         if (manageItem[i])                                                                                                      //if you press on it you get this
                         {
 
@@ -283,8 +282,8 @@ public class IM_Manager : EditorWindow
                             }
 
                             GUI.color = Color.white;                                                                                            //next GUIElements will be white
-                            inventoryItemList.itemList[i].ItemName = EditorGUILayout.TextField("Item Name", inventoryItemList.itemList[i].ItemName, GUILayout.Width(position.width - 45));          //textfield for the itemname which you wanna create
-                            inventoryItemList.itemList[i].ItemID = i;                                             //itemID getting set automaticly ...its unique...better do not change it :D  
+                            inventoryItemList.itemList[i].Name = EditorGUILayout.TextField("Item Name", inventoryItemList.itemList[i].Name, GUILayout.Width(position.width - 45));          //textfield for the itemname which you wanna create
+                            inventoryItemList.itemList[i].ID = i;                                             //itemID getting set automaticly ...its unique...better do not change it :D  
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("Item ID");
                             GUILayout.Label("" + i);
@@ -292,11 +291,11 @@ public class IM_Manager : EditorWindow
                             GUILayout.BeginHorizontal();
                             GUILayout.Label("Item Description");                                                                                                                        //label ItemDescription
                             GUILayout.Space(47);
-                            inventoryItemList.itemList[i].ItemDesc = EditorGUILayout.TextArea(inventoryItemList.itemList[i].ItemDesc, GUILayout.Width(position.width - 195), GUILayout.Height(70));     //Text area for the itemDesc
+                            inventoryItemList.itemList[i].Description = EditorGUILayout.TextArea(inventoryItemList.itemList[i].Description, GUILayout.Width(position.width - 195), GUILayout.Height(70));     //Text area for the itemDesc
                             GUILayout.EndHorizontal();
-                            inventoryItemList.itemList[i].ItemIcon = (Sprite)EditorGUILayout.ObjectField("Item Icon", inventoryItemList.itemList[i].ItemIcon, typeof(Sprite), false, GUILayout.Width(position.width - 45));         //objectfield for the itemicon for your new item
-                            inventoryItemList.itemList[i].ItemModel = (GameObject)EditorGUILayout.ObjectField("Item Model", inventoryItemList.itemList[i].ItemModel, typeof(GameObject), false, GUILayout.Width(position.width - 45));      //objectfield for the itemmodel for your new item
-                            inventoryItemList.itemList[i].ItemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", inventoryItemList.itemList[i].ItemType, GUILayout.Width(position.width - 45));                                      //the itemtype which you want to have can be selected with the enumpopup
+                            inventoryItemList.itemList[i].Icon = (Sprite)EditorGUILayout.ObjectField("Item Icon", inventoryItemList.itemList[i].Icon, typeof(Sprite), false, GUILayout.Width(position.width - 45));         //objectfield for the itemicon for your new item
+                            inventoryItemList.itemList[i].Model = (GameObject)EditorGUILayout.ObjectField("Item Model", inventoryItemList.itemList[i].Model, typeof(GameObject), false, GUILayout.Width(position.width - 45));      //objectfield for the itemmodel for your new item
+                            inventoryItemList.itemList[i].Type = (ItemType)EditorGUILayout.EnumPopup("Item Type", inventoryItemList.itemList[i].Type, GUILayout.Width(position.width - 45));                                      //the itemtype which you want to have can be selected with the enumpopup
                             inventoryItemList.itemList[i].MaxStack = EditorGUILayout.IntField("Max Stack", inventoryItemList.itemList[i].MaxStack, GUILayout.Width(position.width - 45));
                             inventoryItemList.itemList[i].Rarity = EditorGUILayout.IntSlider("Rarity", inventoryItemList.itemList[i].Rarity, 0, 100);
                             GUILayout.BeginVertical("Box", GUILayout.Width(position.width - 45));
@@ -359,11 +358,11 @@ public class IM_Manager : EditorWindow
                                     for (int z = 0; z < items.Length; z++)
                                     {
                                         ItemOnObject item = items[z].GetComponent<ItemOnObject>();
-                                        if (item.Item.ItemID == inventoryItemList.itemList[i].ItemID)
+                                        if (item.Item.ID == inventoryItemList.itemList[i].ID)
                                         {
-                                            int value = item.Item.ItemValue;
+                                            int value = item.Item.Quantity;
                                             item.Item = inventoryItemList.itemList[i];
-                                            item.Item.ItemValue = value;
+                                            item.Item.Quantity = value;
                                         }
                                     }
 
@@ -421,7 +420,7 @@ public class IM_Manager : EditorWindow
                 string[] items = new string[inventoryItemList.itemList.Count];                                                      //create a string array in length of the itemcount
                 for (int i = 1; i < items.Length; i++)                                                                              //go through the item array
                 {
-                    items[i] = inventoryItemList.itemList[i].ItemName;                                                              //and paste all names into the array
+                    items[i] = inventoryItemList.itemList[i].Name;                                                              //and paste all names into the array
                 }
                 EditorGUILayout.BeginHorizontal();
                 finalItemID = EditorGUILayout.Popup("Final Item", finalItemID, items, EditorStyles.popup);
@@ -481,7 +480,7 @@ public class IM_Manager : EditorWindow
                     {
                         manageItem1.Add(false);
                         GUILayout.BeginVertical("Box", GUILayout.Width(position.width - 23));
-                        manageItem1[i] = EditorGUILayout.Foldout(manageItem1[i], "" + bluePrintDatabase.blueprints[i].finalItem.ItemName);                    //create for every item which you have in the itemdatabase a foldout
+                        manageItem1[i] = EditorGUILayout.Foldout(manageItem1[i], "" + bluePrintDatabase.blueprints[i].finalItem.Name);                    //create for every item which you have in the itemdatabase a foldout
                         if (manageItem1[i])                                                                                                      //if you press on it you get this
                         {
                             EditorGUI.indentLevel++;
@@ -501,7 +500,7 @@ public class IM_Manager : EditorWindow
                             string[] items = new string[inventoryItemList.itemList.Count];                                                      //create a string array in length of the itemcount
                             for (int z = 1; z < items.Length; z++)                                                                              //go through the item array
                             {
-                                items[z] = inventoryItemList.itemList[z].ItemName;                                                              //and paste all names into the array
+                                items[z] = inventoryItemList.itemList[z].Name;                                                              //and paste all names into the array
                             }
                             GUILayout.Label("Ingredients");
                             for (int k = 0; k < bluePrintDatabase.blueprints[i].ingredients.Count; k++)
@@ -635,7 +634,7 @@ public class IM_Manager : EditorWindow
     {
         EditorUtility.SetDirty(inventoryItemList);          //message scriptable object for incoming changes
         Item newItem = new Item();                          //create a empty mask of an item
-        newItem.ItemName = "New Item";                      //set the name as "new Item"
+        newItem.Name = "New Item";                      //set the name as "new Item"
         inventoryItemList.itemList.Add(newItem);            //and add this to the itemdatabase
         EditorUtility.SetDirty(inventoryItemList);          //message scriptable object that you added something
     }

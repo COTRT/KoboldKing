@@ -12,7 +12,6 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
 
     private static Inventory mi;
     public Inventory RootInventory;
-    //Refactor this
 
 
     void Start()
@@ -36,8 +35,9 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
     {
         if (duplication != null)
         {
-            duplication.RootInventory.updateItemList();
-            duplication.RootInventory.stackableSettings();
+            //TODO remove Duplication functionality
+            //duplication.RootInventory.UpdateItemList();
+            //duplication.RootInventory.UpdateStackNumbers();
         }
     }
 
@@ -56,18 +56,15 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
         //item from craft system to inventory
         if (transform.parent.GetComponent<CraftResultSlot>() != null)
         {
-            if (!mi.checkIfItemAllreadyExist(Item.ItemID, Item.ItemValue))
+            if (mi.AddItemToInventory(Item.ID, Item.Quantity)!=0)
             {
-                mi.addItemToInventory(Item.ItemID, Item.ItemValue);
-                mi.stackableSettings();
+                CraftSystem cS = PlayerInventory.Instance.craftSystem;
+                cS.RemoveItemIngredients(Item); //TODO:  Change CraftSystem to store Blueprint in CraftResultSlot, and pass that in here, to make things significantly less stupid in that department
+                CraftResultSlot result = cS.transform.GetChild(3).GetComponent<CraftResultSlot>();
+                result.temp = 0;
+                tooltip.deactivateTooltip();
+                gearable = true;
             }
-            CraftSystem cS = PlayerInventory.Instance.cS;
-            cS.RemoveItemIngredients(Item); //TODO:  Change CraftSystem to store Blueprint in CraftResultSlot, and pass that in here, to make things significantly less stupid in that department
-            CraftResultSlot result = cS.transform.GetChild(3).GetComponent<CraftResultSlot>();
-            result.temp = 0;
-            tooltip.deactivateTooltip();
-            gearable = true;
-            mi.updateItemList();
         }
         else
         {
@@ -77,7 +74,7 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
             {
                 for (int i = 0; i < eS.slotsInTotal; i++) //Keeping for loop for now... TODO replace with foreach when EquipmentSystem is refactored.
                 {
-                    if (eS.itemTypeOfSlots[i].Equals(Item.ItemType))
+                    if (eS.itemTypeOfSlots[i].Equals(Item.Type))
                     {
                         Transform slot = eS.transform.GetChild(1).GetChild(i);
                         if (slot.childCount == 0)
@@ -88,8 +85,6 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
 
                             transform.SetParent(eS.transform.GetChild(1).GetChild(i));
                             GetComponent<RectTransform>().localPosition = Vector3.zero;
-                            eS.GetComponent<Inventory>().updateItemList();
-                            RootInventory.updateItemList();
                             gearable = true;
                             if (duplication != null)
                                 Destroy(duplication.gameObject);
@@ -101,16 +96,17 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
 
                 if (!emptySlotFound && firstSlotFound != null)
                 {
+                    //TODO replace moving logic with array movement (instead of hierarchy)
                     ItemSlot otherItemFromCharacterSystem = firstSlotFound.GetComponent<ItemSlot>();
                     Item otherSlotItem = otherItemFromCharacterSystem.Item;
-                    if (Item.ItemType == ItemType.UFPS_Weapon)
+                    if (Item.Type == ItemType.UFPS_Weapon)
                     {
                         RootInventory.UnEquipItem(otherSlotItem);
                         RootInventory.EquipItem(Item);
                     }
                     else
                     {
-                        if (Item.ItemType != ItemType.Backpack)
+                        if (Item.Type != ItemType.Backpack)
                             RootInventory.UnEquipItem(otherItemFromCharacterSystem.GetComponent<ItemOnObject>().Item);
                         RootInventory.EquipItem(Item);
                     }
@@ -127,14 +123,13 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
                     gearable = true;
                     if (duplication != null)
                         Destroy(duplication.gameObject);
-                    eS.GetComponent<Inventory>().updateItemList();
-                    RootInventory.OnUpdateItemList();
+                    RootInventory.UpdateItemDisplay();
                 }
 
             }
 
         }
-        if (!gearable && Item.ItemType != ItemType.UFPS_Ammo && Item.ItemType != ItemType.UFPS_Grenade)
+        if (!gearable && Item.Type != ItemType.UFPS_Ammo && Item.Type != ItemType.UFPS_Grenade)
         {
             Item itemFromDup = null;
             if (duplication != null)
@@ -142,23 +137,33 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
 
             RootInventory.ConsumeItem(Item);
 
-            Item.ItemValue--;
-            if (Item.ItemValue <= 0)
+            Item.Quantity--;
+            if (Item.Quantity <= 0)
             {
                 if (tooltip != null)
                     tooltip.deactivateTooltip();
-                RootInventory.deleteItemFromInventory(Item);
+                RootInventory.DeleteItem(Item);
                 Destroy(duplication.gameObject);
             }
         }
 
     }
 
+    public void UpdateSlotSize(int slotSize, int iconSize)
+    {
+        if (transform.childCount > 0)
+        {
+            GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
+            transform.GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
+            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(iconSize, iconSize);
+        }
+    }
+
     public static void CreateDuplication(ItemSlot ItemToDup)
     {
-
-        ItemSlot dup = mi.GetComponent<Inventory>().addItemToInventory(ItemToDup.Item.ItemID, ItemToDup.Item.ItemValue).GetComponent<ItemSlot>();
-        dup.RootInventory.stackableSettings();
+        //TODO remove this functionality in favor of independent Hotbar and Inventory systems (i.e., no duplication)
+        //It also happens that this functionality is not possible with the new array-based inventory system, since in-inventory GameObject references are not attainable.
+        ItemSlot dup = mi.GetComponent<Inventory>().AddItemToInventory(ItemToDup.Item.ID, ItemToDup.Item.Quantity).GetComponent<ItemSlot>();
         ItemToDup.duplication = dup;
         dup.duplication = ItemToDup;
     }

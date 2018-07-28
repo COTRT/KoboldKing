@@ -6,9 +6,9 @@ using System;
 
 public class PlayerInventory : MonoBehaviour
 {
-    public Inventory craftSystem;
+    public Inventory craftSystemInv;
     [HideInInspector]
-    public CraftSystem cS;
+    public CraftSystem craftSystem;
     public Inventory mainInventory;
     public  Inventory characterSystem;
     private Tooltip toolTip;
@@ -56,21 +56,29 @@ public class PlayerInventory : MonoBehaviour
             UpdateHPBar();
             UpdateManaBar();
         }
+        else
+        {
+            throw new Exception("Please provide PlayerInventory with HPMANACanvas");
+        }
 
-        if (inputManagerDatabase == null)
-            inputManagerDatabase = (InputManager)Resources.Load("InputManager");
+        inputManagerDatabase = (InputManager)Resources.Load("InputManager");
 
-        if (new[] { craftSystem, mainInventory, characterSystem }.Any(i => i == null))
+        if (new[] { craftSystemInv, mainInventory, characterSystem }.Any(i => i == null))
         {
             throw new ArgumentException("Please supply the PlayerInventory Script with the Craft System, Character System, and Main Inventory panels in the inspector");
         }
-        cS = craftSystem.GetComponent<CraftSystem>();
+        craftSystem = craftSystemInv.GetComponent<CraftSystem>();
 
         if (GameObject.FindGameObjectWithTag("Tooltip") != null)
-            toolTip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
         {
-            normalSize = mainInventory.width * mainInventory.height;
+            toolTip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
         }
+        else
+        {
+            throw new Exception("No GameObject found with 'Tooltip' tag.  That's needed.");
+        }
+
+        normalSize = mainInventory.width * mainInventory.height;
     }
 
     public void OnEnable()
@@ -79,7 +87,7 @@ public class PlayerInventory : MonoBehaviour
         Inventory.ItemUnequip += UnEquipBackpack;
 
         Inventory.ItemEquip += OnGearItem;
-        Inventory.ItemConsumed += OnConsumeItem;
+        Inventory.ItemConsume += OnConsumeItem;
         Inventory.ItemUnequip += OnUnEquipItem;
 
         Inventory.ItemEquip += EquipWeapon;
@@ -92,7 +100,7 @@ public class PlayerInventory : MonoBehaviour
         Inventory.ItemUnequip -= UnEquipBackpack;
 
         Inventory.ItemEquip -= OnGearItem;
-        Inventory.ItemConsumed -= OnConsumeItem;
+        Inventory.ItemConsume -= OnConsumeItem;
         Inventory.ItemUnequip -= OnUnEquipItem;
 
         Inventory.ItemUnequip -= UnEquipWeapon;
@@ -101,7 +109,7 @@ public class PlayerInventory : MonoBehaviour
 
     void EquipWeapon(Item item)
     {
-        if (item.ItemType == ItemType.Weapon)
+        if (item.Type == ItemType.Weapon)
         {
             //add the weapon if you unequip the weapon
         }
@@ -109,7 +117,7 @@ public class PlayerInventory : MonoBehaviour
 
     void UnEquipWeapon(Item item)
     {
-        if (item.ItemType == ItemType.Weapon)
+        if (item.Type == ItemType.Weapon)
         {
             //delete the weapon if you unequip the weapon
         }
@@ -117,7 +125,7 @@ public class PlayerInventory : MonoBehaviour
 
     void OnBackpack(Item item)
     {
-        if (item.ItemType == ItemType.Backpack)
+        if (item.Type == ItemType.Backpack)
         {
             mainInventory.SortItems();
             var slots = item.itemAttributes.Find(att => att.attributeName == "Slots");
@@ -127,7 +135,7 @@ public class PlayerInventory : MonoBehaviour
 
     void UnEquipBackpack(Item item)
     {
-        if (item.ItemType == ItemType.Backpack)
+        if (item.Type == ItemType.Backpack)
             mainInventory.ChangeInventorySize(normalSize);
     }
 
@@ -248,18 +256,18 @@ public class PlayerInventory : MonoBehaviour
 
         if (Input.GetKeyDown(inputManagerDatabase.CraftSystemKeyCode))
         {
-            if (!craftSystem.gameObject.activeSelf)
+            if (!craftSystemInv.gameObject.activeSelf)
             {
                 if (!mainInventory.gameObject.activeSelf) mainInventory.OpenInventory();
-                craftSystem.OpenInventory();
+                craftSystemInv.OpenInventory();
             }
             else
             {
-                if (cS != null)
-                    cS.BackToInventory();
+                if (craftSystem != null)
+                    craftSystem.BackToInventory();
                 if (toolTip != null)
                     toolTip.deactivateTooltip();
-                craftSystem.CloseInventory();
+                craftSystemInv.CloseInventory();
             }
         }
 

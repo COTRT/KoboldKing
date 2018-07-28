@@ -140,7 +140,7 @@ public class CraftSystem : MonoBehaviour
     {
         foreach (ItemOnObject ccitem in itemsInCraftSystem)
         {
-            PlayerInventory.Instance.mainInventory.addItemToInventory(ccitem.Item.ItemID, ccitem.Item.ItemValue);
+            PlayerInventory.Instance.mainInventory.AddItemToInventory(ccitem.Item.ID, ccitem.Item.Quantity);
             Destroy(ccitem.gameObject);
         }
 
@@ -165,11 +165,11 @@ public class CraftSystem : MonoBehaviour
 
         foreach (var blueprint in blueprintDatabase.blueprints)
         {
-            var ccItemIds = itemsInCraftSystem.Select(c => c.Item.ItemID).ToArray();
+            var ccItemIds = itemsInCraftSystem.Select(c => c.Item.ID).ToArray();
             if (blueprint.ingredients.All(ingredient => ccItemIds.Contains(ingredient)))
             {
                 Item item = blueprint.finalItem;
-                item.ItemValue = blueprint.amountOfFinalItem;
+                item.Quantity = blueprint.amountOfFinalItem;
                 possibleItems.Add(item);
             }
         }
@@ -183,7 +183,7 @@ public class CraftSystem : MonoBehaviour
             (ingredient,indice) => new
             {
                 inventoryIndex = itemsInCraftSystem.FindIndex(ccitem =>
-                    ccitem.Item.ItemID == ingredient),
+                    ccitem.Item.ID == ingredient),
                 ingredientIndex = indice
             }); //Search the items in the crafting system for all ingredients of Blueprint.
         if (ingredientIndices.Any(i => i.inventoryIndex == -1)) return false; //Kick out if any ingredient is missing
@@ -191,12 +191,12 @@ public class CraftSystem : MonoBehaviour
         {
             var ingItem = itemsInCraftSystem[indexPair.inventoryIndex];
             var blueprintAmount = blueprint.amount[indexPair.ingredientIndex]; //BAD, FIX
-            if (ingItem.Item.ItemValue > blueprintAmount)
+            if (ingItem.Item.Quantity > blueprintAmount)
             {
-                ingItem.Item.ItemValue -= blueprint.amount[indexPair.ingredientIndex]; //I dissaprove of this system so greatly
+                ingItem.Item.Quantity -= blueprint.amount[indexPair.ingredientIndex]; //I dissaprove of this system so greatly
                 //Actually, let me make a "TODO:  Change Blueprint Ingredient System" out of this.
             }
-            else if (ingItem.Item.ItemValue == blueprintAmount)
+            else if (ingItem.Item.Quantity == blueprintAmount)
             {
                 Destroy(ingItem.gameObject);
                 itemsInCraftSystem.RemoveAt(indexPair.inventoryIndex);

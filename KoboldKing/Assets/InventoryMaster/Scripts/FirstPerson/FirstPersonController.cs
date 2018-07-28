@@ -33,7 +33,7 @@ public class FirstPersonController : MonoBehaviour
             PlayerInventory playerInv = PlayerInventory.Instance;
 
             inventory = playerInv.mainInventory.gameObject;
-            craftSystem = playerInv.craftSystem.gameObject;
+            craftSystem = playerInv.craftSystemInv.gameObject;
             characterSystem = playerInv.characterSystem.gameObject;
         }
     }

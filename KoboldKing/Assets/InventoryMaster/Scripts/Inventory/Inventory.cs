@@ -5,6 +5,8 @@ using UnityEditor;
 #endif
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class Inventory : MonoBehaviour
 {
@@ -42,7 +44,7 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     public bool mainInventory;
     [SerializeField]
-    public List<Item> ItemsInInventory = new List<Item>();
+    public Item[] ItemsInInventory = new Item[0];
     [SerializeField]
     public int height;
     [SerializeField]
@@ -88,270 +90,54 @@ public class Inventory : MonoBehaviour
         {36, new Vector2(6,6) }
     };
 
-
     //event delegates for consuming, gearing
     public delegate void ItemDelegate(Item item);
-    public static event ItemDelegate ItemConsumed;
+    public static event ItemDelegate ItemConsume;
     public static event ItemDelegate ItemEquip;
     public static event ItemDelegate ItemUnequip;
-
-    public delegate void InventoryOpened();
-    public static event InventoryOpened InventoryOpen;
-    public static event InventoryOpened AllInventoriesClosed;
-
-    
 
     void Start()
     {
         if (transform.GetComponent<Hotbar>() == null)
             this.gameObject.SetActive(false);
 
-        updateItemList();
-
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
-    }
-    public void ChangeInventorySize(int size)
-    {
-        if (size < mainInventory.ItemsInInventory.Count)
+        prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
+        if (SlotContainer == null)
         {
-            foreach (var item in ItemsInInventory.Skip(size))
-            {
-                GameObject dropItem = Instantiate(item.ItemModel);
-                dropItem.AddComponent<PickUpItem>().item = item;
-                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
-            }
+            SlotContainer = Instantiate(prefabSlotContainer);
+            SlotContainer.transform.SetParent(PanelRectTransform.transform);
         }
-
-        Vector2 dimensions;
-        if (!DimensionsDict.TryGetValue(size, out dimensions)) //Check first to see if the given dimensions are in the dimensions dictionary
-        {
-            //Some very fancy math to calculate the most even grid possible for the given size.
-            for (float h = Mathf.Ceil(Mathf.Sqrt(size)); h > 1; h--) //Count down from the Square Root (i.e., square inventory) of the total size (i.e. number of slots)
-            {
-                if ((size / h) % 1 == 0) //If the given number can divide the size evenly...
-                {
-                    dimensions = new Vector2(size / h, h); //Use that number as the height and the quotient as the width
-                    break;
-                }
-            }
-        }
-        width = (int)dimensions.x;
-        height = (int)dimensions.y;
-        updateSlotAmount();
-        adjustInventorySize();
-    }
-    public void UpdateItemDisplay()
-    {
-        if (ItemsInInventory.Count != SlotContainer.transform.childCount)
-        {
-            throw new System.Exception("ItemsInInventory is not of equal length to the slots in the inventory.  This is almost certainly an internal glitch.");
-        }
-        for(int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            if (ItemsInInventory[i] != SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item)
-            {
-
-            }
-        }
-    }
-
-    public void SortItems()
-    {
-        int empty = -1;
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount == 0 && empty == -1)
-                empty = i;
-            else
-            {
-                if (empty > -1)
-                {
-                    if (SlotContainer.transform.GetChild(i).childCount != 0)
-                    {
-                        RectTransform rect = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<RectTransform>();
-                        rect.transform.SetParent(SlotContainer.transform.GetChild(empty).transform);
-                        rect.localPosition = Vector3.zero;
-                        i = empty + 1;
-                        empty = i;
-                    }
-                }
-            }
-        }
-    }
-
-    void Update()
-    {
-        updateItemIndex();
-    }
-
-
-    public void SetAsMain()
-    {
-        if (mainInventory)
-            this.gameObject.tag = "Untagged";
-        else if (!mainInventory)
-            this.gameObject.tag = "MainInventory";
-    }
-
-    public void OnUpdateItemList()
-    {
-        updateItemList();
-    }
-
-    public void CloseInventory()
-    {
-        this.gameObject.SetActive(false);
-        CheckIfAllInventoryClosed();
-    }
-
-    public void OpenInventory()
-    {
-        this.gameObject.SetActive(true);
-        if (InventoryOpen != null)
-            InventoryOpen();
-    }
-
-    public void CheckIfAllInventoryClosed()
-    {
-        GameObject canvas = GameObject.FindGameObjectWithTag("Canvas");
-
-        for (int i = 0; i < canvas.transform.childCount; i++)
-        {
-            GameObject child = canvas.transform.GetChild(i).gameObject;
-            if (!child.activeSelf && (child.tag == "EquipmentSystem" || child.tag == "Panel" || child.tag == "MainInventory" || child.tag == "CraftSystem"))
-            {
-                if (AllInventoriesClosed != null && i == canvas.transform.childCount - 1)
-                    AllInventoriesClosed();
-            }
-            else if (child.activeSelf && (child.tag == "EquipmentSystem" || child.tag == "Panel" || child.tag == "MainInventory" || child.tag == "CraftSystem"))
-                break;
-
-            else if (i == canvas.transform.childCount - 1)
-            {
-                if (AllInventoriesClosed != null)
-                    AllInventoriesClosed();
-            }
-
-
-        }
-    }
-
-
-
-
-    public void ConsumeItem(Item item)
-    {
-        if (ItemConsumed != null)
-            ItemConsumed(item);
-    }
-
-    public void EquipItem(Item item)
-    {
-        if (ItemEquip != null)
-            ItemEquip(item);
-    }
-
-    public void UnEquipItem(Item item)
-    {
-        if (ItemUnequip != null)
-            ItemUnequip(item);
-    }
-
-#if UNITY_EDITOR
-    [MenuItem("Master System/Create/Inventory and Storage")]        //creating the menu item
-    public static void menuItemCreateInventory()       //create the inventory at start
-    {
-        GameObject Canvas = null;
-        if (GameObject.FindGameObjectWithTag("Canvas") == null)
-        {
-            GameObject inventory = new GameObject();
-            inventory.name = "Inventories";
-            Canvas = (GameObject)Instantiate(Resources.Load("Prefabs/Canvas - Inventory") as GameObject);
-            Canvas.transform.SetParent(inventory.transform, true);
-            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Inventory") as GameObject);
-            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-            panel.transform.SetParent(Canvas.transform, true);
-            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
-            draggingItem.transform.SetParent(Canvas.transform, true);
-            Inventory temp = panel.AddComponent<Inventory>();
-            Instantiate(Resources.Load("Prefabs/EventSystem") as GameObject);
-            panel.AddComponent<InventoryDesign>();
-            temp.getPrefabs();
-        }
-        else
-        {
-            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Inventory") as GameObject);
-            panel.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
-            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
-            Inventory temp = panel.AddComponent<Inventory>();
-            panel.AddComponent<InventoryDesign>();
-            DestroyImmediate(GameObject.FindGameObjectWithTag("DraggingItem"));
-            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
-            draggingItem.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
-            temp.getPrefabs();
-        }
-    }
-#endif
-
-    public void setImportantVariables()
-    {
+       
+        //Load SlotContainer Stuff
+        SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
+        SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
+        SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
+        SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
+        SlotContainerRectTransform.localPosition = Vector3.zero;
         PanelRectTransform = GetComponent<RectTransform>();
         SlotContainer = transform.GetChild(1).gameObject;
         SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
         SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
-    }
+        
+        //Initialize ItemsInInventory array from items in editor hierarchy
+        ItemsInInventory = SlotContainer.transform.GetComponentsInChildren<ItemSlot>().Select(i => i.Item).ToArray();
+        ChangeInventorySize(ItemsInInventory.Length);
+        
+        //Setup inventory sizing
+        UpdateSlotSize(slotSize, iconSize);
+        UpdatePadding(paddingBetweenX, paddingBetweenY);
+        
+        //Nab Prefabs
+        prefabCanvasWithPanel = Resources.Load("Prefabs/Canvas - Inventory") as GameObject;
+        prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
+        prefabSlotContainer = Resources.Load("Prefabs/Slots - Inventory") as GameObject;
+        prefabItem = Resources.Load("Prefabs/Item") as GameObject;
+        itemDatabase = (ItemDataBaseList)Resources.Load("ItemDatabase");
+        prefabDraggingItemContainer = Resources.Load("Prefabs/DraggingItem") as GameObject;
+        prefabPanel = Resources.Load("Prefabs/Panel - Inventory") as GameObject;
 
-    public void getPrefabs()
-    {
-        if (prefabCanvasWithPanel == null)
-            prefabCanvasWithPanel = Resources.Load("Prefabs/Canvas - Inventory") as GameObject;
-        if (prefabSlot == null)
-            prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
-        if (prefabSlotContainer == null)
-            prefabSlotContainer = Resources.Load("Prefabs/Slots - Inventory") as GameObject;
-        if (prefabItem == null)
-            prefabItem = Resources.Load("Prefabs/Item") as GameObject;
-        if (itemDatabase == null)
-            itemDatabase = (ItemDataBaseList)Resources.Load("ItemDatabase");
-        if (prefabDraggingItemContainer == null)
-            prefabDraggingItemContainer = Resources.Load("Prefabs/DraggingItem") as GameObject;
-        if (prefabPanel == null)
-            prefabPanel = Resources.Load("Prefabs/Panel - Inventory") as GameObject;
-
-        setImportantVariables();
-        setDefaultSettings();
-        adjustInventorySize();
-        updateSlotAmount(width, height);
-        updateSlotSize();
-        updatePadding(paddingBetweenX, paddingBetweenY);
-
-    }
-
-    public void updateItemList()
-    {
-        ItemsInInventory.Clear();
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            Transform trans = SlotContainer.transform.GetChild(i);
-            if (trans.childCount != 0)
-            {
-                ItemsInInventory.Add(trans.GetChild(0).GetComponent<ItemOnObject>().Item);
-            }
-        }
-
-    }
-
-    public bool characterSystem()
-    {
-        if (GetComponent<EquipmentSystem>() != null)
-            return true;
-        else
-            return false;
-    }
-
-
-    public void setDefaultSettings()
-    {
+        //Default Settings
         if (GetComponent<EquipmentSystem>() == null && GetComponent<Hotbar>() == null && GetComponent<CraftSystem>() == null)
         {
             height = 5;
@@ -413,7 +199,137 @@ public class Inventory : MonoBehaviour
         }
     }
 
-    public void adjustInventorySize()
+    public void ChangeInventorySize(int size)
+    {
+        if (size < ItemsInInventory.Length)
+        {
+            foreach (var item in ItemsInInventory.Skip(size))
+            {
+                if (item == null) continue;
+                GameObject dropItem = Instantiate(item.Model);
+                dropItem.AddComponent<PickUpItem>().item = item;
+                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
+            }
+        }
+
+        Vector2 dimensions;
+        if (!DimensionsDict.TryGetValue(size, out dimensions)) //Check first to see if the given dimensions are in the dimensions dictionary
+        {
+            //Some very fancy math to calculate the most even grid possible for the given size.
+            for (float h = Mathf.Ceil(Mathf.Sqrt(size)); h > 1; h--) //Count down from the Square Root (i.e., square inventory) of the total size (i.e. number of slots)
+            {
+                if ((size / h) % 1 == 0) //If the given number can divide the size evenly...
+                {
+                    dimensions = new Vector2(size / h, h); //Use that number as the height and the quotient as the width
+                    break;
+                }
+            }
+        }
+        width = (int)dimensions.x;
+        height = (int)dimensions.y;
+        Array.Resize(ref ItemsInInventory, size);
+        UpdateItemDisplay();
+        AdjustInventorySize();
+    }
+
+    public void UpdateItemDisplay()
+    {
+
+        ItemSlot[] startingSlots = SlotContainer.transform.GetComponentsInChildren<ItemSlot>();
+
+        if (startingSlots.Length > ItemsInInventory.Length)
+        {
+            foreach (var slot in startingSlots.Skip(ItemsInInventory.Length).ToList())
+            {
+                Destroy(slot.gameObject);
+            }
+        }
+        else if (startingSlots.Length < ItemsInInventory.Length)
+        {
+            for (int i = startingSlots.Length; i < ItemsInInventory.Length; i++)
+            {
+                ItemSlot Slot = Instantiate(prefabSlot).GetComponent<ItemSlot>();
+                Slot.name = (i + 1).ToString();
+                Slot.transform.SetParent(SlotContainer.transform);
+            }
+        } //Do nothing if the inventory array and hierarchy are aligned.
+
+        //Update the Items in the slots
+        for (int i = 0; i < ItemsInInventory.Length; i++)
+        {
+            var child = SlotContainer.transform.GetChild(i);
+            if (ItemsInInventory[i] == null && child.childCount != 0)
+            {
+                Destroy(child.GetChild(0));
+            }
+            else if (ItemsInInventory[i] != null)
+            {
+                child.GetComponent<ItemSlot>().Item = ItemsInInventory[i];
+            }
+        }
+        UpdateStackNumberSettings();
+    }
+    public void UpdateStackNumberSettings()  //TODO:  I'd imagine this is unnecessary if we update properly.
+    {
+        foreach (var itemSlot in GetComponentsInChildren<ItemSlot>()) itemSlot.UpdateDisplay(stackable, positionNumberX, positionNumberY);
+    }
+
+    public void UpdateSlotSize(int slotSize, int iconSize)
+    {
+        this.slotSize = slotSize;
+        this.iconSize = iconSize;
+        SlotGridLayout.cellSize = new Vector2(slotSize, slotSize);
+        foreach (var slot in GetComponentsInChildren<ItemSlot>()) slot.UpdateSlotSize(slotSize, iconSize);
+    }
+
+    public void SortItems()
+    {
+        ItemsInInventory = ItemsInInventory.OrderBy(i => i == null).ToArray();
+        UpdateItemDisplay();
+        //A potential concern with this system is this will create and destroy moved items instead of, 
+        //...you know, moving the items.  Perhaps a future improvement.
+        //It is still a whole lot prettier and shorter than the old system.
+    }
+
+    public void SetMain(bool main)
+    {
+        if (main)
+            this.gameObject.tag = "Untagged";
+        else
+            this.gameObject.tag = "MainInventory";
+    }
+
+    public void CloseInventory()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    public void OpenInventory()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public void ConsumeItem(Item item)
+    {
+        ItemConsume?.Invoke(item);
+    }
+
+    public void EquipItem(Item item)
+    {
+        ItemEquip?.Invoke(item);
+    }
+
+    public void UnEquipItem(Item item)
+    {
+        ItemUnequip?.Invoke(item);
+    }
+
+    public bool CharacterSystem()
+    {
+        return GetComponent<EquipmentSystem>() != null;
+    }
+
+    public void AdjustInventorySize()
     {
         int x = (((width * slotSize) + ((width - 1) * paddingBetweenX)) + paddingLeft + paddingRight);
         int y = (((height * slotSize) + ((height - 1) * paddingBetweenY)) + paddingTop + paddingBottom);
@@ -422,156 +338,7 @@ public class Inventory : MonoBehaviour
         SlotGridRectTransform.sizeDelta = new Vector2(x, y);
     }
 
-    public void updateSlotAmount(int width, int height)
-    {
-        if (prefabSlot == null)
-            prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
-
-        if (SlotContainer == null)
-        {
-            SlotContainer = (GameObject)Instantiate(prefabSlotContainer);
-            SlotContainer.transform.SetParent(PanelRectTransform.transform);
-            SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
-            SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
-            SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
-        }
-
-        if (SlotContainerRectTransform == null)
-            SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
-
-        SlotContainerRectTransform.localPosition = Vector3.zero;
-
-        List<Item> itemsToMove = new List<Item>();
-        List<GameObject> slotList = new List<GameObject>();
-        foreach (Transform child in SlotContainer.transform)
-        {
-            if (child.tag == "Slot") { slotList.Add(child.gameObject); }
-        }
-
-        while (slotList.Count > width * height)
-        {
-            GameObject go = slotList[slotList.Count - 1];
-            ItemOnObject itemInSlot = go.GetComponentInChildren<ItemOnObject>();
-            if (itemInSlot != null)
-            {
-                itemsToMove.Add(itemInSlot.Item);
-                ItemsInInventory.Remove(itemInSlot.Item);
-            }
-            slotList.Remove(go);
-            DestroyImmediate(go);
-        }
-
-        if (slotList.Count < width * height)
-        {
-            for (int i = slotList.Count; i < (width * height); i++)
-            {
-                GameObject Slot = (GameObject)Instantiate(prefabSlot);
-                Slot.name = (slotList.Count + 1).ToString();
-                Slot.transform.SetParent(SlotContainer.transform);
-                slotList.Add(Slot);
-            }
-        }
-
-        if (itemsToMove != null && ItemsInInventory.Count < width * height)
-        {
-            foreach (Item i in itemsToMove)
-            {
-                addItemToInventory(i.ItemID);
-            }
-        }
-
-        setImportantVariables();
-    }
-
-    public void updateSlotAmount()
-    {
-
-        if (prefabSlot == null)
-            prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
-
-        if (SlotContainer == null)
-        {
-            SlotContainer = (GameObject)Instantiate(prefabSlotContainer);
-            SlotContainer.transform.SetParent(PanelRectTransform.transform);
-            SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
-            SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
-            SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
-        }
-
-        if (SlotContainerRectTransform == null)
-            SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
-        SlotContainerRectTransform.localPosition = Vector3.zero;
-
-        List<Item> itemsToMove = new List<Item>();
-        List<GameObject> slotList = new List<GameObject>();
-        foreach (Transform child in SlotContainer.transform)
-        {
-            if (child.tag == "Slot") { slotList.Add(child.gameObject); }
-        }
-
-        while (slotList.Count > width * height)
-        {
-            GameObject go = slotList[slotList.Count - 1];
-            ItemOnObject itemInSlot = go.GetComponentInChildren<ItemOnObject>();
-            if (itemInSlot != null)
-            {
-                itemsToMove.Add(itemInSlot.Item);
-                ItemsInInventory.Remove(itemInSlot.Item);
-            }
-            slotList.Remove(go);
-            DestroyImmediate(go);
-        }
-
-        if (slotList.Count < width * height)
-        {
-            for (int i = slotList.Count; i < (width * height); i++)
-            {
-                GameObject Slot = (GameObject)Instantiate(prefabSlot);
-                Slot.name = (slotList.Count + 1).ToString();
-                Slot.transform.SetParent(SlotContainer.transform);
-                slotList.Add(Slot);
-            }
-        }
-
-        if (itemsToMove != null && ItemsInInventory.Count < width * height)
-        {
-            foreach (Item i in itemsToMove)
-            {
-                addItemToInventory(i.ItemID);
-            }
-        }
-
-        setImportantVariables();
-    }
-
-    public void updateSlotSize(int slotSize)
-    {
-        SlotGridLayout.cellSize = new Vector2(slotSize, slotSize);
-
-        updateItemSize();
-    }
-
-    public void updateSlotSize()
-    {
-        SlotGridLayout.cellSize = new Vector2(slotSize, slotSize);
-
-        updateItemSize();
-    }
-
-    void updateItemSize()
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount > 0)
-            {
-                SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
-                SlotContainer.transform.GetChild(i).GetChild(0).GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
-            }
-
-        }
-    }
-
-    public void updatePadding(int spacingBetweenX, int spacingBetweenY)
+    public void UpdatePadding(int spacingBetweenX, int spacingBetweenY)
     {
         SlotGridLayout.spacing = new Vector2(paddingBetweenX, paddingBetweenY);
         SlotGridLayout.padding.bottom = paddingBottom;
@@ -580,368 +347,57 @@ public class Inventory : MonoBehaviour
         SlotGridLayout.padding.top = paddingTop;
     }
 
-    public void updatePadding()
+    /// <summary>
+    /// Add the item with provided ID (and quantity) to the inventory at the first available slots.  
+    /// Returns the number of successfully added numbers 
+    /// -(this will be less than the specified quantity if the inventory is too full)
+    /// acceptPartialMove determines if the inventory should completely cancel the addition if there isn't enough space to complete it.
+    /// </summary>
+    public int AddItemToInventory(int id, int quantity,bool acceptPartialMove = true)
     {
-        SlotGridLayout.spacing = new Vector2(paddingBetweenX, paddingBetweenY);
-        SlotGridLayout.padding.bottom = paddingBottom;
-        SlotGridLayout.padding.right = paddingRight;
-        SlotGridLayout.padding.left = paddingLeft;
-        SlotGridLayout.padding.top = paddingTop;
-    }
-
-    public void addAllItemsToInventory()
-    {
-        for (int k = 0; k < ItemsInInventory.Count; k++)
+        int totalCapacity = ItemsInInventory.Sum(i =>
         {
-            for (int i = 0; i < SlotContainer.transform.childCount; i++)
+            if (i == null)
             {
-                if (SlotContainer.transform.GetChild(i).childCount == 0)
-                {
-                    GameObject item = (GameObject)Instantiate(prefabItem);
-                    item.GetComponent<ItemOnObject>().Item = ItemsInInventory[k];
-                    item.transform.SetParent(SlotContainer.transform.GetChild(i));
-                    item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                    item.transform.GetChild(0).GetComponent<Image>().sprite = ItemsInInventory[k].ItemIcon;
-                    updateItemSize();
-                    break;
-                }
+                return i.MaxStack;
+            }
+            else if (i.ID == id)
+            {
+                return i.MaxStack - i.Quantity;
+            }
+            else
+            {
+                return 0;
+            }
+        });
+        if (totalCapacity < quantity && !acceptPartialMove) return 0; //Add nothing if there isn't space for it and we have been instructed to kick out.
+        int remainingQuantity = quantity;
+        foreach(var item in Array.FindAll(ItemsInInventory,i => i.ID == id))
+        {
+            if (remainingQuantity <= 0) break;
+            var availableCapacity = item.MaxStack - item.Quantity;
+            if (availableCapacity>0) {
+                var increase = Mathf.Min(availableCapacity, remainingQuantity); //Choose the smaller value
+                remainingQuantity -= increase;
+                item.Quantity += increase;
             }
         }
-        stackableSettings();
+        while(remainingQuantity>0&&ItemsInInventory.Any(i => i == null))
+        {
+            var item = itemDatabase.getItemByID(id);
+            var increase = Mathf.Min(remainingQuantity, item.MaxStack);
+            remainingQuantity -= increase;
+            item.Quantity += increase;
+            ItemsInInventory[Array.FindIndex(ItemsInInventory, i => i == null)] = item;
+        }
+        
+        UpdateItemDisplay();
+        return quantity - remainingQuantity;
     }
 
-
-    public bool checkIfItemAllreadyExist(int itemID, int itemValue)
+    public void DeleteItem(Item item)
     {
-        updateItemList();
-        int stack;
-        for (int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            if (ItemsInInventory[i].ItemID == itemID)
-            {
-                stack = ItemsInInventory[i].ItemValue + itemValue;
-                if (stack <= ItemsInInventory[i].MaxStack)
-                {
-                    ItemsInInventory[i].ItemValue = stack;
-                    return true;
-                }
-                //TODO:  Add an "Else" to this statement
-                //Also TODO:  Probably, don't change the inventory when we're supposed to be doing a "check"
-            }
-        }
-        return false;
-    }
-
-    public void addItemToInventory(int id)
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount == 0)
-            {
-                GameObject item = (GameObject)Instantiate(prefabItem);
-                item.GetComponent<ItemOnObject>().Item = itemDatabase.getItemByID(id);
-                item.transform.SetParent(SlotContainer.transform.GetChild(i));
-                item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                item.transform.GetChild(0).GetComponent<Image>().sprite = item.GetComponent<ItemOnObject>().Item.ItemIcon;
-                item.GetComponent<ItemOnObject>().Item.IndexItemInList = ItemsInInventory.Count - 1;
-                break;
-            }
-        }
-
-        stackableSettings();
-        updateItemList();
-
-    }
-
-    public GameObject addItemToInventory(int id, int value)
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount == 0)
-            {
-                GameObject item = (GameObject)Instantiate(prefabItem);
-                ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.Item = itemDatabase.getItemByID(id);
-                if (itemOnObject.Item.ItemValue <= itemOnObject.Item.MaxStack && value <= itemOnObject.Item.MaxStack)
-                    itemOnObject.Item.ItemValue = value;
-                else
-                    itemOnObject.Item.ItemValue = 1;
-                item.transform.SetParent(SlotContainer.transform.GetChild(i));
-                item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                item.transform.GetChild(0).GetComponent<Image>().sprite = itemOnObject.Item.ItemIcon;
-                itemOnObject.Item.IndexItemInList = ItemsInInventory.Count - 1;
-                if (inputManagerDatabase == null)
-                    inputManagerDatabase = (InputManager)Resources.Load("InputManager");
-                return item;
-            }
-        }
-
-        stackableSettings();
-        updateItemList();
-        return null;
-
-    }
-
-    public void addItemToInventoryStorage(int itemID, int value)
-    {
-
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount == 0)
-            {
-                GameObject item = (GameObject)Instantiate(prefabItem);
-                ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.Item = itemDatabase.getItemByID(itemID);
-                if (itemOnObject.Item.ItemValue < itemOnObject.Item.MaxStack && value <= itemOnObject.Item.MaxStack)
-                    itemOnObject.Item.ItemValue = value;
-                else
-                    itemOnObject.Item.ItemValue = 1;
-                item.transform.SetParent(SlotContainer.transform.GetChild(i));
-                item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                itemOnObject.Item.IndexItemInList = 999;
-                if (inputManagerDatabase == null)
-                    inputManagerDatabase = (InputManager)Resources.Load("InputManager");
-                updateItemSize();
-                stackableSettings();
-                break;
-            }
-        }
-        stackableSettings();
-        updateItemList();
-    }
-
-    public void updateIconSize(int iconSize)
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount > 0)
-            {
-                SlotContainer.transform.GetChild(i).GetChild(0).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(iconSize, iconSize);
-            }
-        }
-        updateItemSize();
-
-    }
-
-    public void updateIconSize()
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount > 0)
-            {
-                SlotContainer.transform.GetChild(i).GetChild(0).GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(iconSize, iconSize);
-            }
-        }
-        updateItemSize();
-
-    }
-
-    public void stackableSettings(bool stackable, Vector3 posi)
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount > 0)
-            {
-                ItemOnObject item = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>();
-                if (item.Item.MaxStack > 1)
-                {
-                    RectTransform textRectTransform = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<RectTransform>();
-                    Text text = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<Text>();
-                    text.text = "" + item.Item.ItemValue;
-                    text.enabled = stackable;
-                    textRectTransform.localPosition = posi;
-                }
-            }
-        }
-    }
-
-
-    public void deleteAllItems()
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount != 0)
-            {
-                Destroy(SlotContainer.transform.GetChild(i).GetChild(0).gameObject);
-            }
-        }
-    }
-
-    public List<Item> getItemList()
-    {
-        List<Item> theList = new List<Item>();
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount != 0)
-                theList.Add(SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item);
-        }
-        return theList;
-    }
-
-    public void stackableSettings()
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount > 0)
-            {
-                ItemOnObject item = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>();
-                if (item.Item.MaxStack > 1)
-                {
-                    RectTransform textRectTransform = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<RectTransform>();
-                    Text text = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<Text>();
-                    text.text = "" + item.Item.ItemValue;
-                    text.enabled = stackable;
-                    textRectTransform.localPosition = new Vector3(positionNumberX, positionNumberY, 0);
-                }
-                else
-                {
-                    Text text = SlotContainer.transform.GetChild(i).GetChild(0).GetChild(1).GetComponent<Text>();
-                    text.enabled = false;
-                }
-            }
-        }
-
-    }
-
-    public GameObject getItemGameObjectByName(Item item)
-    {
-        for (int k = 0; k < SlotContainer.transform.childCount; k++)
-        {
-            if (SlotContainer.transform.GetChild(k).childCount != 0)
-            {
-                GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
-                if (itemObject.ItemName.Equals(item.ItemName))
-                {
-                    return itemGameObject;
-                }
-            }
-        }
-        return null;
-    }
-
-    public GameObject getItemGameObject(Item item)
-    {
-        for (int k = 0; k < SlotContainer.transform.childCount; k++)
-        {
-            if (SlotContainer.transform.GetChild(k).childCount != 0)
-            {
-                GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
-                if (itemObject.Equals(item))
-                {
-                    return itemGameObject;
-                }
-            }
-        }
-        return null;
-    }
-
-
-
-    public void changeInventoryPanelDesign(Image image)
-    {
-        Image inventoryDesign = transform.GetChild(0).GetChild(0).GetComponent<Image>();
-        inventoryDesign.sprite = (Sprite)image.sprite;
-        inventoryDesign.color = image.color;
-        inventoryDesign.material = image.material;
-        inventoryDesign.type = image.type;
-        inventoryDesign.fillCenter = image.fillCenter;
-    }
-
-    public void deleteItem(Item item)
-    {
-        for (int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            if (item.Equals(ItemsInInventory[i]))
-                ItemsInInventory.RemoveAt(item.IndexItemInList);
-        }
-    }
-
-    
-
-    public void deleteItemFromInventory(Item item)
-    {
-        for (int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            if (item.Equals(ItemsInInventory[i]))
-                ItemsInInventory.RemoveAt(i);
-        }
-    }
-
-    public void deleteItemFromInventoryWithGameObject(Item item)
-    {
-        for (int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            if (item.Equals(ItemsInInventory[i]))
-            {
-                ItemsInInventory.RemoveAt(i);
-            }
-        }
-
-        for (int k = 0; k < SlotContainer.transform.childCount; k++)
-        {
-            if (SlotContainer.transform.GetChild(k).childCount != 0)
-            {
-                GameObject itemGameObject = SlotContainer.transform.GetChild(k).GetChild(0).gameObject;
-                Item itemObject = itemGameObject.GetComponent<ItemOnObject>().Item;
-                if (itemObject.Equals(item))
-                {
-                    Destroy(itemGameObject);
-                    break;
-                }
-            }
-        }
-    }
-
-    public int getPositionOfItem(Item item)
-    {
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount != 0)
-            {
-                Item item2 = SlotContainer.transform.GetChild(i).GetChild(0).GetComponent<ItemOnObject>().Item;
-                if (item.Equals(item2))
-                    return i;
-            }
-        }
-        return -1;
-    }
-
-    public void addItemToInventory(int ignoreSlot, int itemID, int itemValue)
-    {
-
-        for (int i = 0; i < SlotContainer.transform.childCount; i++)
-        {
-            if (SlotContainer.transform.GetChild(i).childCount == 0 && i != ignoreSlot)
-            {
-                GameObject item = (GameObject)Instantiate(prefabItem);
-                ItemOnObject itemOnObject = item.GetComponent<ItemOnObject>();
-                itemOnObject.Item = itemDatabase.getItemByID(itemID);
-                if (itemOnObject.Item.ItemValue < itemOnObject.Item.MaxStack && itemValue <= itemOnObject.Item.MaxStack)
-                    itemOnObject.Item.ItemValue = itemValue;
-                else
-                    itemOnObject.Item.ItemValue = 1;
-                item.transform.SetParent(SlotContainer.transform.GetChild(i));
-                item.GetComponent<RectTransform>().localPosition = Vector3.zero;
-                itemOnObject.Item.IndexItemInList = 999;
-                updateItemSize();
-                stackableSettings();
-                break;
-            }
-        }
-        stackableSettings();
-        updateItemList();
-    }
-
-
-
-
-    public void updateItemIndex()
-    {
-        for (int i = 0; i < ItemsInInventory.Count; i++)
-        {
-            ItemsInInventory[i].IndexItemInList = i;
-        }
+        ItemsInInventory[Array.FindIndex(ItemsInInventory, i => i == item)] = null; //One unfortunate side effect of using an array; you get to use "Array" in front of everything.
+        UpdateItemDisplay();
     }
 }

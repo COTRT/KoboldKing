@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+//TODO refactor to new Array Inventory System
 public class StorageInventory : MonoBehaviour
 {
 
@@ -47,7 +48,7 @@ public class StorageInventory : MonoBehaviour
     public void addItemToStorage(int id, int value)
     {
         Item item = itemDatabase.getItemByID(id);
-        item.ItemValue = value;
+        item.Quantity = value;
         storageItems.Add(item);
     }
 
@@ -71,9 +72,9 @@ public class StorageInventory : MonoBehaviour
 
             if (raffle <= inventoryItemList.itemList[randomItemNumber].Rarity)
             {
-                int randomValue = Random.Range(1, inventoryItemList.itemList[randomItemNumber].getCopy().MaxStack);
-                Item item = inventoryItemList.itemList[randomItemNumber].getCopy();
-                item.ItemValue = randomValue;
+                int randomValue = Random.Range(1, inventoryItemList.itemList[randomItemNumber].GetCopy().MaxStack);
+                Item item = inventoryItemList.itemList[randomItemNumber].GetCopy();
+                item.Quantity = randomValue;
                 storageItems.Add(item);
                 creatingItemsForChest++;
             }
@@ -125,7 +126,7 @@ public class StorageInventory : MonoBehaviour
                 storageItems.Clear();
                 setListofStorage();
                 inventory.SetActive(false);
-                inv.deleteAllItems();
+                inv.ItemsInInventory = new Item[inv.ItemsInInventory.Length];
             }
             tooltip.deactivateTooltip();
             timerImage.fillAmount = 0;
@@ -143,7 +144,7 @@ public class StorageInventory : MonoBehaviour
             yield return new WaitForSeconds(timeToOpenStorage);
             if (showStorage)
             {
-                inv.ItemsInInventory.Clear();
+                inv.ItemsInInventory = new Item[inv.ItemsInInventory.Length];
                 inventory.SetActive(true);
                 addItemsToInventory();
                 showTimer = false;
@@ -156,7 +157,7 @@ public class StorageInventory : MonoBehaviour
             storageItems.Clear();
             setListofStorage();
             inventory.SetActive(false);
-            inv.deleteAllItems();
+            inv.ItemsInInventory = new Item[inv.ItemsInInventory.Length];
             tooltip.deactivateTooltip();
         }
 
@@ -168,7 +169,7 @@ public class StorageInventory : MonoBehaviour
     void setListofStorage()
     {
         Inventory inv = inventory.GetComponent<Inventory>();
-        storageItems = inv.getItemList();
+        //storageItems = inv.getItemList();
     }
 
     void addItemsToInventory()
@@ -176,9 +177,8 @@ public class StorageInventory : MonoBehaviour
         Inventory iV = inventory.GetComponent<Inventory>();
         for (int i = 0; i < storageItems.Count; i++)
         {
-            iV.addItemToInventory(storageItems[i].ItemID, storageItems[i].ItemValue);
+            iV.AddItemToInventory(storageItems[i].ID, storageItems[i].Quantity);
         }
-        iV.stackableSettings();
     }
 
 

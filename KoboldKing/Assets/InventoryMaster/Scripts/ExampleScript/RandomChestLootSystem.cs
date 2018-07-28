@@ -42,7 +42,7 @@ public class RandomChestLootSystem : MonoBehaviour
 
                 if (raffle <= inventoryItemList.itemList[randomItemNumber].Rarity)
                 {
-                    itemsForChest.Add(inventoryItemList.itemList[randomItemNumber].getCopy());
+                    itemsForChest.Add(inventoryItemList.itemList[randomItemNumber].GetCopy());
                     creatingItemsForChest++;
                 }
             }
@@ -61,10 +61,10 @@ public class RandomChestLootSystem : MonoBehaviour
 
             for (int i = 0; i < itemsForChest.Count; i++)
             {
-                sI.storageItems.Add(inventoryItemList.getItemByID(itemsForChest[i].ItemID));
+                sI.storageItems.Add(inventoryItemList.getItemByID(itemsForChest[i].ID));
 
                 int randomValue = Random.Range(1, sI.storageItems[sI.storageItems.Count - 1].MaxStack);
-                sI.storageItems[sI.storageItems.Count - 1].ItemValue = randomValue;
+                sI.storageItems[sI.storageItems.Count - 1].Quantity = randomValue;
             }
 
             chest.transform.localPosition = new Vector3(x, height + 2, z);
