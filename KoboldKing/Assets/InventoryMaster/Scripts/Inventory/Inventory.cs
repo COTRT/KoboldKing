@@ -49,6 +49,7 @@ public class Inventory : MonoBehaviour
     public int height;
     [SerializeField]
     public int width;
+    public int Size { get { return width * height; } }
     [SerializeField]
     public bool stackable;
     [SerializeField]
@@ -96,10 +97,12 @@ public class Inventory : MonoBehaviour
     public static event ItemDelegate ItemEquip;
     public static event ItemDelegate ItemUnequip;
 
+    public event Action SizeChanged;
+
     void Start()
     {
         if (transform.GetComponent<Hotbar>() == null)
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
 
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
         prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
@@ -230,6 +233,7 @@ public class Inventory : MonoBehaviour
         Array.Resize(ref ItemsInInventory, size);
         UpdateItemDisplay();
         AdjustInventorySize();
+        SizeChanged?.Invoke();
     }
 
     public void UpdateItemDisplay()

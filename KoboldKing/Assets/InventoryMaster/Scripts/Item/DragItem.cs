@@ -38,8 +38,8 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransformSlot, Input.mousePosition, data.pressEventCamera, out localPointerPosition))
             {
                 rectTransform.localPosition = localPointerPosition - pointerOffset;
-                if (transform.GetComponent<ItemSlot>().duplication != null)
-                    Destroy(transform.GetComponent<ItemSlot>().duplication);
+                if (transform.GetComponent<ItemSlot>().Duplication != null)
+                    Destroy(transform.GetComponent<ItemSlot>().Duplication);
             }
         }
 
@@ -188,8 +188,8 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
                                         secondItemRectTransform.localPosition = Vector3.zero;
                                         firstItemRectTransform.localPosition = Vector3.zero;
 
-                                        if (secondItemGameObject.GetComponent<ItemSlot>().duplication != null)
-                                            Destroy(secondItemGameObject.GetComponent<ItemSlot>().duplication);
+                                        if (secondItemGameObject.GetComponent<ItemSlot>().Duplication != null)
+                                            Destroy(secondItemGameObject.GetComponent<ItemSlot>().Duplication);
 
                                     }
                                     //if you are dragging an item from the equipmentsystem to the inventory and they are not from the same itemtype they do not get swapped.                                    
@@ -320,7 +320,7 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
 
                                     if (oldSlot.transform.parent.parent.gameObject.Equals(GameObject.FindGameObjectWithTag("MainInventory")))
                                     {
-                                        Destroy(secondItemGameObject.GetComponent<ItemSlot>().duplication);
+                                        Destroy(secondItemGameObject.GetComponent<ItemSlot>().Duplication);
                                         CreateDuplication(firstItemGameObject);
                                     }
                                     else

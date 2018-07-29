@@ -14,7 +14,7 @@ public class Slime : Interactable, IEnemy
     public int Experience { get; set; }
     public DropTable DropTable { get; set; }
     public PickupItem pickupItem;
-    public Spawner Spawner { get; set; }
+    //public Spawner Spawner { get; set; }
 
 
     private Player player;
@@ -90,7 +90,7 @@ public class Slime : Interactable, IEnemy
     {
         DropLoot();
         CombatEvents.EnemyDied(this);
-        this.Spawner.Respawn();
+        //this.Spawner.Respawn();
         Destroy(gameObject);
     }
 

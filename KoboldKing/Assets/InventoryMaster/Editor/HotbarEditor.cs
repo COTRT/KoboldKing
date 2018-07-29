@@ -17,14 +17,12 @@ public class HotbarEditor : Editor
         hotbar = target as Hotbar;
         slotsInTotal = serializedObject.FindProperty("slotsInTotal");
         keyCodesForSlots = serializedObject.FindProperty("keyCodesForSlots");
-        slotsInTotal.intValue = hotbar.getSlotsInTotal();
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
         GUILayout.BeginVertical("Box");
-        slotsInTotal.intValue = hotbar.getSlotsInTotal();
         for (int i = 0; i < slotsInTotal.intValue; i++)
         {
             GUILayout.BeginVertical("Box");
@@ -33,5 +31,38 @@ public class HotbarEditor : Editor
         }
         serializedObject.ApplyModifiedProperties();
         GUILayout.EndVertical();
+    }
+    [MenuItem("Master System/Create/Hotbar")]        //creating the menu item
+    public static void MenuItemCreateInventory()       //create the inventory at start
+    {
+        GameObject Canvas = null;
+        if (GameObject.FindGameObjectWithTag("Canvas") == null)
+        {
+            GameObject inventory = new GameObject();
+            inventory.name = "Inventories";
+            Canvas = (GameObject)Instantiate(Resources.Load("Prefabs/Canvas - Inventory") as GameObject);
+            Canvas.transform.SetParent(inventory.transform, true);
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Hotbar") as GameObject);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            panel.transform.SetParent(Canvas.transform, true);
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            Instantiate(Resources.Load("Prefabs/EventSystem") as GameObject);
+            draggingItem.transform.SetParent(Canvas.transform, true);
+            Inventory inv = panel.AddComponent<Inventory>();
+            panel.AddComponent<InventoryDesign>();
+            panel.AddComponent<Hotbar>();
+        }
+        else
+        {
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - Hotbar") as GameObject);
+            panel.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            Inventory inv = panel.AddComponent<Inventory>();
+            panel.AddComponent<Hotbar>();
+            DestroyImmediate(GameObject.FindGameObjectWithTag("DraggingItem"));
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            draggingItem.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+            panel.AddComponent<InventoryDesign>();
+        }
     }
 }

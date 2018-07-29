@@ -3,12 +3,10 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class CraftResultSlot : MonoBehaviour
+public class CraftResultSlot : ItemSlot
 {
-
     CraftSystem craftSystem;
     public int temp = 0;
-    ItemSlot itemGameObject;
     //Inventory inventory;
 
 
@@ -18,14 +16,15 @@ public class CraftResultSlot : MonoBehaviour
         //inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
         craftSystem = transform.parent.GetComponent<CraftSystem>();
 
-        itemGameObject = Instantiate(Resources.Load("Prefabs/Item") as GameObject).GetComponent<ItemSlot>();
-        itemGameObject.transform.SetParent(this.gameObject.transform);
-        itemGameObject.GetComponent<RectTransform>().localPosition = Vector3.zero;
-        itemGameObject.GetComponent<DragItem>().enabled = false;
-        itemGameObject.gameObject.SetActive(false);
-        itemGameObject.transform.GetChild(1).GetComponent<Text>().enabled = true;
-        itemGameObject.transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(PlayerInventory.Instance.mainInventory.positionNumberX, PlayerInventory.Instance.mainInventory.positionNumberY);
-
+        GetComponent<RectTransform>().localPosition = Vector3.zero;
+        GetComponent<DragItem>().enabled = false;
+        gameObject.SetActive(false);
+        transform.GetChild(1).GetComponent<Text>().enabled = true;
+        transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(PlayerInventory.Instance.mainInventory.positionNumberX, PlayerInventory.Instance.mainInventory.positionNumberY);
+    }
+    protected override Inventory GetInventory()
+    {
+        return transform.parent.parent.GetComponent<Inventory>();
     }
 
     // Update is called once per frame
@@ -33,13 +32,23 @@ public class CraftResultSlot : MonoBehaviour
     {
         if (craftSystem.possibleItems.Count != 0)
         {
-            itemGameObject.Item = craftSystem.possibleItems[temp];
-            itemGameObject.gameObject.SetActive(true);
+            Item = craftSystem.possibleItems[temp];
+            gameObject.SetActive(true);
         }
         else
-            itemGameObject.gameObject.SetActive(false);
+            gameObject.SetActive(false);
 
     }
-
+    public override void ConsumeIt()
+    {
+        if (mi.AddItemToInventory(Item.ID, Item.Quantity) != 0)
+        {
+            CraftSystem cS = PlayerInventory.Instance.craftSystem;
+            cS.RemoveItemIngredients(Item); //TODO:  Change CraftSystem to store Blueprint in CraftResultSlot, and pass that in here, to make things significantly less stupid in that department
+            CraftResultSlot result = cS.transform.GetChild(3).GetComponent<CraftResultSlot>();
+            result.temp = 0;
+            tooltip.deactivateTooltip();
+        }
+    }
 
 }

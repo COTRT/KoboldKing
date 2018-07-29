@@ -9,7 +9,7 @@ public interface IEnemy
     int Experience { get; set; }
     int Id { get; set; }
     void PerformAttack();
-    Spawner Spawner { get; set; }
+    //Spawner Spawner { get; set; }
     void TakeDamage(int amount);
 
 
