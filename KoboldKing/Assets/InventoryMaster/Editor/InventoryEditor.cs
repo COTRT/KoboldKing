@@ -36,7 +36,6 @@ public class InventoryEditor : Editor
 
     private int itemID;
     private int itemValue = 1;
-    private int imageTypeIndex;
 
 
 
@@ -57,6 +56,7 @@ public class InventoryEditor : Editor
         positionNumberX = serializedObject.FindProperty("positionNumberX");
         positionNumberY = serializedObject.FindProperty("positionNumberY");
         mainInventory = serializedObject.FindProperty("mainInventory");
+        inv.Start();
     }
 
     public override void OnInspectorGUI()
@@ -141,8 +141,7 @@ public class InventoryEditor : Editor
         EditorGUILayout.IntSlider(inventoryWidth, 1, 10, new GUIContent("Width"));
         if (EditorGUI.EndChangeCheck())
         {
-            inv.UpdateItemDisplay();
-            inv.AdjustInventorySize();
+            inv.ChangeInventorySize();
             inv.UpdatePadding(slotsPaddingBetweenX.intValue, slotsPaddingBetweenY.intValue);
         }
 

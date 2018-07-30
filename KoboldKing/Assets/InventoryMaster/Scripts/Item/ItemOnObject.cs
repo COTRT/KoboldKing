@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
 {
     private Text itemCountText;  //text for the itemValue
-    private Image image;
+    private Image itemImage;
+    RectTransform itemTextRectTransform;
 
     private Item item;
     bool invStackable;
@@ -30,29 +31,48 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
 
     void Start()
     {
-        image = transform.GetChild(0).GetComponent<Image>();
-        itemCountText = transform.GetChild(0).GetChild(1).GetComponent<Text>();
-        if (Item == null) Item = new Item() { Quantity = 0, ID = 0, Name = "Empty" };
+        UpdateDisplay();
         Item.PropertyChanged += (sender, prop) => UpdateDisplay();
     }
 
     public void UpdateDisplay()
     {
-        image.sprite = Item.Icon;
-        if (Item.MaxStack > 1)
+        if (Item == null)
         {
-            RectTransform textRectTransform = transform.GetChild(0).GetChild(1).GetComponent<RectTransform>();
-            itemCountText.text = Item.Quantity.ToString(); ;
-            itemCountText.enabled = invStackable;
-            textRectTransform.localPosition = new Vector3(positionNumberX, positionNumberY, 0);
+#if UNITY_EDITOR
+            DestroyImmediate(transform.GetChild(0)?.gameObject); //The editor version of this, which also happens to be a little dangerous to use.
+#else
+            Destroy(transform.GetChild(0)?.gameObject); //The Runtime version of this.
+#endif
+
         }
         else
         {
-            itemCountText.enabled = false;
+            if (transform.childCount == 0) //Item is not null, but we haven't made a display for it yet.
+            {
+                Debug.Log("Instantiating Item");
+                var itemObject = (Instantiate(Resources.Load("Prefabs/Item")) as GameObject).transform;
+                itemObject.SetParent(transform);
+                itemImage = itemObject.GetChild(0).GetComponent<Image>();
+                itemCountText = itemObject.GetChild(1).GetComponent<Text>();
+                itemTextRectTransform = itemObject.GetChild(1).GetComponent<RectTransform>();
+            }
+
+            itemImage.sprite = Item.Icon;
+            if (Item.MaxStack > 1)
+            {
+                itemCountText.text = Item.Quantity.ToString();
+                itemCountText.enabled = invStackable;
+                itemTextRectTransform.localPosition = new Vector3(positionNumberX, positionNumberY, 0);
+            }
+            else
+            {
+                itemCountText.enabled = false;
+            }
         }
     }
 
-    public void UpdateDisplay(bool stackable, int positionNumberX, int positionNumberY)
+    public void UpdateDisplaySettings(bool stackable, int positionNumberX, int positionNumberY)
     {
         this.invStackable = stackable;
         this.positionNumberX = positionNumberX;

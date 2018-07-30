@@ -5,14 +5,11 @@ using UnityEditor;
 #endif
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+[RequireComponent(typeof(Image))]
 public class InventoryDesign : MonoBehaviour
 {
 
     //UIDesign
-    [SerializeField]
-    public Image slotDesignTemp;
-    [SerializeField]
-    public Image slotDesign;
     [SerializeField]
     public Image inventoryDesign;
     [SerializeField]
@@ -38,7 +35,13 @@ public class InventoryDesign : MonoBehaviour
     [SerializeField]
     public int panelSizeY;
 
-    public void setVariables()
+    public Sprite slotSprite;
+    public Color slotColor;
+    public Material slotMaterial;
+    public Image.Type slotImageType;
+    public bool slotFillCenter;
+
+    public void SetVariables()
     {
         inventoryTitlePosX = (int)transform.GetChild(0).GetComponent<RectTransform>().localPosition.x;
         inventoryTitlePosY = (int)transform.GetChild(0).GetComponent<RectTransform>().localPosition.y;
@@ -52,22 +55,27 @@ public class InventoryDesign : MonoBehaviour
             inventoryCrossImage = transform.GetChild(2).GetComponent<Image>();
         }
         inventoryDesign = GetComponent<Image>();
-        slotDesign = transform.GetChild(1).GetChild(0).GetComponent<Image>();
-        slotDesignTemp = slotDesign;
-        slotDesignTemp.sprite = slotDesign.sprite;
-        slotDesignTemp.color = slotDesign.color;
-        slotDesignTemp.material = slotDesign.material;
-        slotDesignTemp.type = slotDesign.type;
-        slotDesignTemp.fillCenter = slotDesign.fillCenter;
+        var slotContainer = transform.GetChild(1);
+        if (slotContainer.childCount!=0)
+        {
+            var firstSlot = slotContainer.GetChild(0).GetComponent<Image>();
+            slotSprite = firstSlot.sprite;
+            slotColor = firstSlot.color;
+            slotMaterial = firstSlot.material;
+            slotImageType = firstSlot.type;
+            slotFillCenter = firstSlot.fillCenter;
+        }
+
     }
 
-    public void updateEverything()
+    public void UpdateTitle()
     {
-        transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(inventoryTitlePosX, inventoryTitlePosY, 0);
         transform.GetChild(0).GetComponent<Text>().text = inventoryTitle;
+        transform.GetChild(0).GetComponent<RectTransform>().localPosition = new Vector3(inventoryTitlePosX, inventoryTitlePosY, 0); //Title pos
     }
 
-    public void changeCrossSettings()
+
+    public void ChangeCrossSettings()
     {
         GameObject cross = transform.GetChild(2).gameObject;
         if (showInventoryCross)
@@ -82,25 +90,33 @@ public class InventoryDesign : MonoBehaviour
         }
     }
 
-    public void updateAllSlots()
+    public void UpdateAllSlots()
     {
         Image slot = null;
 #if UNITY_EDITOR
-        Object prefab = PrefabUtility.CreateEmptyPrefab("Assets/InventoryMaster/Resources/Prefabs/Slot - Inventory.prefab");
-#endif
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/Prefabs/Slot - Inventory.prefab");
 
-        for (int i = 0; i < transform.GetChild(1).childCount; i++)
+        AssetDatabase.StartAssetEditing();
+        var pi = prefab.GetComponent<Image>();
+        if(pi == null)
         {
-            slot = transform.GetChild(1).GetChild(i).GetComponent<Image>();
-            slot.sprite = slotDesignTemp.sprite;
-            slot.color = slotDesignTemp.color;
-            slot.material = slotDesignTemp.material;
-            slot.type = slotDesignTemp.type;
-            slot.fillCenter = slotDesignTemp.fillCenter;
+            pi = prefab.AddComponent<Image>();
         }
-#if UNITY_EDITOR
-        PrefabUtility.ReplacePrefab(slot.gameObject, prefab, ReplacePrefabOptions.ConnectToPrefab);
+        pi.sprite = slotSprite;
+        pi.color = slotColor;
+        pi.material = slotMaterial;
+        pi.type = slotImageType;
+        pi.fillCenter = slotFillCenter;
+        AssetDatabase.StopAssetEditing();
 #endif
-
+        foreach (Transform child in transform.GetChild(1)) {
+            slot = child.GetComponent<Image>();
+            Debug.Log(slot.name);
+            slot.sprite = slotSprite;
+            slot.color = slotColor;
+            slot.material = slotMaterial;
+            slot.type = slotImageType;
+            slot.fillCenter = slotFillCenter;
+        }
     }
 }

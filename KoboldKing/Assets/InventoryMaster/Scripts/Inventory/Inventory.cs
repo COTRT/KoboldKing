@@ -99,9 +99,9 @@ public class Inventory : MonoBehaviour
 
     public event Action SizeChanged;
 
-    void Start()
+    public void Start()
     {
-        if (transform.GetComponent<Hotbar>() == null)
+        if (transform.GetComponent<Hotbar>() == null && Application.isPlaying)
             gameObject.SetActive(false);
 
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
@@ -111,7 +111,7 @@ public class Inventory : MonoBehaviour
             SlotContainer = Instantiate(prefabSlotContainer);
             SlotContainer.transform.SetParent(PanelRectTransform.transform);
         }
-       
+
         //Load SlotContainer Stuff
         SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
         SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
@@ -122,15 +122,15 @@ public class Inventory : MonoBehaviour
         SlotContainer = transform.GetChild(1).gameObject;
         SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
         SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
-        
+
         //Initialize ItemsInInventory array from items in editor hierarchy
-        ItemsInInventory = SlotContainer.transform.GetComponentsInChildren<ItemSlot>().Select(i => i.Item).ToArray();
+        ItemsInInventory = GetSlotsFromHierarchy().Select(i => i?.Item).ToArray();
         ChangeInventorySize(ItemsInInventory.Length);
-        
+
         //Setup inventory sizing
         UpdateSlotSize(slotSize, iconSize);
         UpdatePadding(paddingBetweenX, paddingBetweenY);
-        
+
         //Nab Prefabs
         prefabCanvasWithPanel = Resources.Load("Prefabs/Canvas - Inventory") as GameObject;
         prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
@@ -204,16 +204,6 @@ public class Inventory : MonoBehaviour
 
     public void ChangeInventorySize(int size)
     {
-        if (size < ItemsInInventory.Length)
-        {
-            foreach (var item in ItemsInInventory.Skip(size))
-            {
-                if (item == null) continue;
-                GameObject dropItem = Instantiate(item.Model);
-                dropItem.AddComponent<PickUpItem>().item = item;
-                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
-            }
-        }
 
         Vector2 dimensions;
         if (!DimensionsDict.TryGetValue(size, out dimensions)) //Check first to see if the given dimensions are in the dimensions dictionary
@@ -230,27 +220,59 @@ public class Inventory : MonoBehaviour
         }
         width = (int)dimensions.x;
         height = (int)dimensions.y;
-        Array.Resize(ref ItemsInInventory, size);
+        ChangeInventorySize();
+    }
+    /// <summary>
+    /// Change the inventory size to be that which has been set in the width and height properties (use ChangeInventorySize(size) to set to a particular size succinctly)
+    /// </summary>
+    public void ChangeInventorySize()
+    {
+        if (Size < ItemsInInventory.Length)
+        {
+            foreach (var item in ItemsInInventory.Skip(Size))
+            {
+                if (item == null) continue;
+                GameObject dropItem = Instantiate(item.Model);
+                dropItem.AddComponent<PickUpItem>().item = item;
+                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
+            }
+        }
+        Array.Resize(ref ItemsInInventory, Size);
         UpdateItemDisplay();
         AdjustInventorySize();
         SizeChanged?.Invoke();
     }
 
+    private List<ItemSlot> GetSlotsFromHierarchy()
+    {
+        //Somehow, Transform implements IEnumerable yet is simultaneously unavailble to the LINQ functions that could clean this up so nicely.
+        List<ItemSlot> toReturn = new List<ItemSlot>();
+        foreach (Transform slot in SlotContainer.transform)
+        {
+            toReturn.Add(slot.GetComponent<ItemSlot>());
+        }
+        return toReturn;
+    }
+
     public void UpdateItemDisplay()
     {
 
-        ItemSlot[] startingSlots = SlotContainer.transform.GetComponentsInChildren<ItemSlot>();
+        List<ItemSlot> startingSlots = GetSlotsFromHierarchy();
 
-        if (startingSlots.Length > ItemsInInventory.Length)
+        if (startingSlots.Count > ItemsInInventory.Length)
         {
             foreach (var slot in startingSlots.Skip(ItemsInInventory.Length).ToList())
             {
-                Destroy(slot.gameObject);
+#if UNITY_EDITOR
+                DestroyImmediate(slot.gameObject); //The editor version of this, which also happens to be a little dangerous to use.
+#else
+            Destroy(slot.gameObject); //The Runtime version of this.
+#endif
             }
         }
-        else if (startingSlots.Length < ItemsInInventory.Length)
+        else if (startingSlots.Count < ItemsInInventory.Length)
         {
-            for (int i = startingSlots.Length; i < ItemsInInventory.Length; i++)
+            for (int i = startingSlots.Count; i < ItemsInInventory.Length; i++)
             {
                 ItemSlot Slot = Instantiate(prefabSlot).GetComponent<ItemSlot>();
                 Slot.name = (i + 1).ToString();
@@ -275,7 +297,7 @@ public class Inventory : MonoBehaviour
     }
     public void UpdateStackNumberSettings()  //TODO:  I'd imagine this is unnecessary if we update properly.
     {
-        foreach (var itemSlot in GetComponentsInChildren<ItemSlot>()) itemSlot.UpdateDisplay(stackable, positionNumberX, positionNumberY);
+        foreach (var itemSlot in GetSlotsFromHierarchy()) itemSlot?.UpdateDisplaySettings(stackable, positionNumberX, positionNumberY);
     }
 
     public void UpdateSlotSize(int slotSize, int iconSize)
@@ -283,7 +305,7 @@ public class Inventory : MonoBehaviour
         this.slotSize = slotSize;
         this.iconSize = iconSize;
         SlotGridLayout.cellSize = new Vector2(slotSize, slotSize);
-        foreach (var slot in GetComponentsInChildren<ItemSlot>()) slot.UpdateSlotSize(slotSize, iconSize);
+        foreach (var slot in GetSlotsFromHierarchy()) slot?.UpdateSlotSize(slotSize, iconSize);
     }
 
     public void SortItems()
@@ -357,7 +379,7 @@ public class Inventory : MonoBehaviour
     /// -(this will be less than the specified quantity if the inventory is too full)
     /// acceptPartialMove determines if the inventory should completely cancel the addition if there isn't enough space to complete it.
     /// </summary>
-    public int AddItemToInventory(int id, int quantity,bool acceptPartialMove = true)
+    public int AddItemToInventory(int id, int quantity, bool acceptPartialMove = true)
     {
         int totalCapacity = ItemsInInventory.Sum(i =>
         {
@@ -376,17 +398,18 @@ public class Inventory : MonoBehaviour
         });
         if (totalCapacity < quantity && !acceptPartialMove) return 0; //Add nothing if there isn't space for it and we have been instructed to kick out.
         int remainingQuantity = quantity;
-        foreach(var item in Array.FindAll(ItemsInInventory,i => i.ID == id))
+        foreach (var item in Array.FindAll(ItemsInInventory, i => i.ID == id))
         {
             if (remainingQuantity <= 0) break;
             var availableCapacity = item.MaxStack - item.Quantity;
-            if (availableCapacity>0) {
+            if (availableCapacity > 0)
+            {
                 var increase = Mathf.Min(availableCapacity, remainingQuantity); //Choose the smaller value
                 remainingQuantity -= increase;
                 item.Quantity += increase;
             }
         }
-        while(remainingQuantity>0&&ItemsInInventory.Any(i => i == null))
+        while (remainingQuantity > 0 && ItemsInInventory.Any(i => i == null))
         {
             var item = itemDatabase.getItemByID(id);
             var increase = Mathf.Min(remainingQuantity, item.MaxStack);
@@ -394,7 +417,7 @@ public class Inventory : MonoBehaviour
             item.Quantity += increase;
             ItemsInInventory[Array.FindIndex(ItemsInInventory, i => i == null)] = item;
         }
-        
+
         UpdateItemDisplay();
         return quantity - remainingQuantity;
     }

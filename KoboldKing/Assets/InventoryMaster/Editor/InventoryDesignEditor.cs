@@ -8,13 +8,11 @@ using UnityEngine.EventSystems;
 public class InventoryDesignEditor : Editor
 {
     InventoryDesign invDesign;
-    Image slotDesign;
 
     bool showTitleFont;
     bool slotDesignFoldOut;
     bool inventoryDesignFoldOut;
     bool inventoryBackgroundDesignFoldOut;
-    bool inventoryCloseCross;
     bool inventoryCrossPosition;
     bool showinventoryCrossDesign;
 
@@ -36,7 +34,7 @@ public class InventoryDesignEditor : Editor
     void OnEnable()
     {
         invDesign = target as InventoryDesign;
-        invDesign.setVariables();
+        invDesign.SetVariables();
         inventoryTitlePosX = serializedObject.FindProperty("inventoryTitlePosX");
         inventoryTitlePosY = serializedObject.FindProperty("inventoryTitlePosY");
         panelSizeX = serializedObject.FindProperty("panelSizeX");
@@ -50,8 +48,6 @@ public class InventoryDesignEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        if(invDesign.GetComponent<Hotbar>() != null)
-            invDesign.setVariables();
 
         GUILayout.BeginVertical("Box");        
         EditorGUI.indentLevel++;
@@ -60,6 +56,7 @@ public class InventoryDesignEditor : Editor
         {               
             EditorGUI.BeginChangeCheck();
             inventoryTitle.stringValue = EditorGUILayout.TextField("Title", inventoryTitle.stringValue);
+            if (EditorGUI.EndChangeCheck()) invDesign.UpdateTitle();
             EditorGUI.indentLevel++;
             GUILayout.BeginVertical("Box");
             showTitleFont = EditorGUILayout.Foldout(showTitleFont, "Font");
@@ -70,9 +67,8 @@ public class InventoryDesignEditor : Editor
                 inventoryTitlePosY.intValue = EditorGUILayout.IntSlider("Position Y:", inventoryTitlePosY.intValue, -panelSizeY.intValue / 2, panelSizeX.intValue);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    invDesign.updateEverything();
+                    invDesign.UpdateTitle();
                 }
-                EditorGUI.BeginChangeCheck();
                 EditorGUI.indentLevel++;
                 EditorGUILayout.TextArea("Character", EditorStyles.boldLabel);
                 invDesign.inventoryTitleText.font = (Font)EditorGUILayout.ObjectField("Font", invDesign.inventoryTitleText.font, typeof(Font), true);                                                 //objectfield for the fonts
@@ -89,17 +85,10 @@ public class InventoryDesignEditor : Editor
                 invDesign.inventoryTitleText.material = (Material)EditorGUILayout.ObjectField("Material", invDesign.inventoryTitleText.material, typeof(Material), true);                             //material objectfield for the itemname
                 EditorGUI.indentLevel--;
                 GUILayout.Space(20);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    invDesign.updateEverything();
-                }
 
             }
             GUILayout.EndVertical();
-            if (EditorGUI.EndChangeCheck())
-            {
-                invDesign.updateEverything();
-            }
+
 
             GUILayout.BeginVertical("Box");
             inventoryBackgroundDesignFoldOut = EditorGUILayout.Foldout(inventoryBackgroundDesignFoldOut, "Inventory Design");
@@ -118,10 +107,6 @@ public class InventoryDesignEditor : Editor
                 else if (imageTypeIndexForInventory == 2) { invDesign.inventoryDesign.type = Image.Type.Sliced; imageTypeIndexForInventory = 2; }
                 else if (imageTypeIndexForInventory == 3) { invDesign.inventoryDesign.type = Image.Type.Tiled; imageTypeIndexForInventory = 3; }
                 invDesign.inventoryDesign.fillCenter = EditorGUILayout.Toggle("Fill Center", invDesign.inventoryDesign.fillCenter);
-                if (EditorGUI.EndChangeCheck())
-                {
-                    invDesign.updateEverything();
-                }
                 EditorGUI.indentLevel--;
             }
             GUILayout.EndVertical();
@@ -132,7 +117,6 @@ public class InventoryDesignEditor : Editor
                 showInventoryCross.boolValue = EditorGUILayout.Toggle("CloseButton", showInventoryCross.boolValue);
                 if (showInventoryCross.boolValue)
                 {
-                    invDesign.changeCrossSettings();
                     EditorGUI.indentLevel++;
                     EditorGUI.BeginChangeCheck();
                     inventoryCrossPosition = EditorGUILayout.Foldout(inventoryCrossPosition, "Position");
@@ -145,7 +129,7 @@ public class InventoryDesignEditor : Editor
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        invDesign.changeCrossSettings();
+                        invDesign.ChangeCrossSettings();
                     }
                     
                     showinventoryCrossDesign = EditorGUILayout.Foldout(showinventoryCrossDesign, "Design");
@@ -166,8 +150,6 @@ public class InventoryDesignEditor : Editor
                     }                    
                     EditorGUI.indentLevel--;
                 }
-                else
-                    invDesign.changeCrossSettings();
                 GUILayout.EndVertical();
             }
             
@@ -186,21 +168,20 @@ public class InventoryDesignEditor : Editor
             {
                 EditorGUI.indentLevel++;
                 EditorGUI.BeginChangeCheck();
-                invDesign.slotDesign.sprite = (Sprite)EditorGUILayout.ObjectField("Source Image", invDesign.slotDesign.sprite, typeof(Sprite), true);
-                invDesign.slotDesign.color = EditorGUILayout.ColorField("Color", invDesign.slotDesign.color);
-                invDesign.slotDesign.material = (Material)EditorGUILayout.ObjectField("Material", invDesign.slotDesign.material, typeof(Material), true);
+                invDesign.slotSprite = (Sprite)EditorGUILayout.ObjectField("Source Image", invDesign.slotSprite, typeof(Sprite), true);
+                invDesign.slotColor = EditorGUILayout.ColorField("Color", invDesign.slotColor);
+                invDesign.slotMaterial = (Material)EditorGUILayout.ObjectField("Material", invDesign.slotMaterial, typeof(Material), true);
                 string[] imageTypes = new string[4]; imageTypes[0] = "Filled"; imageTypes[1] = "Simple"; imageTypes[2] = "Sliced"; imageTypes[3] = "Tiled";
                 imageTypeIndex = EditorGUILayout.Popup("Image Type", imageTypeIndex, imageTypes, EditorStyles.popup);
-                if (imageTypeIndex == 0) { invDesign.slotDesign.type = Image.Type.Filled; imageTypeIndex = 0; }
-                else if (imageTypeIndex == 1) { invDesign.slotDesign.type = Image.Type.Simple; imageTypeIndex = 1; }
-                else if (imageTypeIndex == 2) { invDesign.slotDesign.type = Image.Type.Sliced; imageTypeIndex = 2; }
-                else if (imageTypeIndex == 3) { invDesign.slotDesign.type = Image.Type.Tiled; imageTypeIndex = 3; }
-                invDesign.slotDesign.fillCenter = EditorGUILayout.Toggle("Fill Center", invDesign.slotDesign.fillCenter);
+                if (imageTypeIndex == 0) { invDesign.slotImageType = Image.Type.Filled; imageTypeIndex = 0; }
+                else if (imageTypeIndex == 1) { invDesign.slotImageType = Image.Type.Simple; imageTypeIndex = 1; }
+                else if (imageTypeIndex == 2) { invDesign.slotImageType = Image.Type.Sliced; imageTypeIndex = 2; }
+                else if (imageTypeIndex == 3) { invDesign.slotImageType = Image.Type.Tiled; imageTypeIndex = 3; }
+                invDesign.slotFillCenter = EditorGUILayout.Toggle("Fill Center", invDesign.slotFillCenter);
                 EditorGUI.indentLevel--;
                 if (EditorGUI.EndChangeCheck())
                 {
-                    invDesign.updateEverything();
-                    invDesign.updateAllSlots();
+                    invDesign.UpdateAllSlots();
                 }
             }
             catch { }

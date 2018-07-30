@@ -42,7 +42,8 @@ public class CraftSystemEditor : Editor
         rightArrowPositionY = serializedObject.FindProperty("rightArrowPositionY");
         leftArrowRotation = serializedObject.FindProperty("leftArrowRotation");
         rightArrowRotation = serializedObject.FindProperty("rightArrowRotation");
-        cS.SetImages();
+        cS.Start();
+        cS.MirrorLeftArrowToRight();
     }
 
     public override void OnInspectorGUI()
@@ -132,21 +133,21 @@ public class CraftSystemEditor : Editor
             if (showArrowDesign)
             {
                 EditorGUI.indentLevel++;
-                cS.arrowImage.sprite = (Sprite)EditorGUILayout.ObjectField("Source Image", cS.arrowImage.sprite, typeof(Sprite), true);
-                cS.arrowImage.color = EditorGUILayout.ColorField("Color", cS.arrowImage.color);
-                cS.arrowImage.material = (Material)EditorGUILayout.ObjectField("Material", cS.arrowImage.material, typeof(Material), true);
+                cS.leftArrowImage.sprite = (Sprite)EditorGUILayout.ObjectField("Source Image", cS.leftArrowImage.sprite, typeof(Sprite), true);
+                cS.leftArrowImage.color = EditorGUILayout.ColorField("Color", cS.leftArrowImage.color);
+                cS.leftArrowImage.material = (Material)EditorGUILayout.ObjectField("Material", cS.leftArrowImage.material, typeof(Material), true);
                 string[] imageTypes = new string[4]; imageTypes[0] = "Filled"; imageTypes[1] = "Simple"; imageTypes[2] = "Sliced"; imageTypes[3] = "Tiled";
                 imageTypeofArrows = EditorGUILayout.Popup("Image Type", imageTypeofArrows, imageTypes, EditorStyles.popup);
-                if (imageTypeofArrows == 0) { cS.arrowImage.type = Image.Type.Filled; imageTypeofArrows = 0; }
-                else if (imageTypeofArrows == 1) { cS.arrowImage.type = Image.Type.Simple; imageTypeofArrows = 1; }
-                else if (imageTypeofArrows == 2) { cS.arrowImage.type = Image.Type.Sliced; imageTypeofArrows = 2; }
-                else if (imageTypeofArrows == 3) { cS.arrowImage.type = Image.Type.Tiled; imageTypeofArrows = 3; }
-                cS.arrowImage.fillCenter = EditorGUILayout.Toggle("Fill Center", cS.arrowImage.fillCenter);
+                if (imageTypeofArrows == 0) { cS.leftArrowImage.type = Image.Type.Filled; imageTypeofArrows = 0; }
+                else if (imageTypeofArrows == 1) { cS.leftArrowImage.type = Image.Type.Simple; imageTypeofArrows = 1; }
+                else if (imageTypeofArrows == 2) { cS.leftArrowImage.type = Image.Type.Sliced; imageTypeofArrows = 2; }
+                else if (imageTypeofArrows == 3) { cS.leftArrowImage.type = Image.Type.Tiled; imageTypeofArrows = 3; }
+                cS.leftArrowImage.fillCenter = EditorGUILayout.Toggle("Fill Center", cS.leftArrowImage.fillCenter);
                 EditorGUI.indentLevel--;
             }
             if (EditorGUI.EndChangeCheck())
             {
-                cS.SetImages();
+                cS.MirrorLeftArrowToRight();
             }
             EditorGUI.indentLevel--;
         }
@@ -159,6 +160,35 @@ public class CraftSystemEditor : Editor
         GUILayout.EndVertical();
     }
 
+    [MenuItem("Master System/Create/Craft System")]
+    public static void MenuItemCreateInventory()
+    {
+        GameObject Canvas = null;
+        if (GameObject.FindGameObjectWithTag("Canvas") == null)
+        {
+            GameObject inventory = new GameObject();
+            inventory.name = "Inventories";
+            Canvas = (GameObject)Instantiate(Resources.Load("Prefabs/Canvas - Inventory") as GameObject);
+            Canvas.transform.SetParent(inventory.transform, true);
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - CraftSytem") as GameObject);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            panel.transform.SetParent(Canvas.transform, true);
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            Instantiate(Resources.Load("Prefabs/EventSystem") as GameObject);
+            draggingItem.transform.SetParent(Canvas.transform, true);
+            panel.AddComponent<CraftSystem>();
+        }
+        else
+        {
+            GameObject panel = (GameObject)Instantiate(Resources.Load("Prefabs/Panel - CraftSystem") as GameObject);
+            panel.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+            panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
+            panel.AddComponent<CraftSystem>();
+            DestroyImmediate(GameObject.FindGameObjectWithTag("DraggingItem"));
+            GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
+            draggingItem.transform.SetParent(GameObject.FindGameObjectWithTag("Canvas").transform, true);
+        }
+    }
 
 }
 
