@@ -40,9 +40,9 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
         if (Item == null)
         {
 #if UNITY_EDITOR
-            DestroyImmediate(transform.GetChild(0)?.gameObject); //The editor version of this, which also happens to be a little dangerous to use.
+            DestroyImmediate(transform.childCount>0?transform.GetChild(0).gameObject:null); //The editor version of this, which also happens to be a little dangerous to use.
 #else
-            Destroy(transform.GetChild(0)?.gameObject); //The Runtime version of this.
+            Destroy(transform.childCount>0?transform.GetChild(0).gameObject:null); //The Runtime version of this.
 #endif
 
         }
@@ -52,6 +52,7 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
             {
                 Debug.Log("Instantiating Item");
                 var itemObject = (Instantiate(Resources.Load("Prefabs/Item")) as GameObject).transform;
+                itemObject.position = Vector3.zero;
                 itemObject.SetParent(transform);
                 itemImage = itemObject.GetChild(0).GetComponent<Image>();
                 itemCountText = itemObject.GetChild(1).GetComponent<Text>();

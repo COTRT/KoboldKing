@@ -78,7 +78,7 @@ public class InventoryEditor : Editor
         showInventorySettings = EditorGUILayout.Foldout(showInventorySettings, "Inventory Settings");
         if (showInventorySettings)
         {
-            sizeOfInventoryGUI();
+            SizeOfInventoryGUI();
         }
         GUILayout.EndVertical();
 
@@ -132,13 +132,13 @@ public class InventoryEditor : Editor
         }
     }
 
-    void sizeOfInventoryGUI()
+    void SizeOfInventoryGUI()
     {
 
         EditorGUI.indentLevel++;
         EditorGUI.BeginChangeCheck();
-        EditorGUILayout.IntSlider(inventoryHeight, 1, 10, new GUIContent("Height"));
-        EditorGUILayout.IntSlider(inventoryWidth, 1, 10, new GUIContent("Width"));
+        inv.height = EditorGUILayout.IntSlider("Height",inv.height, 1, 10);
+        inv.width = EditorGUILayout.IntSlider("Width",inv.width, 1, 10);
         if (EditorGUI.EndChangeCheck())
         {
             inv.ChangeInventorySize();

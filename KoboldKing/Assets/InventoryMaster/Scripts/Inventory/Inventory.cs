@@ -125,7 +125,8 @@ public class Inventory : MonoBehaviour
 
         //Initialize ItemsInInventory array from items in editor hierarchy
         ItemsInInventory = GetSlotsFromHierarchy().Select(i => i?.Item).ToArray();
-        ChangeInventorySize(ItemsInInventory.Length);
+        if (ItemsInInventory.Length == Size) ChangeInventorySize();  //  If the specified height and width match the number of icons, use them
+        else ChangeInventorySize(ItemsInInventory.Length);  //Otherwise,  something bad has happened and we should just take over finding the dimensions ourselves.
 
         //Setup inventory sizing
         UpdateSlotSize(slotSize, iconSize);
@@ -227,12 +228,12 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ChangeInventorySize()
     {
-        if (Size < ItemsInInventory.Length)
+        if (Size < ItemsInInventory.Length&&Application.isPlaying)
         {
             foreach (var item in ItemsInInventory.Skip(Size))
             {
                 if (item == null) continue;
-                GameObject dropItem = Instantiate(item.Model);
+                GameObject dropItem = Instantiate(item.Model??Resources.Load<GameObject>("Prefabs/ItemOnTheGround"));
                 dropItem.AddComponent<PickUpItem>().item = item;
                 dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
             }

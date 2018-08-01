@@ -14,7 +14,7 @@ public class Hotbar : MonoBehaviour
     public KeyCode[] keyCodesForSlots = new KeyCode[10];
     Inventory inv;
 
-    private void Start()
+    public void Start()
     {
         inv = GetComponent<Inventory>();
         inv.SizeChanged += UpdateKeyCodeCount;

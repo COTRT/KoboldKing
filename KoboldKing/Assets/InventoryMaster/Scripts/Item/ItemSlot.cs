@@ -159,8 +159,9 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
         if (transform.childCount > 0)
         {
             GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
-            transform.GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
-            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(iconSize, iconSize);
+            Transform child = transform.GetChild(0);
+            child.GetChild(2).GetComponent<RectTransform>().sizeDelta = new Vector2(slotSize, slotSize);
+            child.GetChild(0).GetComponent<RectTransform>().sizeDelta = new Vector2(iconSize, iconSize);
         }
     }
 
