@@ -1,44 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
 
-public class Spawner : MonoBehaviour
-{
-    public GameObject monster;
-    public bool respawn;
-    public float spawnDelay;
-    private float currentTime;
-    private bool spawning;
+//public class Spawner : MonoBehaviour {
 
 
-    void Start()
-    {
-        Spawn();
-        currentTime = spawnDelay;
-    }
+//    public GameObject Enemy;
 
-    void Update()
-    {
-        if (spawning)
-        {
-            currentTime -= Time.deltaTime;
-            if (currentTime <= 0)
-            {
-                Spawn();
-            }
-        }
-    }
+//    public int Count;
+//    public float Radius;
 
-    public void Respawn()
-    {
-        spawning = true;
-        currentTime = spawnDelay;
-    }
 
-    void Spawn()
-    {
-        IEnemy instance = Instantiate(monster, transform.position, Quaternion.identity).GetComponent<IEnemy>();
-        instance.Spawner = this;
-        spawning = false;
-    }
-}
+//    //this is just for testing porposes will be deleted when we are ready to call this function elsewhere.
+//    void Start() {
+//        SpawnEnemy();
+
+
+//    }
+
+
+//    void SpawnEnemy()
+//    {
+//            //Spawns = Instantiate(Enemy, transform.position, Quaternion.Euler(0, 0, 0)) as GameObject;
+
+//    }
+//}
+

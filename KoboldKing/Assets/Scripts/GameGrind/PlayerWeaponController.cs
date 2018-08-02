@@ -9,7 +9,7 @@ public class PlayerWeaponController : MonoBehaviour
 
 
     Transform spawnProjectile;
-    private Item currentlyEquippedItem;
+    private ItemX currentlyEquippedItem;
     private IWeapon equippedWeapon;
 
     private CharacterStats characterStats;
@@ -43,7 +43,7 @@ public class PlayerWeaponController : MonoBehaviour
         equippedWeapon.PerformSpecialAttack();
     }
 
-    public void EquipWeapon(Item itemToEquip)
+    public void EquipWeapon(ItemX itemToEquip)
     {
         if (EquippedWeapon != null)
         {

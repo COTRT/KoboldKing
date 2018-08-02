@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Item;
+﻿using Assets.Scripts.ItemX;
 
 namespace Assets.Scripts.Models
 {

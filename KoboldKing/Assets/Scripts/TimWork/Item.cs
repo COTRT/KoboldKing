@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-namespace Assets.Scripts.Item
+namespace Assets.Scripts.ItemX
 {
     [System.Serializable]
-    public class Item : MonoBehaviour
+    public class ItemX : MonoBehaviour
     {
         [SerializeField] private string _itemName;
         [SerializeField] private string _description;

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Item
+namespace Assets.Scripts.ItemX
 {
     [System.Serializable]
     public class Icon : MonoBehaviour

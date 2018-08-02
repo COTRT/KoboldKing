@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Assets.Scripts.Item;
+using Assets.Scripts.ItemX;
 using UnityEngine;
 
 namespace Assets.Scripts.TimWork

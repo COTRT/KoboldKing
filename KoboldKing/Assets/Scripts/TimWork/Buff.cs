@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.Item
+namespace Assets.Scripts.ItemX
 {
     public class Buff : MonoBehaviour
     {

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 public class ItemDatabase : MonoBehaviour
 {
     public static ItemDatabase Instance { get; set; }
-    private List<Item> Items { get; set; }
+    private List<ItemX> Items { get; set; }
     public List<BaseStat> nothing { get; set; }
 
 
@@ -26,13 +26,13 @@ public class ItemDatabase : MonoBehaviour
     }
     private void BuildDatabase()
     {
-        Items = JsonConvert.DeserializeObject<List<Item>>(Resources.Load<TextAsset>("GameGrind/JSON/Items").ToString());
+        Items = JsonConvert.DeserializeObject<List<ItemX>>(Resources.Load<TextAsset>("GameGrind/JSON/Items").ToString());
     }
 
-    public Item GetItem(string itemSlug)
+    public ItemX GetItem(string itemSlug)
     {
         // TODO: Lamba expression with where clause could be faster?
-        foreach (Item item in Items)
+        foreach (ItemX item in Items)
         {
             if (item.ObjectSlug == itemSlug)
                 return item;

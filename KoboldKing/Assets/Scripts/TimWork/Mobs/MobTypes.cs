@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Item
+﻿namespace Assets.Scripts.ItemX
 {
     public enum MobTypes
     {

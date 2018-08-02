@@ -13,7 +13,7 @@ public class ConsumableController : MonoBehaviour
         stats = GetComponent<Player>().characterStats;
     }
 
-    public void ConsumeItem(Item item)
+    public void ConsumeItem(ItemX item)
     {
         GameObject itemToSpawn = Instantiate(Resources.Load<GameObject>("GameGrind/Consumables/" + item.ObjectSlug));
 

@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
     public DataService dataService;
 
 	[SaveTo("inventory.dat")]
-	public Inventory inventory;
+	public InventoryX inventory;
 
 	void Awake(){
         if (controller == null)

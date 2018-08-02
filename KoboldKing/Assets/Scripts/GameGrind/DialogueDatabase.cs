@@ -8,7 +8,7 @@ namespace Assets.Scripts.GameGrind
     public class DialogueDatabase : MonoBehaviour
     {
         public static DialogueDatabase Instance { get; set; }
-        //private List<Item> Items { get; set; }
+        //private List<ItemX> Items { get; set; }
         private List<GGDialogue> Dialogues { get; set; }
         //public List<BaseStat> nothing { get; set; }
         public string npc = "bob";

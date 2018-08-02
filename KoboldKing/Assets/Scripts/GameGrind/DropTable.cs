@@ -6,7 +6,7 @@ public class DropTable
 {
     public List<LootDrop> loot;
 
-    public Item GetDrop()
+    public ItemX GetDrop()
     {
         int roll = Random.Range(0, 101);
         int weightSum = 0;
