@@ -24,11 +24,11 @@ public class MainMenu : MonoBehaviour
         }
         else if (load == true)
         {
-            SceneManager.LoadScene(2);
+            SceneManager.LoadScene(1);
         }
         else
         {
-            SceneManager.LoadScene(1); //If you click on other button it loads game!
+            SceneManager.LoadScene(2); //If you click on other button it loads game!
         }
     }
     void Update()
