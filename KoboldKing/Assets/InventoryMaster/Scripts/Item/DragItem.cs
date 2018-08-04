@@ -8,7 +8,7 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
 {
     private Vector2 pointerOffset;
     private RectTransform rectTransform;
-    private RectTransform rectTransformSlot;
+    private RectTransform draggedItemRectTransform;
     private CanvasGroup canvasGroup;
     private GameObject oldSlot;
     private Inventory inventory;
@@ -18,28 +18,26 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        rectTransformSlot = GameObject.FindGameObjectWithTag("DraggingItem").GetComponent<RectTransform>();
-        inventory = transform.parent.parent.parent.GetComponent<Inventory>();
         draggedItemBox = GameObject.FindGameObjectWithTag("DraggingItem").transform;
+        draggedItemRectTransform = draggedItemBox.GetComponent<RectTransform>();
+        inventory = transform.parent.GetComponent<ItemSlot>().RootInventory;
     }
 
 
     public void OnDrag(PointerEventData data)
     {
-        if (rectTransform == null)
-            return;
-
         if (data.button == PointerEventData.InputButton.Left && transform.parent.GetComponent<CraftResultSlot>() == null)
         {
-            rectTransform.SetAsLastSibling();
-            transform.SetParent(draggedItemBox);
-            Vector2 localPointerPosition;
+
             canvasGroup.blocksRaycasts = false;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransformSlot, Input.mousePosition, data.pressEventCamera, out localPointerPosition))
+            Vector2 localPointerPosition;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(draggedItemRectTransform, Input.mousePosition, data.pressEventCamera, out localPointerPosition))
             {
+                Debug.Log(localPointerPosition);
                 rectTransform.localPosition = localPointerPosition - pointerOffset;
-                if (transform.GetComponent<ItemSlot>().Duplication != null)
-                    Destroy(transform.GetComponent<ItemSlot>().Duplication);
+                //ItemSlot duplication = oldSlot.GetComponent<ItemSlot>().Duplication;
+                //if (duplication != null)
+                //    Destroy(duplication);
             }
         }
 
@@ -54,6 +52,8 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
         {
             RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera, out pointerOffset);
             oldSlot = transform.parent.gameObject;
+            rectTransform.SetAsLastSibling();
+            transform.SetParent(draggedItemBox);
         }
     }
 
@@ -78,7 +78,7 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
                 GameObject secondItemGameObject = newSlot.parent.gameObject;
                 RectTransform firstItemRectTransform = this.gameObject.GetComponent<RectTransform>();
                 RectTransform secondItemRectTransform = newSlot.parent.GetComponent<RectTransform>();
-                Item firstItem = rectTransform.GetComponent<ItemOnObject>().Item;
+                Item firstItem = transform.GetComponent<ItemDisplay>().Item;
                 Item secondItem = new Item();
                 if (newSlot.parent.GetComponent<ItemOnObject>() != null)
                     secondItem = newSlot.parent.GetComponent<ItemOnObject>().Item;
@@ -573,18 +573,9 @@ public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDr
 
             else
             {
-                GameObject dropItem = (GameObject)Instantiate(GetComponent<ItemOnObject>().Item.Model);
-                dropItem.AddComponent<PickUpItem>();
-                dropItem.GetComponent<PickUpItem>().item = this.gameObject.GetComponent<ItemOnObject>().Item;
-                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
-                //inventory.OnUpdateItemList();
-                if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null)
-                    inventory.GetComponent<Inventory>().UnEquipItem(dropItem.GetComponent<PickUpItem>().item);
-                Destroy(this.gameObject);
-
+                inventory.DropItem(GetComponent<ItemDisplay>().Item);
+                Destroy(gameObject);
             }
         }
-        //inventory.OnUpdateItemList();
     }
-
 }

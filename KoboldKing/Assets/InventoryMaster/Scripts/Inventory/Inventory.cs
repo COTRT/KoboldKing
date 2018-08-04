@@ -22,6 +22,8 @@ public class Inventory : MonoBehaviour
     [SerializeField]
     private GameObject prefabDraggingItemContainer;
     [SerializeField]
+    GameObject prefabItemDefaultDrop;
+    [SerializeField]
     private GameObject prefabPanel;
 
     //Itemdatabase
@@ -43,13 +45,26 @@ public class Inventory : MonoBehaviour
     //Inventory Settings
     [SerializeField]
     public bool mainInventory;
-    [SerializeField]
-    public Item[] ItemsInInventory = new Item[0];
+    private Item[] itemsInInventory = new Item[0];
     [SerializeField]
     public int height;
     [SerializeField]
     public int width;
     public int Size { get { return width * height; } }
+
+    public Item[] ItemsInInventory
+    {
+        get
+        {
+            return itemsInInventory;
+        }
+
+        set
+        {
+            itemsInInventory = value;
+        }
+    }
+
     [SerializeField]
     public bool stackable;
     [SerializeField]
@@ -106,6 +121,7 @@ public class Inventory : MonoBehaviour
 
         inputManagerDatabase = (InputManager)Resources.Load("InputManager");
         prefabSlot = Resources.Load("Prefabs/Slot - Inventory") as GameObject;
+        prefabItemDefaultDrop = Resources.Load<GameObject>("Prefabs/ItemOnTheGround");
         if (SlotContainer == null)
         {
             SlotContainer = Instantiate(prefabSlotContainer);
@@ -117,7 +133,7 @@ public class Inventory : MonoBehaviour
         SlotGridRectTransform = SlotContainer.GetComponent<RectTransform>();
         SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
         SlotContainerRectTransform = SlotContainer.GetComponent<RectTransform>();
-        SlotContainerRectTransform.localPosition = Vector3.zero;
+        SlotContainerRectTransform.anchoredPosition = Vector3.zero;
         PanelRectTransform = GetComponent<RectTransform>();
         SlotContainer = transform.GetChild(1).gameObject;
         SlotGridLayout = SlotContainer.GetComponent<GridLayoutGroup>();
@@ -233,15 +249,21 @@ public class Inventory : MonoBehaviour
             foreach (var item in ItemsInInventory.Skip(Size))
             {
                 if (item == null) continue;
-                GameObject dropItem = Instantiate(item.Model??Resources.Load<GameObject>("Prefabs/ItemOnTheGround"));
-                dropItem.AddComponent<PickUpItem>().item = item;
-                dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
+                DropItem(item);
             }
         }
-        Array.Resize(ref ItemsInInventory, Size);
+        Array.Resize(ref itemsInInventory, Size);
         UpdateItemDisplay();
         AdjustInventorySize();
         SizeChanged?.Invoke();
+    }
+    public void DropItem(Item item)
+    {
+        GameObject dropItem = Instantiate(item.Model ?? prefabItemDefaultDrop);
+        dropItem.AddComponent<PickUpItem>().item = item;
+        dropItem.transform.localPosition = GameObject.FindGameObjectWithTag("Player").transform.localPosition;
+        if (GetComponent<EquipmentSystem>() != null)
+            UnEquipItem(dropItem.GetComponent<PickUpItem>().item);
     }
 
     private List<ItemSlot> GetSlotsFromHierarchy()
@@ -264,11 +286,7 @@ public class Inventory : MonoBehaviour
         {
             foreach (var slot in startingSlots.Skip(ItemsInInventory.Length).ToList())
             {
-#if UNITY_EDITOR
                 DestroyImmediate(slot.gameObject); //The editor version of this, which also happens to be a little dangerous to use.
-#else
-            Destroy(slot.gameObject); //The Runtime version of this.
-#endif
             }
         }
         else if (startingSlots.Count < ItemsInInventory.Length)
@@ -284,18 +302,12 @@ public class Inventory : MonoBehaviour
         //Update the Items in the slots
         for (int i = 0; i < ItemsInInventory.Length; i++)
         {
-            var child = SlotContainer.transform.GetChild(i);
-            if (ItemsInInventory[i] == null && child.childCount != 0)
-            {
-                Destroy(child.GetChild(0));
-            }
-            else if (ItemsInInventory[i] != null)
-            {
-                child.GetComponent<ItemSlot>().Item = ItemsInInventory[i];
-            }
+            SlotContainer.transform.GetChild(i).GetComponent<ItemSlot>().Item = ItemsInInventory[i];  //TODO reimplement
         }
         UpdateStackNumberSettings();
     }
+
+
     public void UpdateStackNumberSettings()  //TODO:  I'd imagine this is unnecessary if we update properly.
     {
         foreach (var itemSlot in GetSlotsFromHierarchy()) itemSlot?.UpdateDisplaySettings(stackable, positionNumberX, positionNumberY);
@@ -311,7 +323,7 @@ public class Inventory : MonoBehaviour
 
     public void SortItems()
     {
-        ItemsInInventory = ItemsInInventory.OrderBy(i => i == null).ToArray();
+        //ItemsInInventory = ItemsInInventory.OrderBy(i => i == null).ToArray();  //TODO reimplement
         UpdateItemDisplay();
         //A potential concern with this system is this will create and destroy moved items instead of, 
         //...you know, moving the items.  Perhaps a future improvement.
@@ -382,11 +394,12 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public int AddItemToInventory(int id, int quantity, bool acceptPartialMove = true)
     {
+        int maxStack = itemDatabase.getItemByID(id).MaxStack;
         int totalCapacity = ItemsInInventory.Sum(i =>
         {
             if (i == null)
             {
-                return i.MaxStack;
+                return maxStack;
             }
             else if (i.ID == id)
             {
@@ -399,7 +412,7 @@ public class Inventory : MonoBehaviour
         });
         if (totalCapacity < quantity && !acceptPartialMove) return 0; //Add nothing if there isn't space for it and we have been instructed to kick out.
         int remainingQuantity = quantity;
-        foreach (var item in Array.FindAll(ItemsInInventory, i => i.ID == id))
+        foreach (var item in Array.FindAll(ItemsInInventory, i => i?.ID == id))
         {
             if (remainingQuantity <= 0) break;
             var availableCapacity = item.MaxStack - item.Quantity;

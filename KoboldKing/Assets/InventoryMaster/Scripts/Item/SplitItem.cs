@@ -9,7 +9,7 @@ public class SplitItem : MonoBehaviour, IPointerDownHandler
 
     private bool pressingButtonToSplit;             //bool for pressing a item to split it
     public Inventory inv;                          //inventory script  
-    static InputManager inputManagerDatabase = null;
+    static InputManager inputManagerDatabase;
 
     void Update()
     {

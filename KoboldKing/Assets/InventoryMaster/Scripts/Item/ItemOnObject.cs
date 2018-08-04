@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using System.ComponentModel;
+using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>
-/// Aka item slot
-/// </summary>
 public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
 {
     private Text itemCountText;  //text for the itemValue
     private Image itemImage;
+    private DragItem dragItem;
     RectTransform itemTextRectTransform;
 
     private Item item;
+    public GameObject itemObject;
+    private bool draggable;
     bool invStackable;
     int positionNumberX;
     int positionNumberY;
@@ -24,42 +25,59 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
 
         set
         {
+            if (item == null && value != null) value.PropertyChanged += Item_PropertyChanged;
+            else if (item != null && value == null) item.PropertyChanged -= Item_PropertyChanged;
             item = value;
             UpdateDisplay();
         }
     }
+    
+    void Item_PropertyChanged(object sender, PropertyChangedEventArgs prop)
+    {
+        UpdateDisplay();
+    }
 
     void Start()
     {
+        if (Item.ID == 0) Item = null; //Correct for an odd bug where the Item tends to create itself, but empty.
         UpdateDisplay();
-        Item.PropertyChanged += (sender, prop) => UpdateDisplay();
     }
 
     public void UpdateDisplay()
     {
         if (Item == null)
         {
-#if UNITY_EDITOR
-            DestroyImmediate(transform.childCount>0?transform.GetChild(0).gameObject:null); //The editor version of this, which also happens to be a little dangerous to use.
-#else
-            Destroy(transform.childCount>0?transform.GetChild(0).gameObject:null); //The Runtime version of this.
-#endif
-
+            if(itemObject != null)
+            {
+                if (Application.isEditor)
+                {
+                    DestroyImmediate(itemObject); //The editor version of this, which also happens to be a little dangerous to use.
+                }
+                else
+                {
+                    Destroy(itemObject); //The Runtime version of this.
+                }
+            }
+            itemObject = null;
         }
         else
         {
-            if (transform.childCount == 0) //Item is not null, but we haven't made a display for it yet.
+            if (itemObject == null) //Item is not null, but we haven't made a display for it yet.
             {
                 Debug.Log("Instantiating Item");
-                var itemObject = (Instantiate(Resources.Load("Prefabs/Item")) as GameObject).transform;
-                itemObject.position = Vector3.zero;
-                itemObject.SetParent(transform);
-                itemImage = itemObject.GetChild(0).GetComponent<Image>();
-                itemCountText = itemObject.GetChild(1).GetComponent<Text>();
-                itemTextRectTransform = itemObject.GetChild(1).GetComponent<RectTransform>();
+                itemObject = Instantiate(Resources.Load("Prefabs/Item")) as GameObject;
+                var ioTrans = itemObject.transform;
+                ioTrans.SetParent(transform);
+                ioTrans.localPosition = Vector3.zero;
+                itemImage = ioTrans.GetChild(0).GetComponent<Image>();
+                itemCountText = ioTrans.GetChild(1).GetComponent<Text>();
+                itemTextRectTransform = ioTrans.GetChild(1).GetComponent<RectTransform>();
+                dragItem = ioTrans.GetComponent<DragItem>();
+                itemObject.GetComponent<ItemDisplay>().Item = Item;
             }
 
             itemImage.sprite = Item.Icon;
+            dragItem.enabled = draggable;
             if (Item.MaxStack > 1)
             {
                 itemCountText.text = Item.Quantity.ToString();
@@ -73,11 +91,13 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
         }
     }
 
-    public void UpdateDisplaySettings(bool stackable, int positionNumberX, int positionNumberY)
+    public void UpdateDisplaySettings(bool? stackable = null, int? positionNumberX = null, int? positionNumberY = null,bool? draggable = null)
     {
-        this.invStackable = stackable;
-        this.positionNumberX = positionNumberX;
-        this.positionNumberY = positionNumberY;
+        //If the caller does not specify a particular setting, default to what it is now.
+        this.invStackable = stackable??this.invStackable;
+        this.positionNumberX = positionNumberX ?? this.positionNumberX;
+        this.positionNumberY = positionNumberY ?? this.positionNumberY;
+        this.draggable = draggable ?? this.draggable;
         UpdateDisplay();
     }
 }

@@ -13,14 +13,12 @@ public class CraftResultSlot : ItemSlot
     // Use this for initialization
     void Start()
     {
-        //inventory = GameObject.FindGameObjectWithTag("Inventory").GetComponent<Inventory>();
         craftSystem = transform.parent.GetComponent<CraftSystem>();
 
         GetComponent<RectTransform>().localPosition = Vector3.zero;
-        GetComponent<DragItem>().enabled = false;
+        Inventory mainInventory = PlayerInventory.Instance.mainInventory;
+        UpdateDisplaySettings(true,mainInventory.positionNumberX, mainInventory.positionNumberY, false);
         gameObject.SetActive(false);
-        transform.GetChild(1).GetComponent<Text>().enabled = true;
-        transform.GetChild(1).GetComponent<RectTransform>().localPosition = new Vector2(PlayerInventory.Instance.mainInventory.positionNumberX, PlayerInventory.Instance.mainInventory.positionNumberY);
     }
     protected override Inventory GetInventory()
     {
@@ -41,12 +39,11 @@ public class CraftResultSlot : ItemSlot
     }
     public override void ConsumeIt()
     {
-        if (mi.AddItemToInventory(Item.ID, Item.Quantity) != 0)
+        if (mi.AddItemToInventory(Item.ID, Item.Quantity,false) != 0)
         {
             CraftSystem cS = PlayerInventory.Instance.craftSystem;
-            cS.RemoveItemIngredients(Item); //TODO:  Change CraftSystem to store Blueprint in CraftResultSlot, and pass that in here, to make things significantly less stupid in that department
-            CraftResultSlot result = cS.transform.GetChild(3).GetComponent<CraftResultSlot>();
-            result.temp = 0;
+            cS.RemoveItemIngredients(Item); //TODO:  Change CraftSystem to store Blueprint in CraftResultSlot, and pass that in here, to make things significantly less stupid in that department4
+            temp = 0;
             tooltip.deactivateTooltip();
         }
     }

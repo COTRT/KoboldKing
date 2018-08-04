@@ -29,26 +29,44 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
             duplication = value;
         }
     }
+    private ItemOnObject _itemOnObject;
+    //public Item Item
+    //{
+    //    get
+    //    {
+    //        return transform.childCount > 0 ? (_itemOnObject  ?? (_itemOnObject= transform.GetChild(0).GetComponent<ItemOnObject>())).Item : null;
+    //    }
+    //    set
+    //    {
+    //        if (value == null&& transform.childCount > 0)
+    //        {
+    //            Destroy(transform.GetChild(0).gameObject);
+    //        }
+    //        else if(value!=null&&transform.childCount==0)
+    //        {
+
+    //        }
+    //    }
+    //}
 
     void Start()
     {
         tooltip = GameObject.FindGameObjectWithTag("Tooltip").GetComponent<Tooltip>();
-        var eSGameObject = GameObject.FindGameObjectWithTag("EquipmentSystem");
-        eS = eSGameObject == null ? null : eSGameObject.GetComponent<EquipmentSystem>(); //I'm so missing C# 7's eSGameObject?.GetComponent<>() right now
+        eS = GameObject.FindGameObjectWithTag("EquipmentSystem")?.GetComponent<EquipmentSystem>();
         mi = PlayerInventory.Instance.mainInventory;
         RootInventory = GetInventory();
     }
     protected virtual Inventory GetInventory() //This function exists for the sake of being overideable.
     {
-        return transform.parent.parent.parent.GetComponent<Inventory>();
+        return transform.parent.parent.GetComponent<Inventory>();
     }
     void OnEnable()
     {
-        Item.PropertyChanged += Item_PropertyChanged;
+        if (Item != null) Item.PropertyChanged += Item_PropertyChanged;
     }
     void OnDisable()
     {
-        Item.PropertyChanged -= Item_PropertyChanged;
+        if (Item != null) Item.PropertyChanged -= Item_PropertyChanged;
     }
 
     private void Item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

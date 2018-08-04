@@ -37,8 +37,6 @@ public class CraftSystem : MonoBehaviour
 
     Transform slots;
     Transform resultSlot;
-    Transform leftArrow;
-    Transform rightArrow;
     RectTransform leftRect;
     RectTransform rightRect;
     RectTransform resultRect;
@@ -52,10 +50,12 @@ public class CraftSystem : MonoBehaviour
         //playerStatsScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
         slots = transform.GetChild(1);
         resultSlot = transform.GetChild(3);
-        leftArrow = transform.GetChild(4);
-        rightArrow = transform.GetChild(5);
+        var leftArrow = transform.GetChild(4);
+        var rightArrow = transform.GetChild(5);
         leftRect = leftArrow.GetComponent<RectTransform>();
         rightRect = rightArrow.GetComponent<RectTransform>();
+        leftArrowImage = leftArrow.GetComponent<Image>();
+        rightArrowImage = rightArrow.GetComponent<Image>();
         resultRect = resultSlot.GetComponent<RectTransform>();
         finalSlotImage = resultSlot.GetComponent<Image>();
         leftArrowImage = leftArrow.GetComponent<Image>();
