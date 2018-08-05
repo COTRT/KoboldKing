@@ -11,7 +11,7 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
 
     private Item item;
     public GameObject itemObject;
-    private bool draggable;
+    private bool draggable = true;
     bool invStackable;
     int positionNumberX;
     int positionNumberY;
@@ -77,7 +77,7 @@ public class ItemOnObject : MonoBehaviour  //Saves the Item in the slot
             }
 
             itemImage.sprite = Item.Icon;
-            dragItem.enabled = draggable;
+            if(dragItem!=null)dragItem.enabled = draggable;
             if (Item.MaxStack > 1)
             {
                 itemCountText.text = Item.Quantity.ToString();

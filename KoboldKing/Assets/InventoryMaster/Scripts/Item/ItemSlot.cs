@@ -9,7 +9,6 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
     //For all ya'lls wondering, calling a something "protected" makes it invsible to all but this class, and any classes overriding this one (e.g., CraftResultSlot)
     protected static Tooltip tooltip;
     public static EquipmentSystem eS;
-    private ItemSlot duplication;
 
     /// <summary>
     /// Main Inventory (not root)
@@ -17,37 +16,8 @@ public class ItemSlot : ItemOnObject, IPointerDownHandler
     protected static Inventory mi;
     public Inventory RootInventory;
 
-    public ItemSlot Duplication
-    {
-        get
-        {
-            return duplication;
-        }
-
-        set
-        {
-            duplication = value;
-        }
-    }
-    private ItemOnObject _itemOnObject;
-    //public Item Item
-    //{
-    //    get
-    //    {
-    //        return transform.childCount > 0 ? (_itemOnObject  ?? (_itemOnObject= transform.GetChild(0).GetComponent<ItemOnObject>())).Item : null;
-    //    }
-    //    set
-    //    {
-    //        if (value == null&& transform.childCount > 0)
-    //        {
-    //            Destroy(transform.GetChild(0).gameObject);
-    //        }
-    //        else if(value!=null&&transform.childCount==0)
-    //        {
-
-    //        }
-    //    }
-    //}
+    public ItemSlot Duplication { get; set; }
+    public int SlotNum { get; set; }
 
     void Start()
     {

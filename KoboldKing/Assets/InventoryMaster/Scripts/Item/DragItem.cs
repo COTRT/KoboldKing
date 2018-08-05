@@ -7,575 +7,163 @@ using UnityEngine.EventSystems;
 public class DragItem : MonoBehaviour, IDragHandler, IPointerDownHandler, IEndDragHandler
 {
     private Vector2 pointerOffset;
-    private RectTransform rectTransform;
+    private RectTransform sourceRectTransform;
     private RectTransform draggedItemRectTransform;
-    private CanvasGroup canvasGroup;
-    private GameObject oldSlot;
-    private Inventory inventory;
+    private CanvasGroup sourceCanvasGroup;
+    private ItemSlot sourceSlot;
+    private Inventory sourceInventory;
     private Transform draggedItemBox;
 
     void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
         draggedItemBox = GameObject.FindGameObjectWithTag("DraggingItem").transform;
         draggedItemRectTransform = draggedItemBox.GetComponent<RectTransform>();
-        inventory = transform.parent.GetComponent<ItemSlot>().RootInventory;
     }
-
-
-    public void OnDrag(PointerEventData data)
-    {
-        if (data.button == PointerEventData.InputButton.Left && transform.parent.GetComponent<CraftResultSlot>() == null)
-        {
-
-            canvasGroup.blocksRaycasts = false;
-            Vector2 localPointerPosition;
-            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(draggedItemRectTransform, Input.mousePosition, data.pressEventCamera, out localPointerPosition))
-            {
-                Debug.Log(localPointerPosition);
-                rectTransform.localPosition = localPointerPosition - pointerOffset;
-                //ItemSlot duplication = oldSlot.GetComponent<ItemSlot>().Duplication;
-                //if (duplication != null)
-                //    Destroy(duplication);
-            }
-        }
-
-        //inventory.OnUpdateItemList();
-    }
-
-
 
     public void OnPointerDown(PointerEventData data)
     {
         if (data.button == PointerEventData.InputButton.Left)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, data.position, data.pressEventCamera, out pointerOffset);
-            oldSlot = transform.parent.gameObject;
-            rectTransform.SetAsLastSibling();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(sourceRectTransform, data.position, data.pressEventCamera, out pointerOffset);
+            sourceSlot = transform.parent.GetComponent<ItemSlot>();
+            sourceRectTransform = GetComponent<RectTransform>();
+            sourceCanvasGroup = GetComponent<CanvasGroup>();
+            sourceRectTransform.SetAsLastSibling();
+            sourceInventory = transform.parent.GetComponent<ItemSlot>().RootInventory;
             transform.SetParent(draggedItemBox);
+            //TODO:  remove dragged item from source inventory
         }
     }
 
-    public void CreateDuplication(GameObject ItemToDup)
+    public void OnDrag(PointerEventData data)
     {
-        ItemSlot.CreateDuplication(ItemToDup.GetComponent<ItemSlot>());
+        if (data.button == PointerEventData.InputButton.Left && transform.parent.GetComponent<CraftResultSlot>() == null)
+        {
+            sourceCanvasGroup.blocksRaycasts = false;
+            Vector2 localPointerPosition;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(draggedItemRectTransform, Input.mousePosition, data.pressEventCamera, out localPointerPosition))
+            {
+                Debug.Log(localPointerPosition);
+                sourceRectTransform.localPosition = localPointerPosition - pointerOffset;
+                //ItemSlot duplication = oldSlot.GetComponent<ItemSlot>().Duplication;
+                //if (duplication != null)
+                //    Destroy(duplication);
+            }
+        }
     }
+
 
     public void OnEndDrag(PointerEventData data)
     {
         if (data.button == PointerEventData.InputButton.Left)
         {
-            canvasGroup.blocksRaycasts = true;
-            Transform newSlot = null;
-            if (data.pointerEnter != null)
-                newSlot = data.pointerEnter.transform;
+            if(!MoveItem(data))
+                Destroy(gameObject);
+        }
+    }
 
-            if (newSlot != null)
+    /// <returns>Whether or not to preserve the dragging item</returns>
+    public bool MoveItem(PointerEventData data)
+    {
+
+        sourceCanvasGroup.blocksRaycasts = true;
+        ItemSlot destinationSlot = data.pointerEnter?.GetComponent<ItemSlot>(); //The OnDragEnd event will grab the actual slot from the hierarchy
+        RectTransform destinationRectTransform = destinationSlot?.GetComponent<RectTransform>();
+
+        if (destinationRectTransform != null)
+        {
+            //getting the items from the slots, GameObjects and RectTransform
+            GameObject destinationGameObject = destinationRectTransform.gameObject;
+            Item sourceItem = GetComponent<ItemDisplay>().Item;
+            Item destinationItem = destinationSlot.Item;
+
+            Inventory destinationInventory = destinationSlot.RootInventory;
+            var equipmentSystem = destinationInventory.GetComponent<EquipmentSystem>();
+            var craftSystem = destinationInventory.GetComponent<CraftSystem>();
+
+            if (ReferenceEquals(sourceSlot, destinationSlot))
             {
-                //getting the items from the slots, GameObjects and RectTransform
-                GameObject firstItemGameObject = this.gameObject;
-                GameObject secondItemGameObject = newSlot.parent.gameObject;
-                RectTransform firstItemRectTransform = this.gameObject.GetComponent<RectTransform>();
-                RectTransform secondItemRectTransform = newSlot.parent.GetComponent<RectTransform>();
-                Item firstItem = transform.GetComponent<ItemDisplay>().Item;
-                Item secondItem = new Item();
-                if (newSlot.parent.GetComponent<ItemOnObject>() != null)
-                    secondItem = newSlot.parent.GetComponent<ItemOnObject>().Item;
-
-                //get some informations about the two items
-                bool sameItem = firstItem.Name == secondItem.Name;
-                bool sameItemRerferenced = firstItem.Equals(secondItem);
-                bool secondItemStack = false;
-                bool firstItemStack = false;
-                if (sameItem)
-                {
-                    firstItemStack = firstItem.Quantity < firstItem.MaxStack;
-                    secondItemStack = secondItem.Quantity < secondItem.MaxStack;
-                }
-
-                GameObject Inventory = secondItemRectTransform.parent.gameObject;
-                if (Inventory.tag == "Slot")
-                    Inventory = secondItemRectTransform.parent.parent.parent.gameObject;
-
-                if (Inventory.tag.Equals("Slot"))
-                    Inventory = Inventory.transform.parent.parent.gameObject;
-
-                //dragging in an Inventory      
-                if (Inventory.GetComponent<Hotbar>() == null && Inventory.GetComponent<EquipmentSystem>() == null && Inventory.GetComponent<CraftSystem>() == null)
-                {
-                    //you cannot attach items to the resultslot of the craftsystem
-                    if (newSlot.transform.parent.tag == "ResultSlot" || newSlot.transform.tag == "ResultSlot" || newSlot.transform.parent.parent.tag == "ResultSlot")
-                    {
-                        firstItemGameObject.transform.SetParent(oldSlot.transform);
-                        firstItemRectTransform.localPosition = Vector3.zero;
-                    }
-                    else
-                    {
-                        int newSlotChildCount = newSlot.transform.parent.childCount;
-                        bool isOnSlot = newSlot.transform.parent.GetChild(0).tag == "ItemIcon";
-                        //dragging on a slot where allready is an item on
-                        if (newSlotChildCount != 0 && isOnSlot)
-                        {
-                            //check if the items fits into the other item
-                            bool fitsIntoStack = false;
-                            if (sameItem)
-                                fitsIntoStack = (firstItem.Quantity + secondItem.Quantity) <= firstItem.MaxStack;
-                            //if the item is stackable checking if the firstitemstack and seconditemstack is not full and check if they are the same items
-
-                            if (inventory.stackable && sameItem && firstItemStack && secondItemStack)
-                            {
-                                //if the item does not fit into the other item
-                                if (fitsIntoStack && !sameItemRerferenced)
-                                {
-                                    secondItem.Quantity = firstItem.Quantity + secondItem.Quantity;
-                                    secondItemGameObject.transform.SetParent(newSlot.parent.parent);
-                                    Destroy(firstItemGameObject);
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                }
-
-                                else
-                                {
-                                    //creates the rest of the item
-                                    int rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                                    //fill up the other stack and adds the rest to the other stack 
-                                    if (!fitsIntoStack && rest > 0)
-                                    {
-                                        firstItem.Quantity = firstItem.MaxStack;
-                                        secondItem.Quantity = rest;
-
-                                        firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                        secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                        firstItemRectTransform.localPosition = Vector3.zero;
-                                        secondItemRectTransform.localPosition = Vector3.zero;
-                                    }
-                                }
-
-                            }
-                            //if does not fit
-                            else
-                            {
-                                //creates the rest of the item
-                                int rest = 0;
-                                if (sameItem)
-                                    rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                                //fill up the other stack and adds the rest to the other stack 
-                                if (!fitsIntoStack && rest > 0)
-                                {
-                                    secondItem.Quantity = firstItem.MaxStack;
-                                    firstItem.Quantity = rest;
-
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                }
-                                //if they are different items or the stack is full, they get swapped
-                                else if (!fitsIntoStack && rest == 0)
-                                {
-                                    //if you are dragging an item from equipmentsystem to the inventory and try to swap it with the same itemtype
-                                    if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null && firstItem.Type == secondItem.Type)
-                                    {
-                                        newSlot.transform.parent.parent.parent.parent.GetComponent<Inventory>().UnEquipItem(firstItem);
-                                        oldSlot.transform.parent.parent.GetComponent<Inventory>().EquipItem(secondItem);
-
-                                        firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                        secondItemGameObject.transform.SetParent(oldSlot.transform);
-                                        secondItemRectTransform.localPosition = Vector3.zero;
-                                        firstItemRectTransform.localPosition = Vector3.zero;
-
-                                        if (secondItemGameObject.GetComponent<ItemSlot>().Duplication != null)
-                                            Destroy(secondItemGameObject.GetComponent<ItemSlot>().Duplication);
-
-                                    }
-                                    //if you are dragging an item from the equipmentsystem to the inventory and they are not from the same itemtype they do not get swapped.                                    
-                                    else if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null && firstItem.Type != secondItem.Type)
-                                    {
-                                        firstItemGameObject.transform.SetParent(oldSlot.transform);
-                                        firstItemRectTransform.localPosition = Vector3.zero;
-                                    }
-                                    //swapping for the rest of the inventorys
-                                    else if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() == null)
-                                    {
-                                        firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                        secondItemGameObject.transform.SetParent(oldSlot.transform);
-                                        secondItemRectTransform.localPosition = Vector3.zero;
-                                        firstItemRectTransform.localPosition = Vector3.zero;
-                                    }
-                                }
-
-                            }
-
-                        }
-
-                        //empty slot
-                        else
-                        {
-                            if (newSlot.tag != "Slot" && newSlot.tag != "ItemIcon")
-                            {
-                                firstItemGameObject.transform.SetParent(oldSlot.transform);
-                                firstItemRectTransform.localPosition = Vector3.zero;
-                            }
-                            else
-                            {
-                                firstItemGameObject.transform.SetParent(newSlot.transform);
-                                firstItemRectTransform.localPosition = Vector3.zero;
-
-                                if (newSlot.transform.parent.parent.GetComponent<EquipmentSystem>() == null && oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null)
-                                    oldSlot.transform.parent.parent.GetComponent<Inventory>().UnEquipItem(firstItem);
-                            }
-                        }
-                    }
-                }
-
-
-
-                //dragging into a Hotbar            
-                if (Inventory.GetComponent<Hotbar>() != null)
-                {
-                    int newSlotChildCount = newSlot.transform.parent.childCount;
-                    bool isOnSlot = newSlot.transform.parent.GetChild(0).tag == "ItemIcon";
-                    //dragging on a slot where allready is an item on
-                    if (newSlotChildCount != 0 && isOnSlot)
-                    {
-                        //check if the items fits into the other item
-                        bool fitsIntoStack = false;
-                        if (sameItem)
-                            fitsIntoStack = (firstItem.Quantity + secondItem.Quantity) <= firstItem.MaxStack;
-                        //if the item is stackable checking if the firstitemstack and seconditemstack is not full and check if they are the same items
-
-                        if (inventory.stackable && sameItem && firstItemStack && secondItemStack)
-                        {
-                            //if the item does not fit into the other item
-                            if (fitsIntoStack && !sameItemRerferenced)
-                            {
-                                secondItem.Quantity = firstItem.Quantity + secondItem.Quantity;
-                                secondItemGameObject.transform.SetParent(newSlot.parent.parent);
-                                Destroy(firstItemGameObject);
-                                secondItemRectTransform.localPosition = Vector3.zero;
-                            }
-
-                            else
-                            {
-                                //creates the rest of the item
-                                int rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                                //fill up the other stack and adds the rest to the other stack 
-                                if (!fitsIntoStack && rest > 0)
-                                {
-                                    firstItem.Quantity = firstItem.MaxStack;
-                                    secondItem.Quantity = rest;
-
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-
-                                    CreateDuplication(this.gameObject);
-                                    secondItemGameObject.GetComponent<ItemSlot>().Item = secondItem;
-
-                                }
-                            }
-
-                        }
-                        //if does not fit
-                        else
-                        {
-                            //creates the rest of the item
-                            int rest = 0;
-                            if (sameItem)
-                                rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                            bool fromEquip = oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null;
-
-                            //fill up the other stack and adds the rest to the other stack 
-                            if (!fitsIntoStack && rest > 0)
-                            {
-                                secondItem.Quantity = firstItem.MaxStack;
-                                firstItem.Quantity = rest;
-
-                                CreateDuplication(this.gameObject);
-
-                                firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                firstItemRectTransform.localPosition = Vector3.zero;
-                                secondItemRectTransform.localPosition = Vector3.zero;
-
-                            }
-                            //if they are different items or the stack is full, they get swapped
-                            else if (!fitsIntoStack && rest == 0)
-                            {
-                                if (!fromEquip)
-                                {
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-
-                                    if (oldSlot.transform.parent.parent.gameObject.Equals(GameObject.FindGameObjectWithTag("MainInventory")))
-                                    {
-                                        Destroy(secondItemGameObject.GetComponent<ItemSlot>().Duplication);
-                                        CreateDuplication(firstItemGameObject);
-                                    }
-                                    else
-                                    {
-                                        CreateDuplication(firstItemGameObject);
-                                    }
-                                }
-                                else
-                                {
-                                    firstItemGameObject.transform.SetParent(oldSlot.transform);
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                }
-                            }
-
-                        }
-                    }
-                    //empty slot
-                    else
-                    {
-                        if (newSlot.tag != "Slot" && newSlot.tag != "ItemIcon")
-                        {
-                            firstItemGameObject.transform.SetParent(oldSlot.transform);
-                            firstItemRectTransform.localPosition = Vector3.zero;
-                        }
-                        else
-                        {
-                            firstItemGameObject.transform.SetParent(newSlot.transform);
-                            firstItemRectTransform.localPosition = Vector3.zero;
-
-                            if (newSlot.transform.parent.parent.GetComponent<EquipmentSystem>() == null && oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null)
-                                oldSlot.transform.parent.parent.GetComponent<Inventory>().UnEquipItem(firstItem);
-                            CreateDuplication(firstItemGameObject);
-                        }
-                    }
-
-                }
-
-
-                //dragging into a equipmentsystem/charactersystem
-                if (Inventory.GetComponent<EquipmentSystem>() != null)
-                {
-                    ItemType[] itemTypeOfSlots = GameObject.FindGameObjectWithTag("EquipmentSystem").GetComponent<EquipmentSystem>().itemTypeOfSlots;
-                    int newSlotChildCount = newSlot.transform.parent.childCount;
-                    bool isOnSlot = newSlot.transform.parent.GetChild(0).tag == "ItemIcon";
-                    bool sameItemType = firstItem.Type == secondItem.Type;
-                    bool fromHot = oldSlot.transform.parent.parent.GetComponent<Hotbar>() != null;
-
-                    //dragging on a slot where allready is an item on
-                    if (newSlotChildCount != 0 && isOnSlot)
-                    {
-                        //items getting swapped if they are the same itemtype
-                        if (sameItemType && !sameItemRerferenced) //
-                        {
-                            Transform temp1 = secondItemGameObject.transform.parent.parent.parent;
-                            Transform temp2 = oldSlot.transform.parent.parent;
-
-                            firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                            secondItemGameObject.transform.SetParent(oldSlot.transform);
-                            secondItemRectTransform.localPosition = Vector3.zero;
-                            firstItemRectTransform.localPosition = Vector3.zero;
-
-                            if (!temp1.Equals(temp2))
-                            {
-                                if (firstItem.Type == ItemType.UFPS_Weapon)
-                                {
-                                    Inventory.GetComponent<Inventory>().UnEquipItem(secondItem);
-                                    Inventory.GetComponent<Inventory>().EquipItem(firstItem);
-                                }
-                                else
-                                {
-                                    Inventory.GetComponent<Inventory>().EquipItem(firstItem);
-                                    if (secondItem.Type != ItemType.Backpack)
-                                        Inventory.GetComponent<Inventory>().UnEquipItem(secondItem);
-                                }
-                            }
-
-                            if (fromHot)
-                                CreateDuplication(secondItemGameObject);
-
-                        }
-                        //if they are not from the same Itemtype the dragged one getting placed back
-                        else
-                        {
-                            firstItemGameObject.transform.SetParent(oldSlot.transform);
-                            firstItemRectTransform.localPosition = Vector3.zero;
-
-                            if (fromHot)
-                                CreateDuplication(firstItemGameObject);
-                        }
-
-                    }
-                    //if the slot is empty
-                    else
-                    {
-                        for (int i = 0; i < newSlot.parent.childCount; i++)
-                        {
-                            if (newSlot.Equals(newSlot.parent.GetChild(i)))
-                            {
-                                //checking if it is the right slot for the item
-                                if (itemTypeOfSlots[i] == transform.GetComponent<ItemOnObject>().Item.Type)
-                                {
-                                    transform.SetParent(newSlot);
-                                    rectTransform.localPosition = Vector3.zero;
-
-                                    if (!oldSlot.transform.parent.parent.Equals(newSlot.transform.parent.parent))
-                                        Inventory.GetComponent<Inventory>().EquipItem(firstItem);
-
-                                }
-                                //else it get back to the old slot
-                                else
-                                {
-                                    transform.SetParent(oldSlot.transform);
-                                    rectTransform.localPosition = Vector3.zero;
-                                    if (fromHot)
-                                        CreateDuplication(firstItemGameObject);
-                                }
-                            }
-                        }
-                    }
-
-                }
-
-                if (Inventory.GetComponent<CraftSystem>() != null)
-                {
-                    CraftSystem cS = Inventory.GetComponent<CraftSystem>();
-                    int newSlotChildCount = newSlot.transform.parent.childCount;
-
-
-                    bool isOnSlot = newSlot.transform.parent.GetChild(0).tag == "ItemIcon";
-                    //dragging on a slot where allready is an item on
-                    if (newSlotChildCount != 0 && isOnSlot)
-                    {
-                        //check if the items fits into the other item
-                        bool fitsIntoStack = false;
-                        if (sameItem)
-                            fitsIntoStack = (firstItem.Quantity + secondItem.Quantity) <= firstItem.MaxStack;
-                        //if the item is stackable checking if the firstitemstack and seconditemstack is not full and check if they are the same items
-
-                        if (inventory.stackable && sameItem && firstItemStack && secondItemStack)
-                        {
-                            //if the item does not fit into the other item
-                            if (fitsIntoStack && !sameItemRerferenced)
-                            {
-                                secondItem.Quantity = firstItem.Quantity + secondItem.Quantity;
-                                secondItemGameObject.transform.SetParent(newSlot.parent.parent);
-                                Destroy(firstItemGameObject);
-                                secondItemRectTransform.localPosition = Vector3.zero;
-                                cS.ListWithItem();
-                            }
-
-                            else
-                            {
-                                //creates the rest of the item
-                                int rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                                //fill up the other stack and adds the rest to the other stack 
-                                if (!fitsIntoStack && rest > 0)
-                                {
-                                    firstItem.Quantity = firstItem.MaxStack;
-                                    secondItem.Quantity = rest;
-
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                    cS.ListWithItem();
-
-
-                                }
-                            }
-
-                        }
-                        //if does not fit
-                        else
-                        {
-                            //creates the rest of the item
-                            int rest = 0;
-                            if (sameItem)
-                                rest = (firstItem.Quantity + secondItem.Quantity) % firstItem.MaxStack;
-
-                            //fill up the other stack and adds the rest to the other stack 
-                            if (!fitsIntoStack && rest > 0)
-                            {
-                                secondItem.Quantity = firstItem.MaxStack;
-                                firstItem.Quantity = rest;
-
-                                firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                secondItemGameObject.transform.SetParent(oldSlot.transform);
-
-                                firstItemRectTransform.localPosition = Vector3.zero;
-                                secondItemRectTransform.localPosition = Vector3.zero;
-                                cS.ListWithItem();
-
-                            }
-                            //if they are different items or the stack is full, they get swapped
-                            else if (!fitsIntoStack && rest == 0)
-                            {
-                                //if you are dragging an item from equipmentsystem to the inventory and try to swap it with the same itemtype
-                                if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null && firstItem.Type == secondItem.Type)
-                                {
-
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-
-                                    oldSlot.transform.parent.parent.GetComponent<Inventory>().EquipItem(secondItem);
-                                    newSlot.transform.parent.parent.parent.parent.GetComponent<Inventory>().UnEquipItem(firstItem);
-                                }
-                                //if you are dragging an item from the equipmentsystem to the inventory and they are not from the same itemtype they do not get swapped.                                    
-                                else if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null && firstItem.Type != secondItem.Type)
-                                {
-                                    firstItemGameObject.transform.SetParent(oldSlot.transform);
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                }
-                                //swapping for the rest of the inventorys
-                                else if (oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() == null)
-                                {
-                                    firstItemGameObject.transform.SetParent(secondItemGameObject.transform.parent);
-                                    secondItemGameObject.transform.SetParent(oldSlot.transform);
-                                    secondItemRectTransform.localPosition = Vector3.zero;
-                                    firstItemRectTransform.localPosition = Vector3.zero;
-                                }
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        if (newSlot.tag != "Slot" && newSlot.tag != "ItemIcon")
-                        {
-                            firstItemGameObject.transform.SetParent(oldSlot.transform);
-                            firstItemRectTransform.localPosition = Vector3.zero;
-                        }
-                        else
-                        {
-                            firstItemGameObject.transform.SetParent(newSlot.transform);
-                            firstItemRectTransform.localPosition = Vector3.zero;
-
-                            if (newSlot.transform.parent.parent.GetComponent<EquipmentSystem>() == null && oldSlot.transform.parent.parent.GetComponent<EquipmentSystem>() != null)
-                                oldSlot.transform.parent.parent.GetComponent<Inventory>().UnEquipItem(firstItem);
-                        }
-                    }
-
-                }
-
-
+                return false;  //Do nothing if the source and destination are the same item.
             }
 
+            if (destinationItem == null)
+            {
+                if (equipmentSystem != null)
+                {
+                    //Make sure the item slots are of the same type before inserting
+                    //kick out if not
+                    if (sourceItem.Type != equipmentSystem.itemTypeOfSlots[destinationSlot.SlotNum])
+                    {
+                        sourceInventory[sourceSlot.SlotNum] = sourceItem;
+                        return false;
+                    }
+                }
+                //insert immediately
+                destinationInventory[destinationSlot.SlotNum] = sourceItem;
+                return false;
+            }
             else
             {
-                inventory.DropItem(GetComponent<ItemDisplay>().Item);
-                Destroy(gameObject);
+                //dragging in a general Inventory (and Hotbar)
+                if (destinationInventory.GetComponent<EquipmentSystem>() == null)
+                {
+                    if (sourceItem.ID == destinationItem.ID)
+                    {
+                        //Add or dump as much as possible of the item to the destination
+                        int remainingItems = sourceItem.Quantity;
+                        int increase = Mathf.Min(destinationItem.MaxStack - destinationItem.Quantity, remainingItems);
+                        destinationItem.Quantity += increase;
+                        remainingItems -= increase;
+                        if (craftSystem != null) craftSystem.ListWithItem();
+                        if (remainingItems > 0)
+                        {
+                            sourceItem.Quantity = remainingItems;
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        //Swap the items
+                        Swap(destinationSlot, destinationInventory);
+                    }
+                }
+
+                //dragging into a equipmentsystem/charactersystem
+                if (equipmentSystem != null)
+                {
+                    if (sourceItem.Type == destinationItem.Type)
+                    {
+                        //swap
+                        Swap(destinationSlot, destinationInventory);
+                        if (!ReferenceEquals(sourceInventory, destinationInventory))
+                        {
+                            destinationInventory.UnEquipItem(destinationItem);
+                            destinationInventory.EquipItem(sourceItem);
+                        }
+                    }
+                    else
+                    {
+                        //kick out and send the item home
+                        sourceInventory[sourceSlot.SlotNum] = sourceItem;
+                    }
+                }
             }
         }
+        else
+        {
+            sourceInventory.DropItem(GetComponent<ItemDisplay>().Item);
+        }
+        return false;
+    }
+
+    private void Swap(ItemSlot destinationSlot, Inventory destinationInventory)
+    {
+        var source = sourceInventory[sourceSlot.SlotNum];
+        sourceInventory[sourceSlot.SlotNum] = destinationInventory[destinationSlot.SlotNum];
+        destinationInventory[sourceSlot.SlotNum] = source;
     }
 }

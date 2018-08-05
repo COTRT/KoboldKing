@@ -65,6 +65,19 @@ public class Inventory : MonoBehaviour
         }
     }
 
+    //Lets you reference the items in this inventory via "Inventory[slot]" instead of "Inventory.ItemsInInventory[slot]".
+    public Item this[int slotNum] 
+    {
+        get
+        {
+            return ItemsInInventory[slotNum];
+        }
+        set
+        {
+            ItemsInInventory[slotNum] = value;
+        }
+    }
+
     [SerializeField]
     public bool stackable;
     [SerializeField]
@@ -244,7 +257,7 @@ public class Inventory : MonoBehaviour
     /// </summary>
     public void ChangeInventorySize()
     {
-        if (Size < ItemsInInventory.Length&&Application.isPlaying)
+        if (Size < ItemsInInventory.Length && Application.isPlaying)
         {
             foreach (var item in ItemsInInventory.Skip(Size))
             {
@@ -302,7 +315,11 @@ public class Inventory : MonoBehaviour
         //Update the Items in the slots
         for (int i = 0; i < ItemsInInventory.Length; i++)
         {
-            SlotContainer.transform.GetChild(i).GetComponent<ItemSlot>().Item = ItemsInInventory[i];  //TODO reimplement
+
+            ItemSlot itemSlot = SlotContainer.transform.GetChild(i).GetComponent<ItemSlot>();
+            itemSlot.Item = ItemsInInventory[i];
+            itemSlot.SlotNum = i;
+
         }
         UpdateStackNumberSettings();
     }
