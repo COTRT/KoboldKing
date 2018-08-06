@@ -44,7 +44,7 @@ public class CraftSystem : MonoBehaviour
 
     //PlayerScript PlayerstatsScript;
 
-    public void Start()  
+    public void Start()
     {
         blueprintDatabase = (BlueprintDatabase)Resources.Load("BlueprintDatabase");
         //playerStatsScript = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerScript>();
@@ -59,7 +59,7 @@ public class CraftSystem : MonoBehaviour
         resultRect = resultSlot.GetComponent<RectTransform>();
         finalSlotImage = resultSlot.GetComponent<Image>();
         leftArrowImage = leftArrow.GetComponent<Image>();
-        Image image = rightArrow.GetComponent<Image>();
+        //Image image = rightArrow.GetComponent<Image>();
     }
 
     void Update()
@@ -112,7 +112,7 @@ public class CraftSystem : MonoBehaviour
     {
         var blueprint = blueprintDatabase.blueprints.Find(b => b.finalItem == item);
         var ingredientIndices = blueprint.ingredients.Select(
-            (ingredient,indice) => new
+            (ingredient, indice) => new
             {
                 inventoryIndex = itemsInCraftSystem.FindIndex(ccitem =>
                     ccitem.Item.ID == ingredient),
@@ -173,7 +173,7 @@ public class CraftSystem : MonoBehaviour
     }
 
     public int GetSizeY()
-    { 
+    {
         return (int)GetComponent<RectTransform>().sizeDelta.y;
     }
 #endif
