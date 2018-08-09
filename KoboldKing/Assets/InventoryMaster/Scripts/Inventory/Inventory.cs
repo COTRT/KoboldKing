@@ -158,6 +158,7 @@ public class Inventory : MonoBehaviour
         prefabPanel = Resources.Load("Prefabs/Panel - Inventory") as GameObject;
 
         //Default Settings
+        // TODO: -- TJI Way to ambigious here.  Let's be specific. Hotbar, CraftSystem, BackPack, etc.. having unnamed containers is far to vague.
         if (GetComponent<EquipmentSystem>() == null && GetComponent<Hotbar>() == null && GetComponent<CraftSystem>() == null)
         {
             height = 5;
