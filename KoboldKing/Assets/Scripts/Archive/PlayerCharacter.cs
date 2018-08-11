@@ -19,7 +19,7 @@ namespace Assets.Scripts
         public void Death()
         {
             player = GameObject.FindGameObjectWithTag("Player");
-            DestroyObject(player);
+            Object.Destroy(player);
         }
     }
 }

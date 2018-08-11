@@ -48,7 +48,7 @@ public class EquipmentSystem : MonoBehaviour
         panel.GetComponent<RectTransform>().localPosition = new Vector3(0, 0, 0);
         panel.AddComponent<InventoryDesign>();
         panel.AddComponent<EquipmentSystem>();
-        Inventory inv = panel.AddComponent<Inventory>();
+        //Inventory inv = panel.AddComponent<Inventory>();
         GameObject draggingItem = (GameObject)Instantiate(Resources.Load("Prefabs/DraggingItem") as GameObject);
         draggingItem.transform.SetParent(Canvas.transform, true);
     }

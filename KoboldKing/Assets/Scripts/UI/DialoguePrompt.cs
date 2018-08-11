@@ -41,7 +41,6 @@ public class DialoguePrompt : MonoBehaviour
             {
                 PromptCanvasText.text = PromptText;
                 PromptClone = Instantiate(ChatPromptCanvas);
-                var bob = GameObject.Find("NPC Says(Clone)");
             }
         }
 
@@ -74,26 +73,26 @@ public class DialoguePrompt : MonoBehaviour
                 }
             }
         }
-        if(ConversationClone.enabled == true)
+        if (ConversationClone.enabled == true)
         {
             while (CanStartCoroutine)
             {
                 StartCoroutine("ConversationWait");
- 
+
             }
             CurrentConversationText = AllConversationTexts[ConversationPageNumber];
             var bob = ConversationClone.GetComponentInChildren<Text>();
-            bob.text = CurrentConversationText;            
+            bob.text = CurrentConversationText;
         }
     }
 
-   IEnumerator ConversationWait()
+    IEnumerator ConversationWait()
     {
         CanStartCoroutine = false;
         yield return new WaitForSeconds(2.0f);
         ConversationPageNumber = 1;
-       yield return new WaitForSeconds(2.0f);
-       ConversationPageNumber = 2;
-    } 
+        yield return new WaitForSeconds(2.0f);
+        ConversationPageNumber = 2;
+    }
 
 }

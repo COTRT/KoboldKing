@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ButtonContoller : MonoBehaviour {
+public class ButtonContoller : MonoBehaviour
+{
 
     public GameObject Canvas;
 
-   public void MainMenu()
+    public void MainMenu()
     {
         Time.timeScale = 1;
         SceneManager.LoadScene(0);
@@ -25,7 +26,7 @@ public class ButtonContoller : MonoBehaviour {
     }
     public void Resume()
     {
-        DestroyObject(GameObject.FindGameObjectWithTag("PauseMenu"));
+        Object.Destroy(GameObject.FindGameObjectWithTag("PauseMenu"));
         Time.timeScale = 1;
     }
 
