@@ -5,35 +5,23 @@ using System.Linq;
 
 public class Quest : MonoBehaviour
 {
+    public int Level { get; set; }
 
-    public List<Goal> Goals { get; set; }
+    public List<GGGoal> Goals { get; set; }
     public string QuestName { get; set; }
     public string Description { get; set; }
     public int ExperienceReward { get; set; }
     public Item ItemReward { get; set; }
     public bool Completed { get; set; }
-    public bool HasGivenReward { get; set; }
 
-    public void Awake()
-    {
-        Goals = new List<Goal>();
-        HasGivenReward = false;
-    }
     public void CheckGoals()
     {
-        
-        Completed = Goals.All(x => x.Completed);
+        Completed = Goals.All(g => g.Completed);
     }
 
     public void GiveReward()
     {
         if (ItemReward != null)
-        {
             InventoryController.Instance.GiveItem(ItemReward);
-        }
-        HasGivenReward = true;
     }
-
-
-
 }

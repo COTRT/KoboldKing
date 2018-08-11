@@ -10,7 +10,7 @@ public class Vampire : Interactable, IEnemy
     public LayerMask aggroLayerMask;
     public float currentHealth;
     public float maxHealth;
-    public int Id { get; set; }
+    public string Id { get; set; } = "Vampire";
     public int Experience { get; set; }
     public DropTable DropTable { get; set; }
     public PickupItem pickupItem;
@@ -37,7 +37,6 @@ public class Vampire : Interactable, IEnemy
             new LootDrop("potion_log", 25)
         };
 
-        Id = 1;
         Experience = 300;
         navAgent = GetComponent<NavMeshAgent>();
         //characterStats = new CharacterStats(6, 10, 2);

@@ -7,7 +7,7 @@ public interface IEnemy
 
     void Die();
     int Experience { get; set; }
-    int Id { get; set; }
+    string Id { get; set; }
     void PerformAttack();
     Spawner Spawner { get; set; }
     void TakeDamage(int amount);

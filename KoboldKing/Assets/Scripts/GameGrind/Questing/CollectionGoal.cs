@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CollectionGoal : Goal
+public class CollectionGoal : GGGoal
 {
     public string ItemId { get; set; }
 
