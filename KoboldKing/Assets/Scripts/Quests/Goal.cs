@@ -9,10 +9,14 @@ namespace Assets.Scripts.Quests
 {
     public abstract class Goal
     {
+        /// <summary>
+        /// Make sure to override the base Goal constructor with your own necessary settings, but call the base constructor as well (see <see cref="KillGoal"/>)
+        /// </summary>
+        /// <param name="arguments"></param>
         public Goal(Dictionary<string, string> arguments)
         {
             RequiredAmount = arguments.ContainsKey("Amount") ? 0 : int.Parse(arguments["Amount"]);
-            Description = arguments.ContainsKey("Decscription")?arguments["Description"]: "";
+            Description = arguments.ContainsKey("Description")?arguments["Description"]: "";
         }
 
         public abstract string Description { get; set; }
@@ -27,15 +31,6 @@ namespace Assets.Scripts.Quests
                 Completed = true;
             }
             return Completed;
-        }
-        protected static void CheckConfigContains(Dictionary<string, string> arguments, params string[] keys)
-        {
-            var missingKeys = keys.Where(k => !arguments.ContainsKey(k));
-            if (missingKeys.Count() > 1)
-                throw new ArgumentException(
-                    $"Goal {(arguments["Description"] == null ? "" : ("(with description " + arguments["Description"] + ")"))} is missing these required infos:  {string.Join(",", missingKeys)}"
-                );
-
         }
     }
 }

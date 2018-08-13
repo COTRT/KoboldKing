@@ -1,4 +1,6 @@
-﻿class QuestGiver : Converser, IQuestGiver
+﻿using Assets.Scripts.Quests;
+
+class QuestGiver : Converser, IQuestGiver
 {
 
     private Quest quest;

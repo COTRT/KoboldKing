@@ -7,7 +7,7 @@ public class CollectionGoal : GGGoal
     public string ItemId { get; set; }
 
 
-    public CollectionGoal(Quest quest, string itemId, string description, bool completed, int currentAmount, int requiredAmount)
+    public CollectionGoal(GGQuest quest, string itemId, string description, bool completed, int currentAmount, int requiredAmount)
     {
         this.Quest = quest;
         this.ItemId = itemId;

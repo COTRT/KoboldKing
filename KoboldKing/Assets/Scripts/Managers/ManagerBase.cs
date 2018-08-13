@@ -15,7 +15,7 @@ namespace Assets.Scripts.Managers
         private ManagerStatus oldStatus;
         public event UnhandledExceptionEventHandler OnException;
 
-        public ManagerBase()
+        public void Awake()
         {
             //Get all methods that implement OnAttribute, then turn that into a grouping mapping event names to methods
             //StackOverflow: http://stackoverflow.com/questions/43860262/mapping-a-single-method-to-multiple-strings-dictionary-to-a-single-string-to-mul
@@ -80,14 +80,8 @@ namespace Assets.Scripts.Managers
         public void Startup(DataService dataService)
         {
             StartManager(dataService);
-            Startup_Complete();
+            Status = ManagerStatus.STARTED;
         }
-
-        protected void Startup_Complete()
-        {
-            this.Status = ManagerStatus.STARTED;
-        }
-
 
         [System.AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
         protected sealed class OnAttribute : Attribute

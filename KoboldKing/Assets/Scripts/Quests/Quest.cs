@@ -21,10 +21,11 @@ namespace Assets.Scripts.Quests
             Goals = new List<Goal>();
             HasGivenReward = false;
         }
-        public void CheckGoals()
+        public bool Evaluate()
         {
 
             Completed = Goals.All(x => x.Completed);
+            return Completed;
         }
 
         public void GiveReward()

@@ -22,10 +22,6 @@ public class DialoguePrompt : MonoBehaviour
 
     public bool CanStartCoroutine = true;
 
-
-
-
-
     void OnTriggerEnter(Collider other)
     {
 
@@ -41,7 +37,6 @@ public class DialoguePrompt : MonoBehaviour
             {
                 PromptCanvasText.text = PromptText;
                 PromptClone = Instantiate(ChatPromptCanvas);
-                var bob = GameObject.Find("NPC Says(Clone)");
             }
         }
 
@@ -82,8 +77,6 @@ public class DialoguePrompt : MonoBehaviour
  
             }
             CurrentConversationText = AllConversationTexts[ConversationPageNumber];
-            var bob = ConversationClone.GetComponentInChildren<Text>();
-            bob.text = CurrentConversationText;            
         }
     }
 

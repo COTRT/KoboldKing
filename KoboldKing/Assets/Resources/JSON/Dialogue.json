@@ -6,7 +6,6 @@
         "Hi": {
           "Statement": "How's life?",
           "Responses": {
-            //"S": null,
             "Peachy": {
               "Statement": "Wow.  Are you sure not Appley?",
               "Responses": {
@@ -45,14 +44,12 @@
       "Statement": "I really don't like getting clicked...."
     }
   },
-
-
   "DrKirlinstien": {
     "Quest_Assign": {
       "Statement": "Hey, Guess what?  I want to give you a quest",
       "Responses": {
-        "You know I have wanted one of those latly.": {
-          "Action": "GiveQuest UltimateSlayer",
+        "You know I have wanted one of those lately.": {
+          "Action": "GiveQuest ultimate_slapper",
           "Statement": "You gotta Quest"
         },
         "I have gotten so many of those ill just pass.": {
@@ -76,7 +73,7 @@
       "Statement": "Hey, Guess what?  I want to give you a quest",
       "Responses": {
         "GIMME GIMME GIMME": {
-          "Action": "GiveQuest UltimateSlayer",
+          "Action": "GiveQuest ultimate_slayer",
           "Statement": "You gotta Quest"
         },
         "NO, PLEASE, NO": {
