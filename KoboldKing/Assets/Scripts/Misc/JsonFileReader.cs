@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Assets.Scripts.Data;
+using Assets.Scripts.Managers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +10,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Misc
 {
-    public class JsonFileReader<T>: MonoBehaviour
+    public class JsonFileReader<T>: ManagerBase
     {
         /// <summary>
         /// Please note:  No File Extensions.
@@ -52,10 +54,11 @@ namespace Assets.Scripts.Misc
             return JsonConvert.DeserializeObject<T>(asset.text);
 
         }
-        protected void Awake()
+        protected override void StartManager(DataService dataService)
         {
             _jsonFileName = JSONFileName;
             //_loaded = false; //Reload JSON database
         }
+
     }
 }
