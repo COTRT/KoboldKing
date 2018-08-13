@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UltimateSlayer : Quest
+public class UltimateSlayer : GGQuest
 {
 
 
@@ -14,8 +14,8 @@ public class UltimateSlayer : Quest
 
 
 
-        Goals.Add(new KillGoal(this, "Slime", "Kill 2 Slimes", false, 0, 2));
-        Goals.Add(new KillGoal(this, "Vampire", "Kill 2 Vampires", false, 0, 2));
+        Goals.Add(new GGKillGoal(this, "Slime", "Kill 2 Slimes", false, 0, 2));
+        Goals.Add(new GGKillGoal(this, "Vampire", "Kill 2 Vampires", false, 0, 2));
         Goals.Add(new CollectionGoal(this, "potion_log", "Find a Log Potion", false, 0, 1));
 
         Goals.ForEach(x => x.Init());

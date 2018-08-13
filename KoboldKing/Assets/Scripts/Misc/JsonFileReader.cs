@@ -14,13 +14,12 @@ namespace Assets.Scripts.Misc
         /// Please note:  No File Extensions.
         /// </summary>
         public string JSONFileName;
-        [HideInInspector]
-        public static JsonFileReader<T> Instance;
-        T _masterJsonDict;
-        bool _loaded = false;
+        private static string _jsonFileName;
+        static T _masterJsonDict;
+        static bool _loaded = false;
 
 
-        public T MasterJsonDict
+        public static T MasterJsonDict
         {
             get
             {
@@ -43,9 +42,9 @@ namespace Assets.Scripts.Misc
         /// depending on the environment (say, follow the "Quest Completed" tree after a quest is completed)
         /// </summary>
         /// <returns></returns>
-        private T GetJSON()
+        private static T GetJSON()
         {
-            var asset = Resources.Load<TextAsset>("JSON/" + JSONFileName);
+            var asset = Resources.Load<TextAsset>("JSON/" + _jsonFileName);
             if (asset == null)
             {
                 throw new System.IO.FileNotFoundException("The Target JSON File was not found");
@@ -53,10 +52,10 @@ namespace Assets.Scripts.Misc
             return JsonConvert.DeserializeObject<T>(asset.text);
 
         }
-        private void Awake()
+        protected void Awake()
         {
-            if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            _jsonFileName = JSONFileName;
+            //_loaded = false; //Reload JSON database
         }
     }
 }

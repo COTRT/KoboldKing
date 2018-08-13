@@ -1,4 +1,5 @@
 ﻿
+using Assets.Scripts.Events;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ using UnityEngine;
 // "abstract" on a class merely makes it required to override it.
 // "abstract" on a method means the overriding class MUST provide that method as well.
 // This class is making use of all that to do some of the repetitive work in making a new Converser.
-public abstract class Converser : MonoBehaviour
+public abstract class Converser : Interactable
 {
     public string JSONDatabaseEntryName;
     public ObjectDialogues ObjectDialogues;
@@ -35,6 +36,12 @@ public abstract class Converser : MonoBehaviour
         }
         return ChooseDialogue();
     }
+
+    public override void Interact()
+    {
+        Messenger<Dialogue,GameObject>.Broadcast(UIEvent.SHOW_DIALOGUE, GetDialogue(),gameObject);
+    }
+
     //This is invisible to the outside world ("protected" means "available to overriding classes, but no more"), 
     //so that users can't call it mistakenly before the ObjectDialogues have been loaded.
     protected abstract Dialogue ChooseDialogue();

@@ -11,7 +11,7 @@ public class GGQuestGiver : NPC
     [SerializeField] private GameObject quests;
     [SerializeField] private string questType;
 
-    private Quest Quest { get; set; }
+    private GGQuest Quest { get; set; }
 
     public override void Interact()
     {
@@ -36,7 +36,7 @@ public class GGQuestGiver : NPC
     void AssignQuest()
     {
         AssignedQuest = true;
-        Quest = (Quest)quests.AddComponent(System.Type.GetType(questType));
+        Quest = (GGQuest)quests.AddComponent(System.Type.GetType(questType));
 
 
 

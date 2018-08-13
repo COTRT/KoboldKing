@@ -1,0 +1,21 @@
+{
+  "ultimate_slapper": {
+    "Name": "Ultimate Slapper",
+    "Description": "Slap a lot of bad guys.",
+    "Goals": [
+      {
+        "Type": "KillGoal",
+        "Description": "Kill 2 Vamps",
+        "Enemy": "Vampire",
+        "Amount": 2
+      }
+    ],
+    "Rewards": [
+      {
+        "Type": "ItemReward",
+        "Description": "A very awesome sword to help you slap more vamps in the future.",
+        "Item": "sword"
+      }
+    ]
+  }
+}

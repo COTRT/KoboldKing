@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Quest : MonoBehaviour
+public class GGQuest : MonoBehaviour
 {
     public int Level { get; set; }
 

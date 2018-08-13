@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class KillGoal : GGGoal
+public class GGKillGoal : GGGoal
 {
     public string EnemyId { get; set; }
 
 
-    public KillGoal(Quest quest, string enemyId, string description, bool completed, int currentAmount, int requiredAmount)
+    public GGKillGoal(GGQuest quest, string enemyId, string description, bool completed, int currentAmount, int requiredAmount)
     {
         this.Quest = quest;
         this.EnemyId = enemyId;

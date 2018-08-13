@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Scripts.Quests
 {
     public class QuestSaveData
     {
         public string Name { get; set; }
+        public string Description { get; set; }
         public List<Dictionary<string,string>> Goals { get; set; }
         public List<Dictionary<string,string>> Rewards { get; set; }
-        public string Description { get; set; }
         public Quest ToQuest()
         {
             Quest quest = new Quest
             {
                 QuestName = Name,
-                Description = Description
+                Description = Description,
+                Goals = new List<Goal>(),
+                Rewards = new List<Reward>()
             };
             foreach (var goalSettings in Goals)
             {
