@@ -2100,40 +2100,6 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 685676959}
   m_CullTransparentMesh: 0
---- !u!1 &707228561
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 707228563}
-  - component: {fileID: 707228562}
-  m_Layer: 0
-  m_Name: VampireSpawner (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &707228562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 707228561}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fda3ba38335d260468154d7fef2c5d21, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  monster: {fileID: 1390266098129098, guid: 3235ffe13eb957448bc1d558182705a3, type: 2}
-  respawn: 1
-  spawnDelay: 5
---- !u!4 &707228563
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
 --- !u!1 &711258363
 GameObject:
   m_ObjectHideFlags: 0
@@ -4943,10 +4909,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_CorrespondingSourceObject: {fileID: 0}
-  serializedVersion: 6
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_CorrespondingSourceObject: {fileID: 0}
 --- !u!1 &1521229219
 GameObject:
   m_ObjectHideFlags: 0
@@ -5396,14 +5358,6 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 749f0fcee8899d14d9fc75a4b5997df6, type: 3}
   m_IsPrefabAsset: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  serializedVersion: 6
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_CorrespondingSourceObject: {fileID: 0}
-  serializedVersion: 6
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_CorrespondingSourceObject: {fileID: 0}
 --- !u!1 &1680844075
 GameObject:
   m_ObjectHideFlags: 0
