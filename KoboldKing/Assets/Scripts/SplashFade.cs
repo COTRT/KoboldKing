@@ -5,41 +5,40 @@ using System.Collections;
 
 public class SplashFade : MonoBehaviour
 {
-    public Image[] splashImage;
+    public Image[] splashImages;
     public string loadLevel;
     public int howLong;
 
 
     IEnumerator Start()
     {
-
-        splashImage[0].canvasRenderer.SetAlpha(0.0f);
-        splashImage[1].canvasRenderer.SetAlpha(0.0f);
-        splashImage[2].canvasRenderer.SetAlpha(0.0f);
-
-
-        for (int i = 0; i<= splashImage.Length; i++)
+        foreach(Image splashImage in splashImages)
         {
-            FadeIn(i);
+            splashImage.canvasRenderer.SetAlpha(0.0f);
+
+        }
+
+        foreach(Image splashImage in splashImages)
+        {
+            FadeIn(splashImage);
             yield return new WaitForSeconds(howLong);
-            FadeOut(i);
+            FadeOut(splashImage);
             yield return new WaitForSeconds(4f);
         }
         SceneManager.LoadScene(loadLevel);
-        splashImage[2].canvasRenderer.SetAlpha(0.0f);
 
 
     }
 
-    void FadeIn(int I)
+    void FadeIn(Image image)
     {
-        splashImage[I].CrossFadeAlpha(1.0f, 1.5f, false);
+        image.CrossFadeAlpha(1.0f, 1.5f, false);
 
     }
-
-    void FadeOut(int i)
+    
+    void FadeOut(Image image)
     {
-        splashImage[i].CrossFadeAlpha(0.0f, 2.5f, false);
+        image.CrossFadeAlpha(0.0f, 2.5f, false);
        
     }
  
