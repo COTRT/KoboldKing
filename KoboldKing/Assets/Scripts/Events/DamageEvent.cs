@@ -1,6 +1,6 @@
 ﻿namespace Assets.Scripts.Events
 {
-    public class DamageEvent
+    public static class DamageEvent
     {
         /// <summary>
         /// Called whenever a Damageable is damaged, whether or not the object in question is broken
